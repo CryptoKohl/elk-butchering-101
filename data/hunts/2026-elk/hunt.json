@@ -11,23 +11,87 @@
     "Grind packed in 1-gal zip-top bags and frozen."
   ],
   "progress": [
-    {"date": "2026-10-30", "done": ["rib trim for grind", "tenderloin (only one recovered)"]},
-    {"date": "2026-10-31", "done": ["backstrap", "front shoulder #1: flat iron, mock tender"], "in_progress": ["front shoulder #1: clod, shank, trim"]}
+    {
+      "date": "2026-10-30",
+      "done": [
+        "rib trim for grind",
+        "tenderloin (only one recovered)"
+      ]
+    },
+    {
+      "date": "2026-10-31",
+      "done": [
+        "backstrap",
+        "front shoulder #1: flat iron, mock tender"
+      ],
+      "in_progress": [
+        "front shoulder #1: clod, shank, trim"
+      ]
+    }
   ],
-  "done_cuts": ["rib-trim", "tenderloin", "backstrap-steaks", "backstrap-roast", "backstrap-trim", "flat-iron", "mock-tender"],
-  "remaining": ["front shoulder #2", "hindquarter #1", "hindquarter #2"],
+  "done_cuts": [
+    "rib-trim",
+    "tenderloin",
+    "backstrap-steaks",
+    "backstrap-roast",
+    "backstrap-trim",
+    "flat-iron",
+    "mock-tender"
+  ],
+  "remaining": [
+    "front shoulder #2",
+    "hindquarter #1",
+    "hindquarter #2"
+  ],
   "lessons": [
     "The pale rubbery edge at the bottom of a shoulder hung by the shank is the blade cartilage, not a brisket flap.",
     "Find the blade ridge by feel first and mark it; every shoulder cut is located from it.",
-    "Only one tenderloin came out. Get both before or right after quartering."
+    "Only one tenderloin came out. Get both before or right after quartering.",
+    "On the inside face, the pale whitish patch with rough red tissue at the bottom is also blade cartilage. The brisket is the thick flap that pulls away from the shoulder along a seam."
   ],
   "photos": [
-    {"file": "photos/2026-elk/shoulder_outside.jpg", "caption": "Front shoulder #1, outside face, hung by the shank"},
-    {"file": "photos/2026-elk/shoulder_inside.jpg", "caption": "Front shoulder #1, inside face"},
-    {"file": "photos/2026-elk/blade_cartilage.jpg", "caption": "Blade cartilage close-up"},
-    {"file": "photos/2026-elk/elk_shoulder_ridge.jpg", "caption": "Blade ridge, marked", "cuts": ["flat-iron", "mock-tender"]},
-    {"file": "photos/2026-elk/elk_shoulder_cuts23.jpg", "caption": "Flat iron and mock tender, either side of the ridge", "cuts": ["flat-iron", "mock-tender"]},
-    {"file": "photos/2026-elk/flat_iron_split.png", "caption": "Splitting the flat iron at the gristle", "cuts": ["flat-iron"]},
-    {"file": "photos/2026-elk/elk_shoulder_clod.jpg", "caption": "Clod (orange) and shank cut at the elbow (red)", "cuts": ["clod", "fore-shank"]}
+    {
+      "file": "photos/2026-elk/shoulder_outside.jpg",
+      "caption": "Front shoulder #1, outside face, hung by the shank"
+    },
+    {
+      "file": "photos/2026-elk/shoulder_inside.jpg",
+      "caption": "Front shoulder #1, inside face"
+    },
+    {
+      "file": "photos/2026-elk/blade_cartilage.jpg",
+      "caption": "Blade cartilage close-up"
+    },
+    {
+      "file": "photos/2026-elk/elk_shoulder_ridge.jpg",
+      "caption": "Blade ridge, marked",
+      "cuts": [
+        "flat-iron",
+        "mock-tender"
+      ]
+    },
+    {
+      "file": "photos/2026-elk/elk_shoulder_cuts23.jpg",
+      "caption": "Flat iron and mock tender, either side of the ridge",
+      "cuts": [
+        "flat-iron",
+        "mock-tender"
+      ]
+    },
+    {
+      "file": "photos/2026-elk/flat_iron_split.png",
+      "caption": "Splitting the flat iron at the gristle",
+      "cuts": [
+        "flat-iron"
+      ]
+    },
+    {
+      "file": "photos/2026-elk/elk_shoulder_clod.jpg",
+      "caption": "Clod (orange) and shank cut at the elbow (red)",
+      "cuts": [
+        "clod",
+        "fore-shank"
+      ]
+    }
   ]
 }
