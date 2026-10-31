@@ -1,0 +1,239 @@
+{
+  "version": 1,
+  "animal": "elk",
+  "primals": [
+    {
+      "id": "front-shoulder",
+      "name": "Front shoulder",
+      "summary": "Hang it by the shank. The shoulder blade is a flat bone with a raised ridge down its outside face; the ridge splits the two best cuts.",
+      "order": ["flat-iron", "mock-tender", "clod", "fore-shank", "shoulder-trim"],
+      "landmarks": [
+        "Blade ridge: a hard raised line on the outside face of the shoulder blade. Run a finger along it, then slice along it down to bone.",
+        "Blade cartilage: the pale, rubbery edge at the top of the blade (at the bottom when hung by the shank). It is NOT a brisket flap.",
+        "Elbow joint: bend the leg to find it; the shank is below it."
+      ]
+    },
+    {
+      "id": "backstrap",
+      "name": "Backstrap (loin)",
+      "summary": "The long muscle on each side of the spine, outside the ribs. The best steaks on the animal.",
+      "order": ["backstrap-steaks", "backstrap-roast", "backstrap-trim"],
+      "landmarks": ["Runs from the hip to the shoulder along the top of the spine. Remove whole along the spine and the rib tops, then trim silver skin."]
+    },
+    {
+      "id": "tenderloin",
+      "name": "Tenderloin",
+      "summary": "Inside the body cavity under the spine, in front of the hips. Small and the most tender; easy to lose if the carcass is quartered without gutting.",
+      "order": ["tenderloin"],
+      "landmarks": ["Inside the cavity, pressed under the spine just ahead of the pelvis. Peel out by hand and knife tip."]
+    },
+    {
+      "id": "ribs-neck",
+      "name": "Ribs, flank and neck",
+      "summary": "Thin, sinewy meat. Usually trimmed to grind; the neck can also be a whole braising roast.",
+      "order": ["rib-trim", "neck"],
+      "landmarks": ["Rib meat lies between and over the ribs; flank is the thin belly wall."]
+    },
+    {
+      "id": "hindquarter",
+      "name": "Hindquarter",
+      "summary": "The biggest quarter. Separate it into its natural muscle groups along the seams around the femur, then trim each group.",
+      "order": ["top-round", "bottom-round", "eye-of-round", "sirloin-tip", "top-sirloin", "hind-shank", "hind-trim"],
+      "landmarks": [
+        "Femur: the big leg bone through the middle. Every round muscle seams off around it.",
+        "Knee joint (stifle): the sirloin tip (knuckle) sits on the front of the femur just above it.",
+        "Hip end (ball joint): the top sirloin sits over it."
+      ]
+    }
+  ],
+  "cuts": [
+    {
+      "id": "flat-iron",
+      "primal": "front-shoulder",
+      "name": "Flat iron",
+      "aka": ["top blade", "infraspinatus"],
+      "find": "Outside face of the blade, on one side of the blade ridge (the larger side).",
+      "steps": [
+        "Slice along the blade ridge down to the bone.",
+        "Work the knife flat against the blade and lift the muscle off.",
+        "Lay it flat. A thick gristle seam runs down its middle.",
+        "Peel the muscle off the gristle from each side, giving two flat steaks."
+      ],
+      "uses": ["steak (grill or sear)", "fajitas"],
+      "pack": "Steaks, about 1.5 lb a package",
+      "diagram": "photos/2026-elk/flat_iron_split.png"
+    },
+    {
+      "id": "mock-tender",
+      "primal": "front-shoulder",
+      "name": "Mock tender",
+      "aka": ["chuck tender", "supraspinatus"],
+      "find": "Outside face of the blade, on the other side of the blade ridge (the smaller, cone-shaped muscle).",
+      "steps": [
+        "From the ridge cut, work the knife flat against the blade on the other side.",
+        "Lift the whole cone-shaped muscle off."
+      ],
+      "uses": ["pot roast", "braise", "jerky"],
+      "pack": "Whole roast, about 2 lb"
+    },
+    {
+      "id": "clod",
+      "primal": "front-shoulder",
+      "name": "Clod",
+      "aka": ["shoulder clod", "triceps", "arm roast"],
+      "find": "The big muscle mass in the angle behind the arm bone, between the blade and the elbow.",
+      "steps": [
+        "Find the arm bone (humerus) under it.",
+        "Keep the knife against the bone and work the whole muscle off.",
+        "Split along natural seams into roasts, or cube it."
+      ],
+      "uses": ["roast", "stew meat", "grind"],
+      "pack": "2-3 lb roasts or 1 lb stew packs"
+    },
+    {
+      "id": "fore-shank",
+      "primal": "front-shoulder",
+      "name": "Fore shank",
+      "aka": ["shank", "osso buco"],
+      "find": "Below the elbow joint.",
+      "steps": [
+        "Bend the leg to find the elbow joint.",
+        "Cut through the joint.",
+        "Keep whole (or saw into cross-cut rounds) for braising, or strip the meat for grind."
+      ],
+      "uses": ["braise (osso buco)", "grind"],
+      "pack": "Whole shank, or into the grind bag"
+    },
+    {
+      "id": "shoulder-trim",
+      "primal": "front-shoulder",
+      "name": "Shoulder trim",
+      "aka": ["inside blade meat"],
+      "find": "Everything left on the inside face of the blade and the bones.",
+      "steps": ["Strip the remaining meat off the blade and bones.", "Remove silver skin and blood-shot meat."],
+      "uses": ["grind", "stew"],
+      "pack": "1-gal zip-top bag for grind"
+    },
+    {
+      "id": "backstrap-steaks",
+      "primal": "backstrap",
+      "name": "Backstrap steaks (filet-style)",
+      "aka": ["medallions", "loin steaks"],
+      "find": "The cleaned backstrap.",
+      "steps": ["Trim all silver skin.", "Cut across the grain into 1-1.5 in medallions."],
+      "uses": ["sear", "grill"],
+      "pack": "About 1 lb a package"
+    },
+    {
+      "id": "backstrap-roast",
+      "primal": "backstrap",
+      "name": "Backstrap roast",
+      "find": "Thick center sections of the backstrap.",
+      "steps": ["Leave 1 lb sections whole."],
+      "uses": ["roast", "reverse sear"],
+      "pack": "1 lb roasts"
+    },
+    {
+      "id": "backstrap-trim",
+      "primal": "backstrap",
+      "name": "Backstrap trim",
+      "find": "Tapered ends and edge meat.",
+      "steps": ["Collect ends and edges while trimming."],
+      "uses": ["grind"],
+      "pack": "1-gal zip-top bag"
+    },
+    {
+      "id": "tenderloin",
+      "primal": "tenderloin",
+      "name": "Tenderloin",
+      "find": "Inside the cavity under the spine.",
+      "steps": ["Peel out whole.", "Trim silver skin.", "Leave whole or cut medallions."],
+      "uses": ["sear", "grill"],
+      "pack": "Whole"
+    },
+    {
+      "id": "rib-trim",
+      "primal": "ribs-neck",
+      "name": "Rib and flank trim",
+      "find": "Between and over the ribs; the belly wall.",
+      "steps": ["Fillet the meat off the rib cage.", "Trim fat and membrane."],
+      "uses": ["grind"],
+      "pack": "1-gal zip-top bag"
+    },
+    {
+      "id": "neck",
+      "primal": "ribs-neck",
+      "name": "Neck",
+      "find": "Between the head and the shoulders.",
+      "steps": ["Bone it out for grind, or saw it into a whole bone-in braising roast."],
+      "uses": ["braise", "grind"],
+      "pack": "Whole roast or grind bag"
+    },
+    {
+      "id": "top-round",
+      "primal": "hindquarter",
+      "name": "Top round",
+      "aka": ["inside round"],
+      "find": "The large muscle on the inside of the leg.",
+      "steps": ["Open the natural seam on the inside of the leg.", "Follow it around and lift the muscle off the femur."],
+      "uses": ["steak", "roast", "jerky"],
+      "pack": "Steaks or 2-3 lb roasts"
+    },
+    {
+      "id": "bottom-round",
+      "primal": "hindquarter",
+      "name": "Bottom round",
+      "aka": ["outside round"],
+      "find": "The outside/back of the leg, behind the femur.",
+      "steps": ["Seam it off the femur along the back of the leg.", "Separate the eye of round from it along the seam."],
+      "uses": ["roast", "jerky", "cube steak"],
+      "pack": "2-3 lb roasts"
+    },
+    {
+      "id": "eye-of-round",
+      "primal": "hindquarter",
+      "name": "Eye of round",
+      "find": "A long cylinder attached to the bottom round.",
+      "steps": ["Separate from the bottom round along the seam."],
+      "uses": ["roast", "jerky"],
+      "pack": "Whole"
+    },
+    {
+      "id": "sirloin-tip",
+      "primal": "hindquarter",
+      "name": "Sirloin tip",
+      "aka": ["knuckle"],
+      "find": "The football-shaped muscle on the front of the femur just above the knee.",
+      "steps": ["Cut along the seams on each side down to the femur.", "Lift it off the bone."],
+      "uses": ["steak", "kabobs", "roast"],
+      "pack": "Steaks or roast"
+    },
+    {
+      "id": "top-sirloin",
+      "primal": "hindquarter",
+      "name": "Top sirloin",
+      "find": "Over the hip at the top of the quarter, where the backstrap ended.",
+      "steps": ["Seam it off the pelvis and hip joint."],
+      "uses": ["steak"],
+      "pack": "Steaks"
+    },
+    {
+      "id": "hind-shank",
+      "primal": "hindquarter",
+      "name": "Hind shank",
+      "find": "Below the knee joint.",
+      "steps": ["Cut through the knee joint.", "Keep whole for braising or strip for grind."],
+      "uses": ["braise", "grind"],
+      "pack": "Whole or grind bag"
+    },
+    {
+      "id": "hind-trim",
+      "primal": "hindquarter",
+      "name": "Hindquarter trim",
+      "find": "Everything left on the bones and the edges of the big muscles.",
+      "steps": ["Strip all remaining meat.", "Remove silver skin and blood-shot meat."],
+      "uses": ["grind", "stew"],
+      "pack": "1-gal zip-top bag"
+    }
+  ]
+}

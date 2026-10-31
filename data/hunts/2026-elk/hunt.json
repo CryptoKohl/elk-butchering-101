@@ -1,0 +1,33 @@
+{
+  "id": "2026-elk",
+  "animal": "elk",
+  "title": "2026 bull elk, GMU 681",
+  "harvested": "2026-10-28T15:00:00-06:00",
+  "tag": "OTC 2nd rifle bull elk, GMU 681",
+  "handling": [
+    "Quartered in the field.",
+    "Quarters kept in a cooler in the garage; ice changed daily and the meat left to breathe.",
+    "Body pelt only (no neck) frozen in a trash bag with the air pushed out.",
+    "Grind packed in 1-gal zip-top bags and frozen."
+  ],
+  "progress": [
+    {"date": "2026-10-30", "done": ["rib trim for grind", "tenderloin (only one recovered)"]},
+    {"date": "2026-10-31", "done": ["backstrap", "front shoulder #1: flat iron, mock tender"], "in_progress": ["front shoulder #1: clod, shank, trim"]}
+  ],
+  "done_cuts": ["rib-trim", "tenderloin", "backstrap-steaks", "backstrap-roast", "backstrap-trim", "flat-iron", "mock-tender"],
+  "remaining": ["front shoulder #2", "hindquarter #1", "hindquarter #2"],
+  "lessons": [
+    "The pale rubbery edge at the bottom of a shoulder hung by the shank is the blade cartilage, not a brisket flap.",
+    "Find the blade ridge by feel first and mark it; every shoulder cut is located from it.",
+    "Only one tenderloin came out. Get both before or right after quartering."
+  ],
+  "photos": [
+    {"file": "photos/2026-elk/shoulder_outside.jpg", "caption": "Front shoulder #1, outside face, hung by the shank"},
+    {"file": "photos/2026-elk/shoulder_inside.jpg", "caption": "Front shoulder #1, inside face"},
+    {"file": "photos/2026-elk/blade_cartilage.jpg", "caption": "Blade cartilage close-up"},
+    {"file": "photos/2026-elk/elk_shoulder_ridge.jpg", "caption": "Blade ridge, marked", "cuts": ["flat-iron", "mock-tender"]},
+    {"file": "photos/2026-elk/elk_shoulder_cuts23.jpg", "caption": "Flat iron and mock tender, either side of the ridge", "cuts": ["flat-iron", "mock-tender"]},
+    {"file": "photos/2026-elk/flat_iron_split.png", "caption": "Splitting the flat iron at the gristle", "cuts": ["flat-iron"]},
+    {"file": "photos/2026-elk/elk_shoulder_clod.jpg", "caption": "Clod (orange) and shank cut at the elbow (red)", "cuts": ["clod", "fore-shank"]}
+  ]
+}
