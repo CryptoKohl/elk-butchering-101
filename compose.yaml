@@ -2,7 +2,7 @@ services:
   web:
     image: nginx:1.27-alpine
     restart: unless-stopped
-    ports: ["8090:80"]
+    network_mode: host          # :8090, and reaches the guide API on 127.0.0.1:8091
     volumes:
       - ./:/usr/share/nginx/html:ro
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro

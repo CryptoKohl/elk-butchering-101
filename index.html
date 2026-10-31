@@ -59,16 +59,45 @@ dialog { border:none; padding:0; background:transparent; max-width: 96vw } dialo
 .panel a { color: var(--accent) }
 .progress { height:8px; background: var(--rule); border-radius: 4px; overflow:hidden; margin: 6px 0 2px } .progress i { display:block; height:100%; background: var(--ok) }
 .cut.flash { outline: 3px solid var(--accent); outline-offset: 2px; transition: outline-color 1.5s }
+
+/* break down */
+.quarters { display:grid; grid-template-columns: repeat(auto-fill, minmax(170px,1fr)); gap:10px; margin: 14px 0 }
+.quarters button { text-align:left; background:var(--card); border:1px solid var(--rule); border-left:5px solid var(--rule); padding:10px 12px; cursor:pointer; color:var(--ink); font: 500 1.05rem Oswald, sans-serif; text-transform:uppercase }
+.quarters button small { display:block; font: .85rem "Source Serif 4", serif; text-transform:none; color:var(--muted) }
+.quarters button[aria-pressed=true] { border-left-color: var(--accent); background: var(--accent-soft) }
+.bd { display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1.4fr); gap:18px; align-items:start }
+@media (max-width: 760px) { .bd { grid-template-columns: 1fr } }
+.bd ol.order { padding-left: 0; list-style:none; margin: 8px 0 } .bd ol.order > li { border:1px solid var(--rule); background:var(--card); margin-bottom:6px }
+.bd ol.order summary { padding: 8px 10px; cursor:pointer; font: 500 1.05rem Oswald, sans-serif; text-transform:uppercase; display:flex; gap:8px; align-items:center }
+.bd ol.order .body { padding: 0 12px 10px } .bd ol.order > li.next { border-color: var(--accent); box-shadow: inset 4px 0 0 var(--accent) }
+.st { font-size:.75rem; padding:1px 6px; border-radius:2px; margin-left:auto } .st.ok { color:var(--ok); border:1px solid var(--ok) } .st.nx { background:var(--accent); color:var(--card) }
+.chat { background:var(--card); border:1px solid var(--rule); padding: 12px; display:flex; flex-direction:column; gap:12px }
+.msg { max-width: 100% } .msg.you { align-self:flex-end; background: var(--accent-soft); padding: 8px 10px; border-radius: 6px; max-width: 85% }
+.msg.you img { max-width: 160px; display:block; border-radius:4px; margin-bottom:4px; cursor: zoom-in }
+.msg.ai img { width:100%; max-height: 70vh; object-fit: contain; background:#000; border-radius:4px; cursor: zoom-in }
+.msg.ai ol { padding-left: 22px; margin: 6px 0 } .msg.ai ol li { margin: 4px 0 }
+.msg .who { font: 500 .8rem Oswald, sans-serif; text-transform: uppercase; color: var(--muted); letter-spacing:.05em }
+.warn { border-left: 4px solid #c98a1b; background: rgba(201,138,27,.12); padding: 6px 10px; margin: 6px 0 }
+.wait { color: var(--muted); font-style: italic } .wait::after { content: " ●"; animation: blink 1s infinite } @keyframes blink { 50% { opacity: .2 } }
+.composer { display:grid; gap:8px; border-top: 1px solid var(--rule); padding-top: 10px }
+.composer textarea, .composer input[type=text] { width:100%; font: inherit; padding: 8px; border:1px solid var(--rule); background: var(--bg); color: var(--ink); border-radius: 2px }
+.composer .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center }
+.btn { font: 500 1rem Oswald, sans-serif; text-transform:uppercase; border:1px solid var(--accent); background: var(--accent); color: var(--card); padding: 9px 16px; cursor:pointer; border-radius:2px }
+.btn.ghost { background: transparent; color: var(--accent) } .btn:disabled { opacity:.5; cursor: wait }
+label.file { display:inline-flex } label.file input { display:none }
+.preview { max-height: 120px; border-radius: 4px; border:1px solid var(--rule) }
+.empty { color: var(--muted) }
 </style>
 </head>
 <body>
 <header>
   <h1>Elk Butchering <span>101</span></h1>
   <p class="sub">Cut guide and freezer log, Kohl family. Hang it, find the landmark, make one cut at a time.</p>
-  <nav><button data-view="guide" aria-pressed="true">Cut guide</button><button data-view="hunt" aria-pressed="false">2026 elk</button></nav>
+  <nav><button data-view="guide" aria-pressed="true">Cut guide</button><button data-view="breakdown" aria-pressed="false">Break down</button><button data-view="hunt" aria-pressed="false">2026 elk</button></nav>
 </header>
 <main>
   <section id="guide"></section>
+  <section id="breakdown" hidden></section>
   <section id="hunt" hidden></section>
 </main>
 <dialog id="zoom"><img alt=""></dialog>
@@ -173,16 +202,122 @@ function wireMap(cuts, done) {
         <p><b>Find it:</b> ${esc(c.find)}</p>
         <div>${c.uses.map(u => `<span class="tag">${esc(u)}</span>`).join("")}${done.has(c.id) ? `<span class="tag done">done 2026</span>` : ""}</div>
         <p class="aka">${esc(c.pack)}</p><p>${link({ ...c, name: "Show the steps ↓" })}</p>`;
+    panel.insertAdjacentHTML("beforeend", `<p><button class="btn" data-q="${pr.id}">Break down the ${esc(pr.name.toLowerCase())} →</button></p>`);
   };
   svg.addEventListener("click", e => { const t = e.target.closest("[data-r]"); if (t) select(t.dataset.r) });
   svg.addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target.dataset.r) { e.preventDefault(); select(e.target.dataset.r) } });
   panel.addEventListener("click", e => {
+    const q = e.target.closest("[data-q]"); if (q) return openBreakdown(q.dataset.q);
     const a = e.target.closest("[data-jump]"); if (!a) return; e.preventDefault();
     const card = document.getElementById("cut-" + a.dataset.jump); if (!card) return;
     card.scrollIntoView({ behavior: "smooth", block: "center" }); card.classList.add("flash"); setTimeout(() => card.classList.remove("flash"), 1600);
   });
   $("#showdone").addEventListener("change", e => svg.querySelectorAll(".done").forEach(h => h.style.display = e.target.checked ? "" : "none"));
 }
+
+
+// ---- Break down: pick a quarter, see its cut order, send photos to Claude for the next cut.
+let CUTS, DONE, BD = null;
+const primalOfCut = id => CUTS.primals.find(p => p.order.includes(id));
+const thread = id => JSON.parse(localStorage.getItem("elk-thread-" + id) || "null") || { thread: null, side: "", msgs: [] };
+const saveThread = (id, t) => localStorage.setItem("elk-thread-" + id, JSON.stringify(t));
+
+function show(view) {
+  document.querySelectorAll("nav button").forEach(x => x.setAttribute("aria-pressed", x.dataset.view === view));
+  document.querySelectorAll("main section").forEach(s => s.hidden = s.id !== view);
+}
+
+function openBreakdown(id) { BD = id; renderBreakdown(); show("breakdown"); window.scrollTo({ top: 0 }) }
+
+function renderBreakdown() {
+  const byId = Object.fromEntries(CUTS.cuts.map(c => [c.id, c]));
+  const quarters = CUTS.primals.map(p => {
+    const n = p.order.filter(id => DONE.has(id)).length;
+    return `<button data-q="${p.id}" aria-pressed="${p.id === BD}">${esc(p.name)}<small>${n} of ${p.order.length} cuts done</small></button>`;
+  }).join("");
+  if (!BD) { $("#breakdown").innerHTML = `<h2>Break down a quarter</h2><p class="summary">Pick the piece on the hook. You'll get its cut order, and you can send a photo for the next cut drawn on it.</p><div class="quarters">${quarters}</div>`; return }
+  const p = CUTS.primals.find(x => x.id === BD), t = thread(BD), next = p.order.find(id => !DONE.has(id));
+  $("#breakdown").innerHTML = `<h2>Break down a quarter</h2><div class="quarters">${quarters}</div>
+  <div class="bd"><div>
+    <h2 style="margin-top:0">${esc(p.name)}</h2><p class="summary">${esc(p.summary)}</p>
+    <ul class="marks">${p.landmarks.map(l => `<li>${esc(l)}</li>`).join("")}</ul>
+    <ol class="order">${p.order.map((id, i) => { const c = byId[id]; if (!c) return ""; const d = DONE.has(id);
+      return `<li class="${id === next ? "next" : ""}"><details ${id === next ? "open" : ""}><summary><span class="n" style="color:var(--accent)">${i + 1}</span>${esc(c.name)}${d ? `<span class="st ok">done 2026</span>` : id === next ? `<span class="st nx">next</span>` : ""}</summary>
+        <div class="body"><p><b>Find it:</b> ${esc(c.find)}</p><ol>${c.steps.map(x => `<li>${esc(x)}</li>`).join("")}</ol><p class="aka">${esc(c.pack)}</p></div></details></li>` }).join("")}</ol>
+    <p class="aka">"Done 2026" counts either side. On the second shoulder or hindquarter, start from cut 1.</p>
+  </div>
+  <div class="chat" id="chat">
+    <div class="who">Ask Claude about this ${esc(p.name.toLowerCase())}</div>
+    <div id="msgs">${t.msgs.length ? t.msgs.map(renderMsg).join("") : `<p class="empty">Take a photo of the piece on the hook, with the whole face in frame and good light. Claude will find the landmarks, tell you the next cut and draw it on your photo.</p>`}</div>
+    <form class="composer" id="composer">
+      <input type="text" name="side" placeholder="Which one? e.g. shoulder #2, left hindquarter" value="${esc(t.side)}">
+      <textarea name="message" rows="2" placeholder="Optional: what you see or want to know (e.g. 'flat iron is off, what next?')"></textarea>
+      <div class="row">
+        <label class="file btn ghost">📷 Photo<input type="file" name="photo" accept="image/*" capture="environment"></label>
+        <img class="preview" id="preview" hidden alt="">
+        <button class="btn" type="submit">Send</button>
+        ${t.msgs.length ? `<button class="btn ghost" type="button" id="newthread">New thread</button>` : ""}
+      </div>
+    </form>
+  </div></div>`;
+}
+
+function renderMsg(m) {
+  if (m.role === "you") return `<div class="msg you">${m.img ? `<img src="${esc(m.img)}" alt="Your photo">` : ""}${esc(m.text || "")}</div>`;
+  if (m.role === "wait") return `<div class="msg ai"><span class="who">Claude</span><p class="wait">Looking at your photo. This takes about 20 seconds</p></div>`;
+  if (m.role === "err") return `<div class="msg ai"><span class="who">Claude</span><p class="warn">${esc(m.text)}</p></div>`;
+  const r = m.r, c = CUTS.cuts.find(x => x.id === r.next_cut_id);
+  return `<div class="msg ai"><span class="who">Claude</span>
+    ${r.annotated || r.photo ? `<img src="${esc(r.annotated || r.photo)}" alt="Your photo with the cut drawn on it">` : ""}
+    <p>${esc(r.sees)}</p>
+    ${c ? `<p><span class="tag">Next: ${esc(c.name)}</span></p>` : ""}
+    ${r.steps.length ? `<ol>${r.steps.map(x => `<li>${esc(x)}</li>`).join("")}</ol>` : ""}
+    ${r.caution ? `<p class="warn">⚠ ${esc(r.caution)}</p>` : ""}
+    ${r.need ? `<p class="warn">📷 ${esc(r.need)}</p>` : ""}</div>`;
+}
+
+function shrink(file) {
+  return new Promise((ok, bad) => {
+    const img = new Image(); img.onerror = () => bad(new Error("Could not read that photo"));
+    img.onload = () => {
+      const k = Math.min(1, 1600 / Math.max(img.width, img.height)), cv = document.createElement("canvas");
+      cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
+      cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height); URL.revokeObjectURL(img.src); ok(cv.toDataURL("image/jpeg", .85));
+    };
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+async function send(form) {
+  const id = BD, t = thread(id), file = form.photo.files[0], message = form.message.value.trim(), side = form.side.value.trim();
+  if (!file && !message) return;
+  const btn = form.querySelector("[type=submit]"); btn.disabled = true;
+  try {
+    const image = file ? await shrink(file) : null;
+    t.side = side; t.msgs.push({ role: "you", text: message, img: null }); saveThread(id, t);
+    const youIdx = t.msgs.length - 1;
+    $("#msgs").innerHTML = t.msgs.map(renderMsg).join("") + renderMsg({ role: "wait" });
+    if (image) [...document.querySelectorAll("#msgs .msg.you")].pop()?.insertAdjacentHTML("afterbegin", `<img src="${image}" alt="">`);
+    $("#chat").scrollIntoView({ block: "end", behavior: "smooth" });
+    const res = await fetch("api/guide", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ primal: id, side, message, image, thread: t.thread }) });
+    const r = await res.json();
+    if (!res.ok) throw new Error(r.error || res.statusText);
+    t.thread = r.thread; t.msgs[youIdx].img = r.photo; t.msgs.push({ role: "ai", r });
+  } catch (e) { t.msgs.push({ role: "err", text: "Didn't work: " + e.message }) }
+  saveThread(id, t); if (BD === id) renderBreakdown(); btn.disabled = false;
+  $("#msgs .msg:last-child")?.scrollIntoView({ block: "start", behavior: "smooth" });
+}
+
+$("#breakdown").addEventListener("click", e => {
+  const q = e.target.closest("[data-q]"); if (q) return openBreakdown(q.dataset.q);
+  if (e.target.id === "newthread" && confirm("Start a new thread for this quarter? The old one is cleared from this device.")) { localStorage.removeItem("elk-thread-" + BD); renderBreakdown() }
+  if (e.target.matches(".msg img")) zoom(e.target.src);
+});
+$("#breakdown").addEventListener("change", e => {
+  if (e.target.name !== "photo") return; const f = e.target.files[0], pv = $("#preview");
+  pv.hidden = !f; if (f) pv.src = URL.createObjectURL(f);
+});
+$("#breakdown").addEventListener("submit", e => { e.preventDefault(); send(e.target) });
 
 function render(cuts, hunt, log) {
   const done = new Set(hunt.done_cuts || []);
@@ -214,14 +349,12 @@ function render(cuts, hunt, log) {
     <h2>Lessons</h2><ul class="marks">${hunt.lessons.map(r => `<li>${esc(r)}</li>`).join("")}</ul>
     <h2>Handling</h2><ul class="marks">${hunt.handling.map(r => `<li>${esc(r)}</li>`).join("")}</ul>
     <h2>Photos</h2><div class="gallery">${hunt.photos.map(p => `<figure><img loading="lazy" src="${esc(p.file)}" alt="${esc(p.caption)}"><figcaption>${esc(p.caption)}</figcaption></figure>`).join("")}</div>`;
+  CUTS = cuts; DONE = done; renderBreakdown();
   wireMap(cuts, done);
-  document.querySelectorAll("main img").forEach(img => img.addEventListener("click", () => zoom(img.src)));
+  document.querySelectorAll("#guide img, #hunt img").forEach(img => img.addEventListener("click", () => zoom(img.src)));
 }
 
-document.querySelectorAll("nav button").forEach(b => b.addEventListener("click", () => {
-  document.querySelectorAll("nav button").forEach(x => x.setAttribute("aria-pressed", x === b));
-  document.querySelectorAll("main section").forEach(s => s.hidden = s.id !== b.dataset.view);
-}));
+document.querySelectorAll("nav button").forEach(b => b.addEventListener("click", () => show(b.dataset.view)));
 
 Promise.all([
   fetch("data/cuts.json").then(r => r.json()),
