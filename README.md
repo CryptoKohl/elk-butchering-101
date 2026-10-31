@@ -13,6 +13,15 @@ A field guide and freezer log for breaking down big game at home, built while bu
 docker compose up -d      # nginx on :8090, serves this folder read-only
 ```
 
+## Photo guidance (Break down tab)
+
+Pick a quarter, send a photo of the piece on the hook, and Claude names the landmarks and the next cut and draws it on the photo.
+`server/guide_api.py` runs as the user service `elk-guide` (127.0.0.1:8091); nginx proxies `/api/` to it. It calls `claude -p`
+with read-only tools, using the Claude login on Kassandra. Uploaded photos stay in `uploads/` (not in git).
+
+The elk on the cut map (`img/elk.webp`) was generated locally with RealVisXL (SDXL) on the RTX 4070 (`~/ai/sdxl/gen.py`)
+and cut out with rembg. The mask `img/elk-mask.png` trims the cut regions to the animal.
+
 ## Annotate a photo
 
 ```sh

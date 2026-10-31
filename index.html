@@ -41,17 +41,19 @@ figcaption { font-size:.85rem; color: var(--muted) }
 dialog { border:none; padding:0; background:transparent; max-width: 96vw } dialog img { max-height: 92vh; max-width: 96vw; display:block } dialog::backdrop { background: rgba(0,0,0,.8) }
 
 /* elk map */
-.map { display:grid; grid-template-columns: minmax(0,1fr) 270px; gap:16px; margin: 18px 0 8px; background:var(--card); border:1px solid var(--rule); padding:14px }
+.map { display:grid; grid-template-columns: minmax(0,1fr) 250px; gap:16px; margin: 18px 0 8px; background:var(--card); border:1px solid var(--rule); padding:14px }
 @media (max-width: 760px) { .map { grid-template-columns: 1fr } }
 .map svg { width:100%; height:auto; display:block; touch-action: manipulation }
-.map .rg { cursor:pointer; stroke: var(--card); stroke-width: 2.5; transition: filter .15s }
-.map .rg:hover, .map .rg:focus { filter: brightness(1.18) saturate(1.1); outline: none }
+.map .rg { cursor:pointer; stroke: rgba(255,248,238,.9); stroke-width: 2.5; stroke-dasharray: 8 5; fill-opacity: .4; mix-blend-mode: multiply; transition: fill-opacity .15s }
+.map .rg.tl { mix-blend-mode: normal; fill-opacity: 1 }
+.map .cutlayer.off .rg:not(:hover):not(:focus) { fill-opacity: 0; stroke-opacity: .0 }
+.map .rg:hover, .map .rg:focus { fill-opacity: .85; outline: none }
 .map .done { fill: url(#hatch); pointer-events: none }
-.map .lbl { font: 600 17px Oswald, sans-serif; letter-spacing: .05em; text-transform: uppercase; pointer-events: none }
-.map .in { fill:#fff8ee; paint-order: stroke; stroke: rgba(40,15,10,.55); stroke-width: 3.5px }
-.map .co { cursor:pointer } .map .co text { fill: var(--ink) } .map .co line { stroke: var(--muted); stroke-width: 1.5 } .map .co circle { fill: var(--ink) }
+.map .lbl { font: 600 27px Oswald, sans-serif; letter-spacing: .05em; text-transform: uppercase; pointer-events: none }
+.map .in { fill:#fff8ee; paint-order: stroke; stroke: rgba(40,15,10,.7); stroke-width: 5px }
+.map .co { cursor:pointer } .map .co text { fill: var(--ink) } .map .co line { stroke: var(--ink); stroke-width: 2; opacity: .7 } .map .co circle { fill: var(--ink) }
 .map .co:hover text, .map .co.on text { fill: var(--accent) }
-.map #hl { fill:none; stroke: var(--ink); stroke-width: 4; pointer-events:none; stroke-linejoin: round }
+.map #hl { fill:none; stroke: #fff; stroke-width: 6; mix-blend-mode: normal; pointer-events:none; stroke-linejoin: round }
 .map .key { font-size:.85rem; color:var(--muted); margin-top:6px; display:flex; gap:14px; flex-wrap:wrap; align-items:center }
 .map .key label { cursor:pointer }
 .panel h3 { margin:0; font-size:1.4rem; text-transform:uppercase } .panel .pr { color:var(--muted); font: 500 .85rem Oswald, sans-serif; text-transform:uppercase; letter-spacing:.05em }
@@ -122,66 +124,60 @@ function zoom(src) { const d = $("#zoom"); $("img", d).src = src; d.showModal() 
 $("#zoom").addEventListener("click", e => e.currentTarget.close());
 
 
-// ---- Elk cut map: regions are clipped to the body outline; points overshoot the outline on purpose.
+// ---- Elk cut map: a real elk photo (img/elk.webp, cut out with its mask img/elk-mask.png).
+// Region points are photo pixels and overshoot the body on purpose; the mask trims them to the animal.
 const P = pts => "M" + pts.map(p => p.join(" ")).join("L") + "Z";
 const ELK_REGIONS = [
-  { id: "neck", cuts: ["neck"], color: "#94473a", d: P([[198,88],[345,168],[250,330],[214,236]]), co: { at: [70,300], to: [250,262], text: "Neck" } },
-  { id: "mock-tender", cuts: ["mock-tender"], color: "#c0533b", d: P([[345,168],[405,168],[300,335],[250,330]]), co: { at: [300,140], to: [318,250], text: "Mock tender" } },
-  { id: "flat-iron", cuts: ["flat-iron"], color: "#a93c2c", d: P([[405,168],[432,168],[436,300],[300,335]]), co: { at: [430,128], to: [405,240], text: "Flat iron" } },
-  { id: "clod", cuts: ["clod"], color: "#b9472f", d: P([[300,335],[436,300],[436,340],[422,412],[330,402]]), label: [372,372, "Clod"] },
-  { id: "brisket", cuts: ["rib-trim"], name: "Brisket", note: "Thin on elk. It goes in with the rib and flank trim.", color: "#d27d60", d: P([[230,328],[300,335],[330,402],[318,432],[230,432]]), co: { at: [120,420], to: [282,385], text: "Brisket" } },
-  { id: "fore-shank", cuts: ["fore-shank"], color: "#86372b", d: P([[318,402],[330,402],[422,412],[404,528],[326,528]]), co: { at: [190,505], to: [358,470], text: "Fore shank" } },
-  { id: "backstrap", cuts: ["backstrap-steaks","backstrap-roast","backstrap-trim"], primal: "backstrap", color: "#7a1d18", d: P([[432,168],[705,168],[705,255],[432,255]]), label: [568,226, "Backstrap"] },
-  { id: "ribs", cuts: ["rib-trim"], name: "Ribs", color: "#c86c53", d: P([[432,255],[600,253],[600,445],[420,445],[422,412],[436,340],[436,300]]), label: [512,355, "Ribs"] },
-  { id: "flank", cuts: ["rib-trim"], name: "Flank", note: "The thin belly wall. It goes in with the rib trim.", color: "#d98d6f", d: P([[600,253],[705,255],[698,330],[692,445],[600,445]]), label: [648,350, "Flank"] },
-  { id: "top-sirloin", cuts: ["top-sirloin"], color: "#8e2a21", d: P([[705,168],[800,168],[812,215],[752,268],[705,255]]), co: { at: [775,128], to: [748,215], text: "Top sirloin" } },
-  { id: "sirloin-tip", cuts: ["sirloin-tip"], color: "#b44f39", d: P([[705,255],[752,268],[748,345],[735,432],[692,445],[698,330]]), co: { at: [640,585], to: [714,370], text: "Sirloin tip" } },
-  { id: "top-round", cuts: ["top-round"], color: "#a13a2c", d: P([[812,215],[860,215],[860,300],[748,345],[752,268]]), co: { at: [880,250], to: [785,285], text: "Top round" } },
-  { id: "bottom-round", cuts: ["bottom-round"], color: "#c46045", d: P([[748,345],[860,300],[860,425],[735,432]]), co: { at: [880,395], to: [768,385], text: "Bottom round" } },
-  { id: "eye-of-round", cuts: ["eye-of-round"], color: "#6f241c", ellipse: [800,335,15,40], co: { at: [880,322], to: [806,322], text: "Eye of round" } },
-  { id: "hind-shank", cuts: ["hind-shank"], color: "#85402f", d: P([[735,432],[860,425],[860,525],[728,525]]), co: { at: [880,470], to: [768,460], text: "Hind shank" } },
+  { id: "neck", cuts: ["neck"], color: "#8c3b2e", d: P([[425,220],[600,218],[510,450],[470,575],[320,575],[320,440],[385,330]]), co: { at: [318,450], to: [452,390], text: "Neck" } },
+  { id: "mock-tender", cuts: ["mock-tender"], color: "#c0533b", d: P([[600,218],[665,218],[565,455],[510,450]]), co: { at: [318,515], to: [568,340], text: "Mock tender" } },
+  { id: "flat-iron", cuts: ["flat-iron"], color: "#a93c2c", d: P([[665,218],[724,220],[696,432],[565,455]]), co: { at: [850,100], to: [668,330], text: "Flat iron" } },
+  { id: "clod", cuts: ["clod"], color: "#d0583a", d: P([[565,455],[696,432],[692,520],[650,545],[578,538]]), co: { at: [318,660], to: [628,488], text: "Clod" } },
+  { id: "brisket", cuts: ["rib-trim"], name: "Brisket", note: "Thin on elk. It goes in with the rib and flank trim.", color: "#d27d60", d: P([[510,450],[565,455],[578,538],[560,600],[470,600],[470,575]]), co: { at: [318,590], to: [528,530], text: "Brisket" } },
+  { id: "fore-shank", cuts: ["fore-shank"], color: "#86372b", d: P([[560,600],[578,538],[650,545],[692,520],[790,540],[790,670],[560,670]]), co: { at: [470,735], to: [622,615], text: "Fore shank" } },
+  { id: "backstrap", cuts: ["backstrap-steaks","backstrap-roast","backstrap-trim"], primal: "backstrap", color: "#7a1d18", d: P([[724,200],[988,215],[988,306],[712,306]]), label: [850,280, "Backstrap"] },
+  { id: "ribs", cuts: ["rib-trim"], name: "Ribs", color: "#c86c53", d: P([[712,306],[880,306],[880,580],[692,580],[692,520],[696,432]]), label: [790,440, "Ribs"] },
+  { id: "flank", cuts: ["rib-trim"], name: "Flank", note: "The thin belly wall. It goes in with the rib trim.", color: "#d98d6f", d: P([[880,306],[988,306],[978,420],[962,580],[880,580]]), label: [930,445, "Flank"] },
+  { id: "top-sirloin", cuts: ["top-sirloin"], color: "#8e2a21", d: P([[988,215],[1100,235],[1085,322],[1022,342],[988,306]]), co: { at: [1150,100], to: [1040,285], text: "Top sirloin" } },
+  { id: "sirloin-tip", cuts: ["sirloin-tip"], color: "#b44f39", d: P([[988,306],[1022,342],[1032,442],[1002,532],[962,580],[978,420]]), co: { at: [965,750], to: [1000,450], text: "Sirloin tip" } },
+  { id: "top-round", cuts: ["top-round"], color: "#a13a2c", d: P([[1100,235],[1200,290],[1200,402],[1062,422],[1032,442],[1022,342],[1085,322]]), co: { at: [1205,330], to: [1120,345], text: "Top round" } },
+  { id: "bottom-round", cuts: ["bottom-round"], color: "#c46045", d: P([[1032,442],[1062,422],[1200,402],[1200,525],[1100,565],[1002,532]]), co: { at: [1205,520], to: [1080,495], text: "Bottom round" } },
+  { id: "eye-of-round", cuts: ["eye-of-round"], color: "#6f241c", ellipse: [1128,452,20,52], co: { at: [1205,425], to: [1132,440], text: "Eye of round" } },
+  { id: "hind-shank", cuts: ["hind-shank"], color: "#85402f", d: P([[1002,532],[1100,565],[1200,525],[1200,690],[1040,690],[1040,600]]), co: { at: [1205,640], to: [1110,625], text: "Hind shank" } },
 ];
-const ELK_BODY = "M86 196C84 182 92 172 108 166C130 156 155 138 178 118L192 104C215 115 240 140 265 165C290 185 315 195 345 200C450 210 600 205 700 200C760 198 800 210 815 240C825 250 828 268 818 278C820 320 810 370 790 410C790 430 772 455 778 480L770 600L745 602L748 500C745 470 735 445 720 425C700 405 670 400 640 405C560 415 470 418 400 410C385 420 380 440 378 470L372 600L348 602L352 470C350 440 340 420 320 405C295 395 275 370 270 340C265 300 245 260 215 230C190 215 160 210 130 212C112 214 92 212 86 196Z";
-const ANTLER = "M204 106C222 60 262 22 318 6C360 -6 404 4 432 30M207 98C190 86 168 80 146 82M214 84C196 70 176 62 156 60M246 52C230 34 218 16 206 -2M290 20C278 0 270 -14 262 -26M344 0C342 -12 340 -20 334 -28";
-const TENDERLOIN = "M560 268C590 256 660 254 706 262C700 274 660 282 600 280C580 279 566 275 560 268Z";
+const TENDERLOIN = "M850 322C890 304 960 300 1005 308C1000 322 960 332 900 332C875 332 858 328 850 322Z";
 
 function elkMap(cuts, done) {
   const byId = Object.fromEntries(cuts.cuts.map(c => [c.id, c]));
-  const shape = r => r.ellipse ? `<ellipse cx="${r.ellipse[0]}" cy="${r.ellipse[1]}" rx="${r.ellipse[2]}" ry="${r.ellipse[3]}" transform="rotate(-10 ${r.ellipse[0]} ${r.ellipse[1]})"` : `<path d="${r.d}"`;
+  const shape = r => r.ellipse ? `<ellipse cx="${r.ellipse[0]}" cy="${r.ellipse[1]}" rx="${r.ellipse[2]}" ry="${r.ellipse[3]}" transform="rotate(-8 ${r.ellipse[0]} ${r.ellipse[1]})"` : `<path d="${r.d}"`;
   const isDone = r => r.cuts.every(id => done.has(id));
   const regions = ELK_REGIONS.map(r => `${shape(r)} class="rg" fill="${r.color}" data-r="${r.id}" tabindex="0" role="button" aria-label="${esc(r.name || byId[r.cuts[0]]?.name || r.id)}"/>`).join("");
   const hatches = ELK_REGIONS.filter(isDone).map(r => `${shape(r)} class="done"/>`).join("");
   const labels = ELK_REGIONS.filter(r => r.label).map(r => `<text class="lbl in" x="${r.label[0]}" y="${r.label[1]}" text-anchor="middle">${r.label[2]}</text>`).join("");
-  const callouts = [...ELK_REGIONS.filter(r => r.co), { id: "tenderloin", co: { at: [625,128], to: [632,266], text: "Tenderloin" } }].map(r => {
+  const callouts = [...ELK_REGIONS.filter(r => r.co), { id: "tenderloin", co: { at: [1010,170], to: [925,318], text: "Tenderloin" } }].map(r => {
     const [x, y] = r.co.at, [tx, ty] = r.co.to, right = x > tx + 40, anchor = x < tx - 40 ? "end" : right ? "start" : "middle";
-    const ly = anchor === "middle" ? (y < ty ? y + 6 : y - 18) : y - 6;
-    return `<g class="co" data-r="${r.id}"><line x1="${anchor === "end" ? x + 6 : right ? x - 6 : x}" y1="${ly}" x2="${tx}" y2="${ty}"/><circle cx="${tx}" cy="${ty}" r="3.5"/><text class="lbl" x="${x}" y="${y}" text-anchor="${anchor}">${r.co.text}${(r.cuts || ["tenderloin"]).every(id => done.has(id)) ? " ✓" : ""}</text></g>`;
+    const ly = anchor === "middle" ? (y < ty ? y + 8 : y - 26) : y - 9;
+    return `<g class="co" data-r="${r.id}"><line x1="${anchor === "end" ? x + 8 : right ? x - 8 : x}" y1="${ly}" x2="${tx}" y2="${ty}"/><circle cx="${tx}" cy="${ty}" r="5"/><text class="lbl" x="${x}" y="${y}" text-anchor="${anchor}">${r.co.text}${(r.cuts || ["tenderloin"]).every(id => done.has(id)) ? " ✓" : ""}</text></g>`;
   }).join("");
   const total = cuts.cuts.length, nDone = cuts.cuts.filter(c => done.has(c.id)).length;
   return `<div class="map"><div>
-    <svg viewBox="-10 -40 1010 660" role="img" aria-labelledby="elk-t"><title id="elk-t">Elk cut map. Select a cut for details.</title>
+    <svg viewBox="60 40 1340 730" role="img" aria-labelledby="elk-t"><title id="elk-t">Elk cut map. Select a cut for details.</title>
       <defs>
-        <clipPath id="bodyclip"><path d="${ELK_BODY}"/></clipPath>
-        <pattern id="hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="9" height="9" fill="rgba(255,248,238,.18)"/><line x1="0" y1="0" x2="0" y2="9" stroke="rgba(255,248,238,.6)" stroke-width="3"/></pattern>
+        <mask id="elkmask" maskUnits="userSpaceOnUse" x="0" y="0" width="1344" height="768"><image href="img/elk-mask.png" width="1344" height="768"/></mask>
+        <pattern id="hatch" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="12" stroke="rgba(255,248,238,.5)" stroke-width="3"/></pattern>
+        <radialGradient id="shadow"><stop offset="0" stop-color="#000" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
       </defs>
-      <ellipse cx="560" cy="604" rx="330" ry="12" fill="var(--rule)"/>
-      <path d="${ANTLER}" transform="translate(22 -8)" fill="none" stroke="#9c8a6a" stroke-width="6" stroke-linecap="round"/>
-      <path d="M402 420C398 460 396 520 398 598L420 600C420 540 418 480 425 418Z M700 420C690 470 700 520 716 598L738 598C730 540 728 480 745 430Z" fill="#3b2f26"/>
-      <path d="${ELK_BODY}" fill="#4b3b2f"/>
-      <g clip-path="url(#bodyclip)">${regions}${hatches}<g id="hlwrap"></g></g>
-      <path d="M816 244C826 248 830 262 824 274C818 266 815 256 816 244Z" fill="#3b2f26"/>
-      <path d="M345 588L373 588L372 600L348 602ZM745 588L771 588L770 600L745 602Z" fill="#1f1813"/>
-      <ellipse cx="205" cy="112" rx="8" ry="22" transform="rotate(-35 205 112)" fill="#5a4636"/>
-      <circle cx="158" cy="150" r="4.5" fill="#120d0a"/><ellipse cx="93" cy="193" rx="8" ry="7" fill="#1f1813"/>
-      <path d="${ANTLER}" fill="none" stroke="#cdb894" stroke-width="7" stroke-linecap="round"/>
-      <path d="${TENDERLOIN}" class="rg" data-r="tenderloin" tabindex="0" role="button" aria-label="Tenderloin" fill="rgba(232,176,75,.55)" stroke="#e8b04b" stroke-width="2.5" stroke-dasharray="7 5"/>
+      <ellipse cx="880" cy="760" rx="360" ry="22" fill="url(#shadow)"/>
+      <image href="img/elk.webp" width="1344" height="768"/>
+      <g mask="url(#elkmask)" class="cutlayer">${regions}${hatches}<g id="hlwrap"></g></g>
+      <path d="${TENDERLOIN}" class="rg tl" data-r="tenderloin" tabindex="0" role="button" aria-label="Tenderloin" fill="rgba(232,176,75,.75)" stroke="#f3c463" stroke-width="3" stroke-dasharray="9 6"/>
       ${labels}${callouts}
     </svg>
-    <div class="key"><label><input type="checkbox" id="showdone" checked> Shade cuts done in 2026</label><span>Dashed = inside the body cavity</span><span>Tap or click any cut</span></div>
+    <div class="key"><label><input type="checkbox" id="showdone" checked> Shade cuts done in 2026</label><label><input type="checkbox" id="showcuts" checked> Show cuts</label><span>Dashed = inside the body cavity</span></div>
   </div>
   <aside class="panel" id="panel" aria-live="polite"><h3>2026 elk</h3><p class="pr">${nDone} of ${total} cuts done</p>
     <div class="progress"><i style="width:${(nDone / total * 100).toFixed(0)}%"></i></div>
-    <p>Pick a cut on the elk to see where it is, what to make of it and how it's packed.</p></aside></div>`;
+    <p>Tap a cut on the elk to see where it is, what to make of it and how it's packed, or to break that quarter down with photos.</p>
+    <div class="quarters" style="grid-template-columns:1fr">${cuts.primals.map(p => `<button data-q="${p.id}">${esc(p.name)}<small>${p.order.filter(id => done.has(id)).length} of ${p.order.length} done · break it down →</small></button>`).join("")}</div></aside></div>`;
 }
 
 function wireMap(cuts, done) {
@@ -213,6 +209,7 @@ function wireMap(cuts, done) {
     card.scrollIntoView({ behavior: "smooth", block: "center" }); card.classList.add("flash"); setTimeout(() => card.classList.remove("flash"), 1600);
   });
   $("#showdone").addEventListener("change", e => svg.querySelectorAll(".done").forEach(h => h.style.display = e.target.checked ? "" : "none"));
+  $("#showcuts").addEventListener("change", e => $(".cutlayer", svg).classList.toggle("off", !e.target.checked));
 }
 
 
