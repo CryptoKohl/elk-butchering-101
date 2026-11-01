@@ -5,7 +5,7 @@ set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd); OUT=${OUT:-$ROOT/../elk-101-public}
 uv run --with pillow python3 "$ROOT/tools/build_public.py" "$OUT"
 cd "$OUT"
-[ -d .git ] || { git init -q -b main; git remote add origin https://github.com/CryptoKohl/elk-101.git; }
+[ -d .git ] || { git init -q -b main; git remote add origin https://github.com/CryptoKohl/elk-101.git; git config user.name Lance; git config user.email "$(gh api user --jq .id)+CryptoKohl@users.noreply.github.com"; }
 git add -A
 git diff --cached --quiet && { echo "nothing changed"; exit 0; }
 git commit -qm "Publish $(date +%F) from elk-butchering-101 $(git -C "$ROOT" rev-parse --short HEAD)"
