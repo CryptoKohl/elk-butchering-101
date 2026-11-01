@@ -67,7 +67,7 @@ dialog { border:none; padding:0; background:transparent; max-width: 96vw } dialo
 .quarters button { text-align:left; background:var(--card); border:1px solid var(--rule); border-left:5px solid var(--rule); padding:10px 12px; cursor:pointer; color:var(--ink); font: 500 1.05rem Oswald, sans-serif; text-transform:uppercase }
 .quarters button small { display:block; font: .85rem "Source Serif 4", serif; text-transform:none; color:var(--muted) }
 .quarters button[aria-pressed=true] { border-left-color: var(--accent); background: var(--accent-soft) }
-.bd { display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1.4fr); gap:18px; align-items:start }
+.bd { display:grid; grid-template-columns: minmax(0,1.25fr) minmax(0,1fr); gap:18px; align-items:start }
 @media (max-width: 760px) { .bd { grid-template-columns: 1fr } }
 .bd ol.order { padding-left: 0; list-style:none; margin: 8px 0 } .bd ol.order > li { border:1px solid var(--rule); background:var(--card); margin-bottom:6px }
 .bd ol.order summary { padding: 8px 10px; cursor:pointer; font: 500 1.05rem Oswald, sans-serif; text-transform:uppercase; display:flex; gap:8px; align-items:center }
@@ -89,6 +89,37 @@ dialog { border:none; padding:0; background:transparent; max-width: 96vw } dialo
 label.file { display:inline-flex } label.file input { display:none }
 .preview { max-height: 120px; border-radius: 4px; border:1px solid var(--rule) }
 .empty { color: var(--muted) }
+.st.pg { color:#b5761a; border:1px solid #b5761a } .bd ol.order > li.prog { box-shadow: inset 4px 0 0 #c98a1b }
+.btn.sm { font-size:.85rem; padding: 5px 10px } .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap }
+h3.day { font: 500 1.05rem Oswald, sans-serif; text-transform:uppercase; margin: 12px 0 2px; color: var(--muted) }
+
+/* quarter photo viewer */
+.viewer { background: var(--card); border:1px solid var(--rule); padding: 10px; margin: 8px 0 14px }
+.viewer.novw p { margin:0; color: var(--muted) }
+.vtabs { display:flex; gap:6px; flex-wrap:wrap; margin-bottom: 8px }
+.vtabs button { font: 500 .9rem Oswald, sans-serif; text-transform:uppercase; border:1px solid var(--rule); background:transparent; color:var(--ink); padding: 4px 10px; cursor:pointer; border-radius:2px }
+.vtabs button[aria-pressed=true] { background: var(--ink); color: var(--card); border-color: var(--ink) }
+svg.photo { display:block; width:100%; max-height: 72vh; touch-action: manipulation; background: radial-gradient(ellipse at center, rgba(0,0,0,.06), transparent 70%) }
+.vr { cursor:pointer; stroke-width: var(--sw); stroke-linejoin: round; transition: fill-opacity .15s }
+.vr:focus { outline:none }
+.vr.cut { fill:#e07b54; fill-opacity:.18; stroke:#fff8ee; stroke-opacity:.7; stroke-dasharray: calc(var(--sw)*3) calc(var(--sw)*2) }
+.vr.cut.next { fill:#d0402a; fill-opacity:.45; stroke:#fff; stroke-opacity:1 }
+.vr.cut.prog { fill:#e3a32b; fill-opacity:.45; stroke:#fff3d6; stroke-opacity:1 }
+.vr.cut.done { fill:url(#vhatch); fill-opacity:1; stroke:#fff8ee; stroke-opacity:.6 }
+.vr.mark { fill:#35b6e0; fill-opacity:.3; stroke:#bfefff; stroke-dasharray: calc(var(--sw)*2) calc(var(--sw)*2) }
+.vr:hover, .vr:focus-visible { fill-opacity:.65 } .vr.done:hover { fill:#888; fill-opacity:.5 }
+.vr.sel { fill-opacity:.7; stroke:#fff; stroke-opacity:1; stroke-width: calc(var(--sw)*2); stroke-dasharray: none }
+.vl { cursor:pointer } .vl .hit { stroke: transparent; stroke-width: calc(var(--sw)*8); fill:none }
+.vl .ln { stroke:#e8281c; stroke-width: calc(var(--sw)*1.6); stroke-dasharray: calc(var(--sw)*4) calc(var(--sw)*3); fill:none; stroke-linecap: round }
+.vl.sel .ln, .vl:hover .ln { stroke:#fff; stroke-dasharray:none }
+.vt { font-family: Oswald, sans-serif; font-weight:600; fill:#fff8ee; paint-order: stroke; stroke: rgba(30,10,6,.8); stroke-width: .18em; pointer-events:none; text-transform: uppercase }
+.vt.done { fill:#d9d0c4 } .vt.mk { fill:#d6f5ff }
+.vkey { display:flex; flex-wrap:wrap; gap: 4px 12px; font-size:.8rem; color: var(--muted); margin-top: 6px }
+.vkey i.k { display:inline-block; width:12px; height:12px; margin-right:4px; vertical-align:-1px; border:1px solid var(--rule) }
+.k.next { background:#d0402a } .k.prog { background:#e3a32b } .k.done { background: repeating-linear-gradient(45deg,#bbb 0 3px,#eee 3px 6px) } .k.later { background: rgba(224,123,84,.3) } .k.mark { background: rgba(53,182,224,.5) } .k.line { background: linear-gradient(#e8281c,#e8281c) center/100% 3px no-repeat }
+.vcard { border-top: 1px solid var(--rule); padding-top: 8px; margin-top: 8px } .vcard h3 { margin:0; font: 600 1.15rem Oswald, sans-serif; text-transform:uppercase; display:flex; gap:8px; align-items:center } .vcard p { margin: 6px 0 } .vcard a { color: var(--accent) }
+.spin { cursor: grab; touch-action: pan-y; user-select:none } .spin:active { cursor: grabbing } .spin img { width:100%; max-height:72vh; object-fit: contain; display:block }
+.spinr { width:100% }
 </style>
 </head>
 <body>
@@ -213,9 +244,28 @@ function wireMap(cuts, done) {
 }
 
 
-// ---- Break down: pick a quarter, see its cut order, send photos to Claude for the next cut.
-let CUTS, DONE, BD = null;
-const primalOfCut = id => CUTS.primals.find(p => p.order.includes(id));
+// ---- Break down: pick the piece on the hook (shoulder #1, hindquarter #2...), see it with its cuts
+// outlined on a cut-out photo, tap a cut for how to find and take it, mark it done, and send
+// photos to Claude for the next cut drawn on them.
+let CUTS, DONE, HUNT, BD = null, VIEW = 0, SEL = null;
+const primalById = id => CUTS.primals.find(p => p.id === id);
+const cutById = id => CUTS.cuts.find(c => c.id === id);
+// Pieces come from hunt.json; a primal with none (backstrap, tenderloin) is one implicit piece.
+function pieces() {
+  return CUTS.primals.flatMap(p => {
+    const own = (HUNT.pieces || []).filter(x => x.primal === p.id);
+    return own.length ? own : [{ id: p.id, primal: p.id, name: p.name, done: p.order.filter(id => DONE.has(id)), views: [], implicit: true }];
+  });
+}
+const pieceById = id => pieces().find(x => x.id === id);
+// Next cut: the first one not done after the last one done, so cuts skipped on purpose stay behind you.
+function nextCut(piece) {
+  const order = primalById(piece.primal).order, d = new Set(piece.done);
+  const last = Math.max(-1, ...order.map((id, i) => d.has(id) ? i : -1));
+  return order.slice(last + 1).find(id => !d.has(id)) || order.find(id => !d.has(id));
+}
+const stateOf = (piece, id) => piece.done.includes(id) ? "done" : (piece.in_progress || []).includes(id) ? "prog" : id === nextCut(piece) ? "next" : "later";
+const STATE_TAG = { done: `<span class="st ok">done</span>`, prog: `<span class="st pg">in progress</span>`, next: `<span class="st nx">next</span>`, later: "" };
 const thread = id => JSON.parse(localStorage.getItem("elk-thread-" + id) || "null") || { thread: null, side: "", msgs: [] };
 const saveThread = (id, t) => localStorage.setItem("elk-thread-" + id, JSON.stringify(t));
 
@@ -224,30 +274,35 @@ function show(view) {
   document.querySelectorAll("main section").forEach(s => s.hidden = s.id !== view);
 }
 
-function openBreakdown(id) { BD = id; renderBreakdown(); show("breakdown"); window.scrollTo({ top: 0 }) }
+// From the map a primal id comes in: open its first piece that still has cuts left.
+function openBreakdown(id) {
+  const piece = pieceById(id) || pieces().find(x => x.primal === id && nextCut(x)) || pieces().find(x => x.primal === id);
+  BD = piece?.id || null; VIEW = 0; SEL = null; renderBreakdown(); show("breakdown"); window.scrollTo({ top: 0 });
+}
 
 function renderBreakdown() {
-  const byId = Object.fromEntries(CUTS.cuts.map(c => [c.id, c]));
-  const quarters = CUTS.primals.map(p => {
-    const n = p.order.filter(id => DONE.has(id)).length;
-    return `<button data-q="${p.id}" aria-pressed="${p.id === BD}">${esc(p.name)}<small>${n} of ${p.order.length} cuts done</small></button>`;
+  const all = pieces();
+  const quarters = all.map(x => {
+    const n = primalById(x.primal).order.length;
+    return `<button data-q="${x.id}" aria-pressed="${x.id === BD}">${esc(x.name)}<small>${x.done.length} of ${n} cuts done${(x.views || []).length ? " · 📷" : ""}</small></button>`;
   }).join("");
-  if (!BD) { $("#breakdown").innerHTML = `<h2>Break down a quarter</h2><p class="summary">Pick the piece on the hook. You'll get its cut order, and you can send a photo for the next cut drawn on it.</p><div class="quarters">${quarters}</div>`; return }
-  const p = CUTS.primals.find(x => x.id === BD), t = thread(BD), next = p.order.find(id => !DONE.has(id));
+  if (!BD) { $("#breakdown").innerHTML = `<h2>Break down a quarter</h2><p class="summary">Pick the piece on the hook. You'll see it with its cuts outlined, the cut order, and you can send a photo for the next cut drawn on it.</p><div class="quarters">${quarters}</div>`; return }
+  const piece = pieceById(BD), p = primalById(piece.primal), t = thread(piece.id);
   $("#breakdown").innerHTML = `<h2>Break down a quarter</h2><div class="quarters">${quarters}</div>
   <div class="bd"><div>
-    <h2 style="margin-top:0">${esc(p.name)}</h2><p class="summary">${esc(p.summary)}</p>
+    <h2 style="margin-top:0">${esc(piece.name)}</h2>
+    <div id="viewer"></div>
+    <p class="summary">${esc(p.summary)}</p>
     <ul class="marks">${p.landmarks.map(l => `<li>${esc(l)}</li>`).join("")}</ul>
-    <ol class="order">${p.order.map((id, i) => { const c = byId[id]; if (!c) return ""; const d = DONE.has(id);
-      return `<li class="${id === next ? "next" : ""}"><details ${id === next ? "open" : ""}><summary><span class="n" style="color:var(--accent)">${i + 1}</span>${esc(c.name)}${d ? `<span class="st ok">done 2026</span>` : id === next ? `<span class="st nx">next</span>` : ""}</summary>
-        <div class="body"><p><b>Find it:</b> ${esc(c.find)}</p><ol>${c.steps.map(x => `<li>${esc(x)}</li>`).join("")}</ol><p class="aka">${esc(c.pack)}</p></div></details></li>` }).join("")}</ol>
-    <p class="aka">"Done 2026" counts either side. On the second shoulder or hindquarter, start from cut 1.</p>
+    <ol class="order">${p.order.map((id, i) => { const c = cutById(id); if (!c) return ""; const st = stateOf(piece, id);
+      return `<li class="${st}" id="step-${id}"><details ${st === "next" || st === "prog" ? "open" : ""}><summary data-sel="${id}"><span class="n" style="color:var(--accent)">${i + 1}</span>${esc(c.name)}${STATE_TAG[st]}</summary>
+        <div class="body"><p><b>Find it:</b> ${esc(c.find)}</p><ol>${c.steps.map(x => `<li>${esc(x)}</li>`).join("")}</ol><p class="aka">${esc(c.pack)}</p>${doneButton(piece, id)}</div></details></li>` }).join("")}</ol>
   </div>
   <div class="chat" id="chat">
-    <div class="who">Ask Claude about this ${esc(p.name.toLowerCase())}</div>
+    <div class="who">Ask Claude about ${esc(piece.name.toLowerCase())}</div>
     <div id="msgs">${t.msgs.length ? t.msgs.map(renderMsg).join("") : `<p class="empty">Take a photo of the piece on the hook, with the whole face in frame and good light. Claude will find the landmarks, tell you the next cut and draw it on your photo.</p>`}</div>
     <form class="composer" id="composer">
-      <input type="text" name="side" placeholder="Which one? e.g. shoulder #2, left hindquarter" value="${esc(t.side)}">
+      <input type="text" name="side" placeholder="Anything to add? e.g. left side, already skinned" value="${esc(t.side)}">
       <textarea name="message" rows="2" placeholder="Optional: what you see or want to know (e.g. 'flat iron is off, what next?')"></textarea>
       <div class="row">
         <label class="file btn ghost">📷 Photo<input type="file" name="photo" accept="image/*" capture="environment"></label>
@@ -257,6 +312,107 @@ function renderBreakdown() {
       </div>
     </form>
   </div></div>`;
+  renderViewer();
+}
+
+const doneButton = (piece, id) => piece.done.includes(id)
+  ? `<button class="btn ghost sm" data-done="${id}" data-on="0">Undo: not done</button>`
+  : `<button class="btn sm" data-done="${id}" data-on="1">Mark done on ${esc(piece.name.toLowerCase())}</button>`;
+
+// The photo viewer: the cut-out quarter, each cut outlined and shaded by state. Regions are in the
+// photo's own pixels (see tools/cutout.py); the mask trims them to the meat's edge.
+function renderViewer() {
+  const box = $("#viewer"); if (!box) return;
+  const piece = pieceById(BD), views = piece.views || [], spin = piece.spin?.frames?.length;
+  if (!views.length && !spin) {
+    box.innerHTML = `<div class="viewer novw"><p><b>No photos of this one yet.</b> When it's on the hook, send a photo of the outside and one of the inside (or a 360 set) and the cuts get outlined on it here.</p></div>`;
+    return;
+  }
+  if (VIEW !== "spin" && !views[VIEW]) VIEW = 0;
+  const tabs = views.map((v, i) => `<button data-vw="${i}" aria-pressed="${i === VIEW}">${esc(v.label)}</button>`).join("") + (spin ? `<button data-vw="spin" aria-pressed="${VIEW === "spin"}">360°</button>` : "");
+  if (VIEW === "spin" || !views.length) { box.innerHTML = `<div class="viewer"><div class="vtabs">${tabs}</div>${spinner(piece.spin)}</div>`; wireSpin(); return }
+  const v = views[VIEW], [x, y, w, h] = v.box, fs = Math.round(Math.max(w, h * .6) / 17);
+  const order = primalById(piece.primal).order;
+  const pts = r => r.pts.map(q => q.join(",")).join(" ");
+  const mid = r => {  // area centroid, so labels sit inside the shape
+    let a = 0, cx = 0, cy = 0;
+    r.pts.forEach(([x1, y1], i) => { const [x2, y2] = r.pts[(i + 1) % r.pts.length], k = x1 * y2 - x2 * y1; a += k; cx += (x1 + x2) * k; cy += (y1 + y2) * k });
+    return [cx / (3 * a), cy / (3 * a)];
+  };
+  const on = r => SEL && (r.cut ? SEL === r.cut : SEL === "m" + v.regions.indexOf(r));
+  const shapes = v.regions.map((r, i) => {
+    if (r.type === "cut") return `<polygon points="${pts(r)}" class="vr cut ${stateOf(piece, r.cut)}${on(r) ? " sel" : ""}" data-sel="${r.cut}" tabindex="0" role="button" aria-label="${esc(cutById(r.cut)?.name)}"/>`;
+    if (r.type === "landmark") return `<polygon points="${pts(r)}" class="vr mark${on(r) ? " sel" : ""}" data-sel="m${i}" tabindex="0" role="button" aria-label="${esc(r.name)}"/>`;
+    return "";
+  }).join("");
+  const lines = v.regions.map((r, i) => r.type === "line" ? `<g class="vl${on(r) ? " sel" : ""}" data-sel="m${i}" tabindex="0" role="button" aria-label="${esc(r.name)}"><polyline points="${pts(r)}" class="hit"/><polyline points="${pts(r)}" class="ln"/></g>` : "").join("");
+  const seen = new Set();
+  const labels = v.regions.map((r, i) => {
+    if (r.type === "line") return "";
+    const key = r.cut || "m" + i; if (seen.has(key)) return ""; seen.add(key);
+    const [cx, cy] = mid(r), n = order.indexOf(r.cut) + 1, xs = r.pts.map(q => q[0]);
+    const full = r.cut ? `${n}. ${cutById(r.cut)?.name}` : r.name;
+    const short = r.cut && (piece.done.includes(r.cut) || full.length * fs * .5 > (Math.max(...xs) - Math.min(...xs)) * 1.1);
+    const text = short ? String(n) : full;  // done or narrow: number only, tap it for the name
+    const lx = Math.min(Math.max(cx, x + text.length * fs * .27), x + w - text.length * fs * .27);
+    return `<text class="vt${r.cut ? " " + stateOf(piece, r.cut) : " mk"}" x="${lx}" y="${cy}" font-size="${fs}" text-anchor="middle">${esc(text)}${r.cut && piece.done.includes(r.cut) ? " ✓" : ""}</text>`;
+  }).join("");
+  box.innerHTML = `<div class="viewer"><div class="vtabs">${tabs}</div>
+    <svg class="photo" viewBox="${x} ${y} ${w} ${h}" role="img" aria-label="${esc(piece.name)}, ${esc(v.label)}">
+      <defs><mask id="vmask" maskUnits="userSpaceOnUse" x="${x}" y="${y}" width="${w}" height="${h}" style="mask-type:alpha"><image href="${esc(v.img)}" x="${x}" y="${y}" width="${w}" height="${h}"/></mask>
+        <pattern id="vhatch" width="${fs * .5}" height="${fs * .5}" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="${fs * .5}" height="${fs * .5}" fill="rgba(90,90,90,.35)"/><line x1="0" y1="0" x2="0" y2="${fs * .5}" stroke="rgba(255,248,238,.85)" stroke-width="${fs * .12}"/></pattern></defs>
+      <image href="${esc(v.img)}" x="${x}" y="${y}" width="${w}" height="${h}"/>
+      <g mask="url(#vmask)" style="--sw:${(w / 200).toFixed(1)}px">${shapes}</g><g style="--sw:${(w / 200).toFixed(1)}px">${lines}</g>${labels}
+    </svg>
+    <div class="vkey"><span><i class="k next"></i>next</span><span><i class="k prog"></i>in progress</span><span><i class="k done"></i>done</span><span><i class="k later"></i>later</span><span><i class="k mark"></i>leave on</span><span><i class="k line"></i>cut line / landmark</span></div>
+    <p class="aka">${esc(v.caption || "")}${v.caption ? ". " : ""}Outlines are drawn by eye on this photo: confirm by feel before you cut.</p>
+    <div id="vinfo" aria-live="polite">${info(piece, v)}</div></div>`;
+}
+
+function info(piece, v) {
+  if (!SEL) return `<p class="empty">Tap an outlined cut or a line for what it is.</p>`;
+  if (SEL[0] === "m" && /^m\d+$/.test(SEL)) { const r = v.regions[+SEL.slice(1)]; return r ? `<div class="vcard"><h3>${esc(r.name)}</h3><p>${esc(r.note || "")}</p></div>` : "" }
+  const c = cutById(SEL), st = stateOf(piece, SEL); if (!c) return "";
+  return `<div class="vcard"><h3>${esc(c.name)} ${STATE_TAG[st]}</h3><p><b>Find it:</b> ${esc(c.find)}</p>
+    <div>${c.uses.map(u => `<span class="tag">${esc(u)}</span>`).join("")}</div>
+    <p class="row"><a href="#step-${c.id}" data-steps="${c.id}">Steps ↓</a> ${doneButton(piece, c.id)}</p></div>`;
+}
+
+// Select a cut or landmark; if this view doesn't show the cut, switch to one that does.
+function select(id, keep = false) {
+  SEL = SEL === id && !keep ? null : id;
+  const piece = pieceById(BD), views = piece.views || [];
+  if (SEL && SEL[0] !== "m" && VIEW !== "spin" && !views[VIEW]?.regions.some(r => r.cut === SEL)) {
+    const i = views.findIndex(v => v.regions.some(r => r.cut === SEL)); if (i >= 0) VIEW = i;
+  }
+  renderViewer();
+}
+
+// 360: frames shot every 30° or so; drag (or use the slider) to turn the quarter.
+function spinner(sp) {
+  return `<div class="spin" tabindex="0" aria-label="Drag to turn the quarter"><img src="${esc(sp.frames[0])}" alt="Quarter, turned" draggable="false"></div>
+    <input type="range" class="spinr" min="0" max="${sp.frames.length - 1}" value="0" aria-label="Turn">
+    <p class="aka">Drag the photo or the slider to turn it.</p>`;
+}
+function wireSpin() {
+  const sp = pieceById(BD).spin, el = $(".spin"), img = $("img", el), r = $(".spinr"), n = sp.frames.length;
+  sp.frames.forEach(f => { new Image().src = f });
+  let i = 0, x0 = null, i0 = 0;
+  const go = k => { i = ((k % n) + n) % n; img.src = sp.frames[i]; r.value = i };
+  el.addEventListener("pointerdown", e => { x0 = e.clientX; i0 = i; el.setPointerCapture(e.pointerId) });
+  el.addEventListener("pointermove", e => { if (x0 !== null) go(i0 + Math.round((e.clientX - x0) / (el.clientWidth / n / 1.5))) });
+  el.addEventListener("pointerup", () => { x0 = null });
+  el.addEventListener("keydown", e => { if (e.key === "ArrowRight") go(i + 1); if (e.key === "ArrowLeft") go(i - 1) });
+  r.addEventListener("input", () => go(+r.value));
+}
+
+async function markDone(cut, on, btn) {
+  btn.disabled = true;
+  try {
+    const res = await fetch("api/done", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ piece: BD, cut, done: on }) });
+    const r = await res.json(); if (!res.ok) throw new Error(r.error || res.statusText);
+    await load();
+  } catch (e) { btn.disabled = false; alert("Couldn't save that: " + e.message) }
 }
 
 function renderMsg(m) {
@@ -286,7 +442,7 @@ function shrink(file) {
 }
 
 async function send(form) {
-  const id = BD, t = thread(id), file = form.photo.files[0], message = form.message.value.trim(), side = form.side.value.trim();
+  const id = BD, piece = pieceById(id), t = thread(id), file = form.photo.files[0], message = form.message.value.trim(), side = form.side.value.trim();
   if (!file && !message) return;
   const btn = form.querySelector("[type=submit]"); btn.disabled = true;
   try {
@@ -296,7 +452,7 @@ async function send(form) {
     $("#msgs").innerHTML = t.msgs.map(renderMsg).join("") + renderMsg({ role: "wait" });
     if (image) [...document.querySelectorAll("#msgs .msg.you")].pop()?.insertAdjacentHTML("afterbegin", `<img src="${image}" alt="">`);
     $("#chat").scrollIntoView({ block: "end", behavior: "smooth" });
-    const res = await fetch("api/guide", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ primal: id, side, message, image, thread: t.thread }) });
+    const res = await fetch("api/guide", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ primal: piece.primal, piece: piece.implicit ? null : id, side, message, image, thread: t.thread }) });
     const r = await res.json();
     if (!res.ok) throw new Error(r.error || res.statusText);
     t.thread = r.thread; t.msgs[youIdx].img = r.photo; t.msgs.push({ role: "ai", r });
@@ -307,8 +463,18 @@ async function send(form) {
 
 $("#breakdown").addEventListener("click", e => {
   const q = e.target.closest("[data-q]"); if (q) return openBreakdown(q.dataset.q);
-  if (e.target.id === "newthread" && confirm("Start a new thread for this quarter? The old one is cleared from this device.")) { localStorage.removeItem("elk-thread-" + BD); renderBreakdown() }
+  const d = e.target.closest("[data-done]"); if (d) return markDone(d.dataset.done, d.dataset.on === "1", d);
+  const vw = e.target.closest("[data-vw]"); if (vw) { VIEW = vw.dataset.vw === "spin" ? "spin" : +vw.dataset.vw; return renderViewer() }
+  const st = e.target.closest("[data-steps]");
+  if (st) { e.preventDefault(); const li = document.getElementById("step-" + st.dataset.steps); $("details", li).open = true; li.scrollIntoView({ behavior: "smooth", block: "center" }); return }
+  const sel = e.target.closest("[data-sel]");
+  if (sel) { if (sel.closest("#viewer")) select(sel.dataset.sel); else select(sel.dataset.sel, true); return }  // order list: show it, don't toggle
+  if (e.target.id === "newthread" && confirm("Start a new thread for this piece? The old one is cleared from this device.")) { localStorage.removeItem("elk-thread-" + BD); renderBreakdown() }
   if (e.target.matches(".msg img")) zoom(e.target.src);
+});
+$("#breakdown").addEventListener("keydown", e => {
+  const sel = e.target.closest?.("#viewer [data-sel]");
+  if (sel && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); select(sel.dataset.sel) }
 });
 $("#breakdown").addEventListener("change", e => {
   if (e.target.name !== "photo") return; const f = e.target.files[0], pv = $("#preview");
@@ -317,7 +483,7 @@ $("#breakdown").addEventListener("change", e => {
 $("#breakdown").addEventListener("submit", e => { e.preventDefault(); send(e.target) });
 
 function render(cuts, hunt, log) {
-  const done = new Set(hunt.done_cuts || []);
+  const done = new Set([...(hunt.done_cuts || []), ...(hunt.pieces || []).flatMap(x => x.done)]);  // on any side
   const photosFor = id => hunt.photos.filter(p => (p.cuts || []).includes(id));
   $("#guide").innerHTML = elkMap(cuts, done) + cuts.primals.map(p => {
     const list = p.order.map(id => cuts.cuts.find(c => c.id === id)).filter(Boolean);
@@ -342,23 +508,31 @@ function render(cuts, hunt, log) {
     <div class="stats"><div><b>${lb.toFixed(1)}</b>lb logged</div><div><b>${pk}</b>packages counted</div><div><b>${hunt.remaining.length}</b>quarters left</div></div>
     <h2>Freezer log</h2><div class="table-wrap"><table><thead><tr>${cols.map(c => `<th>${c.replace("_", " ")}</th>`).join("")}</tr></thead>
     <tbody>${log.map(r => `<tr>${cols.map(c => `<td class="${["packages", "total_lb"].includes(c) ? "num" : ""}">${esc(r[c])}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
+    <h2>Quarters</h2><ul class="marks" id="hunt-pieces"></ul>
+    <h2>Day by day</h2>${(hunt.progress || []).map(d => `<h3 class="day">${esc(new Date(d.date + "T12:00").toLocaleDateString([], { weekday: "long", month: "short", day: "numeric" }))}</h3>
+      <ul class="marks">${d.done.map(x => `<li>✓ ${esc(x)}</li>`).join("")}${(d.in_progress || []).map(x => `<li>… ${esc(x)}</li>`).join("")}</ul>`).join("")}
     <h2>Still to do</h2><ul class="marks">${hunt.remaining.map(r => `<li>${esc(r)}</li>`).join("")}</ul>
     <h2>Lessons</h2><ul class="marks">${hunt.lessons.map(r => `<li>${esc(r)}</li>`).join("")}</ul>
     <h2>Handling</h2><ul class="marks">${hunt.handling.map(r => `<li>${esc(r)}</li>`).join("")}</ul>
     <h2>Photos</h2><div class="gallery">${hunt.photos.map(p => `<figure><img loading="lazy" src="${esc(p.file)}" alt="${esc(p.caption)}"><figcaption>${esc(p.caption)}</figcaption></figure>`).join("")}</div>`;
-  CUTS = cuts; DONE = done; renderBreakdown();
+  CUTS = cuts; DONE = done; HUNT = hunt; renderBreakdown();
+  $("#hunt-pieces").innerHTML = pieces().map(x => { const n = primalById(x.primal).order.length;
+    return `<li><a href="#" data-q="${x.id}">${esc(x.name)}</a>: ${x.done.length} of ${n} cuts done${(x.in_progress || []).length ? `, in progress: ${x.in_progress.map(id => esc(cutById(id)?.name || id).toLowerCase()).join(", ")}` : ""}</li>` }).join("");
   wireMap(cuts, done);
   document.querySelectorAll("#guide img, #hunt img").forEach(img => img.addEventListener("click", () => zoom(img.src)));
 }
 
 document.querySelectorAll("nav button").forEach(b => b.addEventListener("click", () => show(b.dataset.view)));
 
-Promise.all([
-  fetch("data/cuts.json").then(r => r.json()),
-  fetch("data/hunts/2026-elk/hunt.json").then(r => r.json()),
-  fetch("data/hunts/2026-elk/freezer-log.csv").then(r => r.text()).then(parseCSV),
-]).then(([c, h, l]) => render(c, h, l))
-  .catch(e => { $("#guide").textContent = "Could not load data: " + e.message });
+$("#hunt").addEventListener("click", e => { const q = e.target.closest("[data-q]"); if (q) { e.preventDefault(); openBreakdown(q.dataset.q) } });
+
+// Loaded again after "mark done", so the map, counts and order all update.
+const load = () => Promise.all([
+  fetch("data/cuts.json", { cache: "no-cache" }).then(r => r.json()),
+  fetch("data/hunts/2026-elk/hunt.json", { cache: "no-cache" }).then(r => r.json()),
+  fetch("data/hunts/2026-elk/freezer-log.csv", { cache: "no-cache" }).then(r => r.text()).then(parseCSV),
+]).then(([c, h, l]) => render(c, h, l));
+load().catch(e => { $("#guide").textContent = "Could not load data: " + e.message });
 </script>
 </body>
 </html>

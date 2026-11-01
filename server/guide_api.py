@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 """Photo guidance API for Elk Butchering 101.
 
-POST /api/guide  JSON {primal, side?, message?, image? (data URL), thread?}
+POST /api/guide  JSON {primal, piece?, side?, message?, image? (data URL), thread?}
   Saves the photo under uploads/<thread>/, asks Claude (claude -p, read-only tools)
   for the next cut on that quarter, draws the cut on the photo with tools/annotate.py,
   and returns the guidance plus the annotated image URL. A thread keeps one Claude
   session, so follow-up photos ("done, what next?") have the earlier context.
+
+POST /api/done   JSON {piece, cut, done}
+  Marks a cut done (or not) on one piece (e.g. shoulder-2) in hunt.json. A primal with no
+  pieces listed (backstrap, tenderloin) is its own piece and only done_cuts changes.
 
 Listens on 127.0.0.1:8091; nginx proxies /api/ to it. One Claude run at a time.
 """
@@ -59,16 +63,44 @@ def load(rel):
     return json.loads((ROOT / rel).read_text())
 
 
-def context(primal_id, side):
+HUNT = ROOT / "data/hunts/2026-elk/hunt.json"
+
+
+def set_done(body):
+    cuts, hunt = load("data/cuts.json"), json.loads(HUNT.read_text())
+    piece_id, cut, on = body.get("piece"), body.get("cut"), bool(body.get("done"))
+    pieces = {p["id"]: p for p in hunt.get("pieces", [])}
+    primal = next((p for p in cuts["primals"] if p["id"] == (pieces[piece_id]["primal"] if piece_id in pieces else piece_id)), None)
+    if not primal or cut not in primal["order"]:
+        raise ValueError("unknown piece or cut")
+    if piece_id in pieces:
+        p = pieces[piece_id]
+        done = set(p["done"]) - {cut} | ({cut} if on else set())
+        p["done"] = [c for c in primal["order"] if c in done]
+        if "in_progress" in p:
+            p["in_progress"] = [c for c in p["in_progress"] if c != cut]
+    on_any = on or any(cut in p["done"] for p in pieces.values())
+    done = [c for c in hunt.get("done_cuts", []) if c != cut]
+    hunt["done_cuts"] = done + [cut] if on_any else done
+    tmp = HUNT.with_suffix(".tmp")
+    tmp.write_text(json.dumps(hunt, indent=2) + "\n")
+    tmp.replace(HUNT)
+    return {"ok": True, "piece": piece_id, "cut": cut, "done": on}
+
+
+def context(primal_id, side, piece_id=None):
     cuts, hunt = load("data/cuts.json"), load("data/hunts/2026-elk/hunt.json")
     primal = next((p for p in cuts["primals"] if p["id"] == primal_id), None)
     if not primal:
         raise ValueError("unknown primal")
     by_id = {c["id"]: c for c in cuts["cuts"]}
     order = [by_id[i] for i in primal["order"] if i in by_id]
+    piece = next((p for p in hunt.get("pieces", []) if p["id"] == piece_id), None)
+    name = piece["name"] if piece else primal["name"]
     return primal, (
-        f"Lance is breaking down an elk {primal['name'].lower()}{f' ({side})' if side else ''}.\n"
-        f"Primal guide: {json.dumps({k: primal[k] for k in ('name', 'summary', 'landmarks')})}\n"
+        f"Lance is breaking down an elk {name.lower()}{f' ({side})' if side else ''}.\n"
+        + (f"On this piece: done {json.dumps(piece['done'])}, in progress {json.dumps(piece.get('in_progress', []))}.\n" if piece else "")
+        + f"Primal guide: {json.dumps({k: primal[k] for k in ('name', 'summary', 'landmarks')})}\n"
         f"Cuts in cutting order: {json.dumps(order)}\n"
         f"Cuts already done on the 2026 elk (any side): {json.dumps(hunt.get('done_cuts', []))}\n"
         f"Lessons learned: {json.dumps(hunt.get('lessons', []))}\n"
@@ -132,8 +164,8 @@ def guide(body):
     workdir = UPLOADS / thread
     workdir.mkdir(parents=True, exist_ok=True)
     meta_path = workdir / "thread.json"
-    meta = json.loads(meta_path.read_text()) if meta_path.exists() else {"primal": body.get("primal"), "session": None, "n": 0}
-    primal, ctx = context(meta["primal"] or body.get("primal"), (body.get("side") or "").strip()[:40])
+    meta = json.loads(meta_path.read_text()) if meta_path.exists() else {"primal": body.get("primal"), "piece": body.get("piece"), "session": None, "n": 0}
+    primal, ctx = context(meta["primal"] or body.get("primal"), (body.get("side") or "").strip()[:40], meta.get("piece"))
     meta["n"] += 1
     n, msg = meta["n"], (body.get("message") or "").strip()[:1000]
     photo, size = None, None
@@ -171,13 +203,14 @@ class Handler(BaseHTTPRequestHandler):
         self._send(200, {"ok": True}) if self.path == "/api/health" else self._send(404, {"error": "not found"})
 
     def do_POST(self):
-        if self.path != "/api/guide":
+        if self.path not in ("/api/guide", "/api/done"):
             return self._send(404, {"error": "not found"})
         length = int(self.headers.get("Content-Length") or 0)
         if not 0 < length <= MAX_BODY:
             return self._send(413, {"error": "photo too large"})
         try:
-            self._send(200, guide(json.loads(self.rfile.read(length))))
+            body = json.loads(self.rfile.read(length))
+            self._send(200, set_done(body) if self.path == "/api/done" else guide(body))
         except (ValueError, KeyError) as e:
             self._send(400, {"error": str(e)})
         except subprocess.TimeoutExpired:
