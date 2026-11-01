@@ -95,3 +95,15 @@ python3 tools/annotate.py spec.json
 
 - Freezer inventory: mark packages as eaten.
 - More animals: deer (GMU 511/681 tags), antelope.
+
+## Public copy (links you can hand out)
+
+`tools/build_public.py` builds a static copy with no server behind it: the cut guide, field dressing,
+and Break down with the example photos and outlines. Each person's done cuts and freezer log stay
+on their own phone (My freezer tab, with a CSV download). It leaves out Ask Claude, adding photos,
+the 2026 hunt diary and freezer log, raw photos, setup.html and the CA. Photos are re-saved without
+EXIF. `tools/publish_public.sh` builds it and pushes to the public repo CryptoKohl/elk-101 (GitHub
+Pages: https://cryptokohl.github.io/elk-101/). Re-run it after adding hindquarter photos.
+
+Field dressing content is in `data/field.json`; the Colorado evidence-of-sex rules there come from
+CPW's elk page (date in `law.checked`). Re-check them against each year's Big Game brochure.

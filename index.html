@@ -141,7 +141,7 @@ body.has-bar main { padding-bottom: calc(110px + env(safe-area-inset-bottom)) }
 .ring b { width:30px; height:30px; border-radius:50%; background:var(--card); display:grid; place-items:center; font: 600 .7rem Oswald, sans-serif; color:var(--ink) }
 .phead { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-top: 10px } .phead h2 { margin:0; border:0; flex: 1 1 auto } .phead .pr { color:var(--muted); font: 500 .9rem Oswald, sans-serif; text-transform:uppercase }
 .awake { font: .85rem "Source Serif 4", serif; border:1px solid var(--rule); background:transparent; color:var(--muted); border-radius:20px; padding: 8px 12px; min-height:40px; cursor:pointer } .awake[aria-pressed=true] { color:var(--ok); border-color:var(--ok) }
-.seg { display:grid; grid-template-columns: repeat(4, 1fr); border:1px solid var(--ink); border-radius:4px; overflow:hidden; margin: 10px 0 12px; position: sticky; top: 0; z-index: 5; background: var(--bg) }
+.seg { display:grid; grid-auto-flow: column; grid-auto-columns: 1fr; border:1px solid var(--ink); border-radius:4px; overflow:hidden; margin: 10px 0 12px; position: sticky; top: 0; z-index: 5; background: var(--bg) }
 .seg button { min-height:48px; border:0; border-left:1px solid var(--ink); background:transparent; color:var(--ink); font: 500 .95rem/1.1 Oswald, sans-serif; text-transform:uppercase; cursor:pointer; padding: 4px } .seg button:first-child { border-left:0 }
 .seg button[aria-selected=true] { background: var(--ink); color: var(--bg) }
 .focus .pr { color:var(--muted); font: 500 .9rem Oswald, sans-serif; text-transform:uppercase; margin: 0 }
@@ -180,6 +180,11 @@ details.pcards > summary { cursor:pointer; color: var(--accent); padding: 10px 0
 .gallery { grid-template-columns: repeat(auto-fill, minmax(140px,1fr)) } .gallery img.cutout { object-fit: contain; background: var(--card) }
 @media (max-width: 420px) { h3.big { font-size: 1.7rem } .seg button { font-size: .85rem } }
 [hidden] { display:none !important }
+.law { border-left: 4px solid var(--accent); background: var(--card); padding: 8px 14px; margin: 12px 0 } .law summary { cursor:pointer; font: 500 1.1rem Oswald, sans-serif; text-transform: uppercase; min-height: 44px; display:flex; align-items:center }
+.law .ev { font-size: 1.15rem; margin: 6px 0 } .law a { color: var(--accent) }
+.seg.two { position: static }
+ol.steps.check li { cursor: pointer } ol.steps.check li b { display:block } ol.steps.check li.ok { color: var(--muted) } ol.steps.check li.ok::before { content: "✓"; background: var(--ok) }
+ol.steps .why { font-size: 1.05rem } .tipbox { border-left: 4px solid #c98a1b; background: rgba(201,138,27,.12); padding: 4px 12px; margin: 8px 0; font-size: 1rem } .tipbox summary { cursor:pointer; min-height: 40px; display:flex; align-items:center; font-weight: 600 }
 .sheet label.btn { display:inline-flex; align-items:center; justify-content:center; color: var(--card); text-transform: uppercase; font: 500 1.1rem Oswald, sans-serif; margin: 0 } .sheet label.btn.ghost { color: var(--accent) }
 .vtabs .add { border-style: dashed; color: var(--accent); border-color: var(--accent) }
 .draft, .editbar { border-left: 4px solid #c98a1b; background: rgba(201,138,27,.12); padding: 8px 12px; margin: 8px 0 } .draft p, .editbar p { margin: 4px 0 }
@@ -199,12 +204,13 @@ svg.photo.editing .vr { cursor: pointer } .hdl { fill: #fff; stroke: var(--accen
   <h1>Elk Butchering <span>101</span></h1>
   <p class="sub">Cut guide and freezer log, Kohl family. Hang it, find the landmark, make one cut at a time.</p>
   <p class="install" id="install" hidden>📱 <a href="setup.html">Install it on your phone</a>: home screen, screen stays on, works without Wi-Fi. One-time setup.</p>
-  <nav><button data-view="guide" aria-pressed="true">Cut guide</button><button data-view="breakdown" aria-pressed="false">Break down</button><button data-view="hunt" aria-pressed="false">2026 elk</button></nav>
+  <nav><button data-view="guide" aria-pressed="true">Cut guide</button><button data-view="breakdown" aria-pressed="false">Break down</button><button data-view="hunt" aria-pressed="false">2026 elk</button><button data-view="field" aria-pressed="false">Field dress</button></nav>
 </header>
 <main>
   <section id="guide"></section>
   <section id="breakdown" hidden></section>
   <section id="hunt" hidden></section>
+  <section id="field" hidden></section>
 </main>
 <dialog id="zoom"><img alt=""></dialog>
 <dialog id="sheet" class="sheet"></dialog>
@@ -303,7 +309,7 @@ function wireMap(cuts, done) {
       : `<p class="pr">${esc(pr?.name)} · cut ${pr.order.indexOf(c.id) + 1} of ${pr.order.length}</p><h3>${esc(r.name || c.name)}</h3>
         ${r.name ? `<p class="aka">${esc(r.note || "")} Packed as: ${esc(c.name)}.</p>` : c.aka ? `<div class="aka">${c.aka.map(esc).join(" · ")}</div>` : ""}
         <p><b>Find it:</b> ${esc(c.find)}</p>
-        <div>${c.uses.map(u => `<span class="tag">${esc(u)}</span>`).join("")}${done.has(c.id) ? `<span class="tag done">done 2026</span>` : ""}</div>
+        <div>${c.uses.map(u => `<span class="tag">${esc(u)}</span>`).join("")}${done.has(c.id) ? `<span class="tag done">done${PUBLIC ? "" : " 2026"}</span>` : ""}</div>
         <p class="aka">${esc(c.pack)}</p><p>${link({ ...c, name: "Show the steps ↓" })}</p>`;
     panel.insertAdjacentHTML("beforeend", `<p><button class="btn" data-q="${pr.id}">Break down the ${esc(pr.name.toLowerCase())} →</button></p>`);
   };
@@ -325,6 +331,9 @@ function wireMap(cuts, done) {
 // cut (focused photo, big steps), all photos, the whole cut order, and Ask Claude. A bar fixed at the
 // bottom holds the two things you do with gloves on: mark the cut done, and send a photo.
 let CUTS, DONE, HUNT, LOG = [], BD = null, VIEW = 0, SEL = null, TAB = "next";
+// The public copy (tools/build_public.py) has no server behind it: no Claude, no photo uploads, and
+// each person's progress and freezer log live on their own phone.
+const PUBLIC = !!window.ELK_PUBLIC;
 const ZOOMS = {};  // viewBox per piece/view, kept across re-renders
 const primalById = id => CUTS.primals.find(p => p.id === id);
 const cutById = id => CUTS.cuts.find(c => c.id === id);
@@ -377,13 +386,13 @@ function renderBreakdown() {
   $("#breakdown").innerHTML = `${picker}
     <div class="phead"><h2>${esc(piece.name)}</h2><span class="pr">${piece.done.length} of ${p.order.length} cuts done</span>
       <button class="awake" id="awake" aria-pressed="${AWAKE}">${AWAKE ? "🔆 Screen stays on" : "🔅 Keep screen on"}</button></div>
-    <div class="seg" role="tablist">${[["next", "Next cut"], ["photos", "Photos"], ["all", "All cuts"], ["ask", "Ask Claude"]]
+    <div class="seg" role="tablist">${[["next", "Next cut"], ["photos", "Photos"], ["all", "All cuts"], ...(PUBLIC ? [] : [["ask", "Ask Claude"]])]
       .map(([k, l]) => `<button role="tab" data-tab="${k}" aria-selected="${TAB === k}">${l}</button>`).join("")}</div>
     <div id="pane"></div>
     <div class="actionbar">
       ${nx ? `<button class="btn big" data-done="${nx}" data-on="1">✓ Done: ${esc(cutById(nx).name)}</button>`
            : `<button class="btn big ghost" data-logpk="">All cuts done · log packages</button>`}
-      <label class="btn big ghost cam">📷 Ask<input type="file" accept="image/*" capture="environment" id="quickcam"></label>
+      ${PUBLIC ? "" : `<label class="btn big ghost cam">📷 Ask<input type="file" accept="image/*" capture="environment" id="quickcam"></label>`}
     </div>`;
   renderPane(); document.body.classList.toggle("has-bar", !$("#breakdown").hidden);
 }
@@ -398,7 +407,7 @@ function renderPane() {
       <p class="pr">Cut ${i + 1} of ${p.order.length}${stateOf(piece, nx) === "prog" ? " · in progress" : ""}</p>
       <h3 class="big">${esc(c.name)}</h3>
       ${"speechSynthesis" in window ? `<button class="btn ghost sm speak" id="speak">🔊 Read it to me</button>` : ""}
-      ${hasRegion(nx) ? `<div id="viewer" data-focus="${nx}"></div>` : (piece.views || []).length ? `<p class="aka">This cut isn't outlined on a photo yet. <a href="#" data-tab="photos">See the photos</a> or tap 📷 Ask.</p>` : ""}
+      ${hasRegion(nx) ? `<div id="viewer" data-focus="${nx}"></div>` : (piece.views || []).length ? `<p class="aka">This cut isn't outlined on a photo yet. <a href="#" data-tab="photos">See the photos</a>${PUBLIC ? "" : " or tap 📷 Ask"}.</p>` : ""}
       <p class="find"><b>Find it:</b> ${esc(c.find)}</p>
       <ol class="steps">${c.steps.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
       <p class="aka">Pack: ${esc(c.pack)}</p>
@@ -441,14 +450,14 @@ function renderViewer() {
   const box = $("#viewer"); if (!box) return;
   const piece = pieceById(BD), views = piece.views || [], spin = piece.spin?.frames?.length, focus = box.dataset.focus;
   if (!views.length && !spin) {
-    box.innerHTML = `<div class="viewer novw"><p><b>No photos of this one yet.</b> When it's on the hook, add a photo of the outside and one of the inside (or a 360 set). Claude outlines the cuts on them for you to check.</p>
+    box.innerHTML = PUBLIC ? `<div class="viewer novw"><p><b>No example photos of this one yet.</b> Use the steps below; the cut guide's map shows where it sits on the elk.</p></div>` : `<div class="viewer novw"><p><b>No photos of this one yet.</b> When it's on the hook, add a photo of the outside and one of the inside (or a 360 set). Claude outlines the cuts on them for you to check.</p>
       ${piece.implicit ? "" : `<p><button class="btn big" data-addphoto>📷 Add photos</button></p>`}</div>`;
     return;
   }
   let vi = VIEW;
   if (focus) vi = views.findIndex(v => v.regions.some(r => r.cut === focus));
   if (vi !== "spin" && !views[vi]) vi = VIEW = 0;
-  const tabs = focus ? "" : `<div class="vtabs">${views.map((v, i) => `<button data-vw="${i}" aria-pressed="${i === vi}">${esc(v.label)}${v.draft ? " •" : ""}</button>`).join("")}${spin ? `<button data-vw="spin" aria-pressed="${vi === "spin"}">360°</button>` : ""}${piece.implicit ? "" : `<button class="add" data-addphoto>＋ Add photos</button>`}</div>`;
+  const tabs = focus ? "" : `<div class="vtabs">${views.map((v, i) => `<button data-vw="${i}" aria-pressed="${i === vi}">${esc(v.label)}${v.draft ? " •" : ""}</button>`).join("")}${spin ? `<button data-vw="spin" aria-pressed="${vi === "spin"}">360°</button>` : ""}${piece.implicit || PUBLIC ? "" : `<button class="add" data-addphoto>＋ Add photos</button>`}</div>`;
   if (vi === "spin") { box.innerHTML = `<div class="viewer">${tabs}${spinner(piece.spin)}</div>`; wireSpin(); return }
   const v = views[vi], [x, y, w, h] = v.box, fs = Math.round(Math.max(w, h * .6) / 17);
   const editing = !focus && EDIT?.vid === v.id, regs = editing ? EDIT.regions : v.regions;
@@ -506,9 +515,9 @@ function renderViewer() {
     </div>
     ${editing ? editBar(piece, regs) : focus ? "" : v.draft ? draftBar(v) : ""}
     ${focus || editing ? "" : `<div class="vkey"><span><i class="k next"></i>next</span><span><i class="k prog"></i>in progress</span><span><i class="k done"></i>done</span><span><i class="k later"></i>later</span><span><i class="k mark"></i>leave on</span><span><i class="k line"></i>cut line / landmark</span></div>`}
-    <p class="aka">${focus ? "" : esc(v.caption || "") + (v.caption ? ". " : "")}Outlines are drawn by eye: confirm by feel before you cut. Pinch or double-tap to zoom.</p>
+    <p class="aka">${PUBLIC ? "Example photo from a 2026 bull elk; yours will look close to this. " : ""}${focus ? "" : esc(v.caption || "") + (v.caption ? ". " : "")}Outlines are drawn by eye: confirm by feel before you cut. Pinch or double-tap to zoom.</p>
     ${focus || editing ? "" : `<div id="vinfo" aria-live="polite">${info(piece, v)}</div>`}
-    ${focus || editing || v.draft || piece.implicit ? "" : `<p class="vmanage"><a href="#" data-vact="edit">Fix outlines</a> · <a href="#" data-vact="redraw">Have Claude redraw them</a> · <a href="#" data-vact="delete">Delete this photo</a></p>`}</div>`;
+    ${focus || editing || v.draft || piece.implicit || PUBLIC ? "" : `<p class="vmanage"><a href="#" data-vact="edit">Fix outlines</a> · <a href="#" data-vact="redraw">Have Claude redraw them</a> · <a href="#" data-vact="delete">Delete this photo</a></p>`}</div>`;
   wireZoom($("svg.photo", box));
   if (editing) wireEdit($("svg.photo", box));
 }
@@ -703,10 +712,12 @@ function photoSheet() {
 
 // Read the next cut aloud, highlighting each step as it's read.
 function speakSteps(btn) {
-  const ss = speechSynthesis, reset = () => { document.querySelectorAll("ol.steps li.reading").forEach(l => l.classList.remove("reading")); btn.textContent = "🔊 Read it to me" };
+  const c = cutById(nextCut(pieceById(BD))), lis = [...document.querySelectorAll("#breakdown ol.steps li")];
+  speakList(btn, [[c.name + ".", null], ["Find it. " + c.find, null], ...c.steps.map((x, i) => [`Step ${i + 1}. ${x}`, lis[i]])]);
+}
+function speakList(btn, parts) {
+  const ss = speechSynthesis, lis = parts.map(x => x[1]).filter(Boolean), reset = () => { lis.forEach(l => l.classList.remove("reading")); btn.textContent = "🔊 Read it to me" };
   if (ss.speaking) { ss.cancel(); return reset() }
-  const c = cutById(nextCut(pieceById(BD))), lis = [...document.querySelectorAll("ol.steps li")];
-  const parts = [[c.name + ".", null], ["Find it. " + c.find, null], ...c.steps.map((x, i) => [`Step ${i + 1}. ${x}`, lis[i]])];
   btn.textContent = "⏹ Stop reading";
   parts.forEach(([text, li], i) => {
     const u = new SpeechSynthesisUtterance(text); u.rate = .95;
@@ -729,6 +740,7 @@ function applyLocal(path, body) {
   if (path === "api/log") LOG.push(body);
 }
 async function api(path, body) {
+  if (PUBLIC) { applyLocal(path, body); saveMine(); return {} }
   try {
     const res = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
     const r = await res.json().catch(() => ({}));
@@ -754,13 +766,27 @@ function netBanner(offline) {
   el.hidden = !n && !offline;
   el.textContent = n ? `Offline: ${n} change${n > 1 ? "s" : ""} saved on this phone, sending when the Wi-Fi is back.` : "Offline: showing the last saved data.";
 }
-addEventListener("online", flush); setInterval(flush, 20000);
+if (!PUBLIC) { addEventListener("online", flush); setInterval(flush, 20000) }
+
+// Public copy: what you've cut and packed, kept in this browser only.
+const MKEY = "elk-mine";
+const saveMine = () => localStorage.setItem(MKEY, JSON.stringify({ pieces: Object.fromEntries((HUNT.pieces || []).map(x => [x.id, x.done])), done_cuts: HUNT.done_cuts || [], log: LOG }));
+function applyMine(h) {
+  const m = JSON.parse(localStorage.getItem(MKEY) || "null") || { pieces: {}, done_cuts: [], log: [] };
+  (h.pieces || []).forEach(x => { x.done = m.pieces[x.id] || []; x.in_progress = [] });
+  h.done_cuts = m.done_cuts; return m.log;
+}
+function downloadLog() {
+  const cols = ["date", "source", "cut", "packages", "package_size", "total_lb", "packaging", "notes"], q = v => /[",\n]/.test(v ?? "") ? `"${String(v).replace(/"/g, '""')}"` : (v ?? "");
+  const a = Object.assign(document.createElement("a"), { download: "freezer-log.csv", href: URL.createObjectURL(new Blob([[cols, ...LOG.map(r => cols.map(c => r[c]))].map(r => r.map(q).join(",")).join("\n") + "\n"], { type: "text/csv" })) });
+  a.click(); URL.revokeObjectURL(a.href);
+}
 
 async function markDone(cut, on, btn) {
   if (btn) btn.disabled = true;
   try {
     await api("api/done", { piece: BD, cut, done: on });
-    if (queue().length) refresh(); else await load();
+    if (PUBLIC || queue().length) refresh(); else await load();
     if (on) packSheet(cut, true);
   } catch (e) { if (btn) btn.disabled = false; alert("Couldn't save that: " + e.message) }
 }
@@ -791,7 +817,7 @@ function packSheet(cut, justDone) {
     if (d.returnValue !== "save") return;
     const f = new FormData($("#packform", d));
     const row = { date: new Date().toLocaleDateString("en-CA"), source: piece.name.toLowerCase(), cut: f.get("cut"), packages: f.get("packages"), package_size: "", total_lb: f.get("total_lb"), packaging: f.get("packaging"), notes: f.get("notes") };
-    try { const r = await api("api/log", row); toast(r.queued ? "Saved on this phone; it goes to the freezer log when the Wi-Fi is back." : "Added to the freezer log."); if (!r.queued) load(); else refresh() }
+    try { const r = await api("api/log", row); toast(r.queued ? "Saved on this phone; it goes to the freezer log when the Wi-Fi is back." : PUBLIC ? "Added to your freezer log on this phone." : "Added to the freezer log."); if (!r.queued && !PUBLIC) load(); else refresh() }
     catch (e) { alert("Couldn't save that: " + e.message) }
   };
 }
@@ -900,6 +926,39 @@ $("#breakdown").addEventListener("submit", e => {
   send(f.photo.files[0], f.message.value.trim(), f.side.value.trim(), f.querySelector("[type=submit]"));
 });
 
+// ---- Field dressing: bull or cow, gutless or gut it whole, each step ticked off with a tap.
+let FIELD;
+const fstate = () => JSON.parse(localStorage.getItem("elk-field") || "null") || { sex: "bull", method: "gutless", done: [] };
+function renderField() {
+  if (!FIELD) return;
+  const st = fstate(), sx = FIELD.sexes[st.sex], m = FIELD.methods.find(x => x.id === st.method) || FIELD.methods[0], L = FIELD.law;
+  const seg = (key, opts) => `<div class="seg two" role="tablist">${opts.map(([k, l]) => `<button role="tab" data-f${key}="${k}" aria-selected="${st[key] === k}">${esc(l)}</button>`).join("")}</div>`;
+  const tip = id => { const t = FIELD.tips[id]; return t ? `<details class="tipbox"><summary>💡 ${esc(t.title)}</summary><ul class="marks">${t.items.map(i => `<li>${esc(i)}</li>`).join("")}</ul></details>` : "" };
+  $("#field").innerHTML = `<h2>Field dressing</h2><p class="summary">${esc(FIELD.intro)}</p>
+    ${seg("sex", Object.entries(FIELD.sexes).map(([k, v]) => [k, v.label]))}${seg("method", FIELD.methods.map(x => [x.id, x.name]))}
+    <details class="law" open><summary>⚖️ ${esc(L.title)}: ${esc(sx.label.toLowerCase())}</summary>
+      <p class="ev"><b>${esc(sx.evidence)}</b></p><ol>${sx.how.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
+      <details class="pcards"><summary>All the Colorado rules</summary><ul class="marks">${L.rules.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+      <p class="aka">${esc(L.note)} From <a href="${esc(L.source)}" target="_blank" rel="noopener">CPW's elk page</a>, checked ${esc(L.checked)}.</p></details></details>
+    <p class="summary">${esc(m.summary)}</p>
+    <p class="row">${"speechSynthesis" in window ? `<button class="btn ghost sm" id="fspeak">🔊 Read it to me</button>` : ""}${st.done.length ? `<button class="btn ghost sm" id="freset">Clear the ticks</button>` : ""}</p>
+    <ol class="steps check">${m.steps.map((x, i) => { const k = m.id + i;
+      return `<li data-fk="${k}" class="${st.done.includes(k) ? "ok" : ""}"><b>${esc(x.t)}</b><span class="why">${esc(x.d)}${x.sex ? ` <i>${esc(sx.evidence)}</i>` : ""}</span>${x.tip ? tip(x.tip) : ""}</li>` }).join("")}</ol>
+    <h2>Tips</h2>${Object.keys(FIELD.tips).map(tip).join("")}`;
+}
+$("#field").addEventListener("click", e => {
+  const st = fstate(), save = () => { localStorage.setItem("elk-field", JSON.stringify(st)); renderField() };
+  const b = e.target.closest("[data-fsex],[data-fmethod]");
+  if (b) { speechSynthesis?.cancel(); if (b.dataset.fsex) st.sex = b.dataset.fsex; else st.method = b.dataset.fmethod; return save() }
+  if (e.target.id === "freset") { st.done = []; return save() }
+  if (e.target.id === "fspeak") { const m = FIELD.methods.find(x => x.id === st.method) || FIELD.methods[0], lis = [...document.querySelectorAll("#field ol.steps li")];
+    return speakList(e.target, m.steps.map((x, i) => [`Step ${i + 1}. ${x.t} ${x.d}${x.sex ? " " + FIELD.sexes[st.sex].evidence : ""}`, lis[i]])) }
+  if (e.target.closest("summary, a, .tipbox")) return;
+  const li = e.target.closest("[data-fk]"); if (li) { const k = li.dataset.fk; st.done = st.done.includes(k) ? st.done.filter(x => x !== k) : [...st.done, k]; save() }
+});
+fetch("data/field.json", { cache: "no-cache" }).then(r => r.json()).then(f => { FIELD = f; localStorage.setItem("elk-field-data", JSON.stringify(f)); renderField() })
+  .catch(() => { FIELD = JSON.parse(localStorage.getItem("elk-field-data") || "null"); renderField() });
+
 // ---- Freezer numbers for the 2026 elk tab: pounds and packages by kind of cut.
 const KINDS = [["Steaks", /steak|filet/i], ["Roasts", /roast|tender/i], ["Grind", /grind|trim|burger/i], ["Stew and other", /./]];
 function freezer(log) {
@@ -933,7 +992,7 @@ function render(cuts, hunt, log) {
         ${c.aka ? `<div class="aka">${c.aka.map(esc).join(" · ")}</div>` : ""}
         <p><b>Find it:</b> ${esc(c.find)}</p>
         <ol>${c.steps.map(s => `<li>${esc(s)}</li>`).join("")}</ol>
-        <div>${c.uses.map(u => `<span class="tag">${esc(u)}</span>`).join("")}${done.has(c.id) ? `<span class="tag done">done 2026</span>` : ""}</div>
+        <div>${c.uses.map(u => `<span class="tag">${esc(u)}</span>`).join("")}${done.has(c.id) ? `<span class="tag done">done${PUBLIC ? "" : " 2026"}</span>` : ""}</div>
         <p class="aka">${esc(c.pack)}</p>
         ${photosFor(c.id).length ? `<div class="thumbs">${photosFor(c.id).map(ph => `<img loading="lazy" src="${esc(ph.file)}" alt="${esc(ph.caption)}" title="${esc(ph.caption)}">`).join("")}</div>` : ""}
       </article>`).join("")}</div></details>`;
@@ -943,7 +1002,24 @@ function render(cuts, hunt, log) {
   const pk = log.reduce((s, r) => s + (parseInt(r.packages) || 0), 0);
   const nCuts = pieces().reduce((s, x) => s + primalById(x.primal).order.length, 0), nDone = pieces().reduce((s, x) => s + x.done.length, 0);
   const cols = ["date", "source", "cut", "packages", "package_size", "total_lb", "notes"];
-  $("#hunt").innerHTML = `<h2>${esc(hunt.title)}</h2>
+  if (PUBLIC) $("#hunt").innerHTML = `<h2>My freezer</h2>
+    <p class="summary">Kept on this phone only. Every cut you mark done and every package you log shows up here.</p>
+    <div class="tiles">
+      <div class="tile"><b>${lb.toFixed(1)}</b><span>lb weighed</span></div>
+      <div class="tile"><b>${pk}</b><span>packages</span></div>
+      <div class="tile"><b>${nDone}<small>/${nCuts}</small></b><span>cuts done</span></div>
+      <div class="tile"><b>${pieces().filter(x => nextCut(x)).length}</b><span>pieces left</span></div>
+    </div>
+    ${log.length ? `<h2>In the freezer</h2>${freezer(log)}
+    <details class="pcards"><summary>Freezer log, every entry (${log.length})</summary>
+    <div class="table-wrap"><table><thead><tr>${cols.map(c => `<th>${c.replace("_", " ")}</th>`).join("")}</tr></thead>
+    <tbody>${log.map(r => `<tr>${cols.map(c => `<td class="${["packages", "total_lb"].includes(c) ? "num" : ""}">${esc(r[c])}</td>`).join("")}</tr>`).join("")}</tbody></table></div></details>
+    <p class="row"><button class="btn ghost sm" id="csv">Download the log (spreadsheet)</button></p>` : `<p class="aka">Nothing logged yet. After you mark a cut done you can log its packages.</p>`}
+    <h2>Quarters</h2><div class="plist">${pieces().map(x => { const n = primalById(x.primal).order.length, nx = nextCut(x);
+      return `<a href="#" data-q="${x.id}" class="prow">${ring(x.done.length, n)}<span><b>${esc(x.name)}</b><small>${nx ? `next: ${esc(cutById(nx)?.name.toLowerCase())}` : "all done"}</small></span></a>` }).join("")}</div>
+    <h2>Lessons</h2><ul class="marks">${hunt.lessons.map(r => `<li>${esc(r)}</li>`).join("")}</ul>
+    <p class="row"><button class="btn ghost sm" id="reset">Start a new animal (clear this phone)</button></p>`;
+  else $("#hunt").innerHTML = `<h2>${esc(hunt.title)}</h2>
     <p class="summary">Harvested ${esc(new Date(hunt.harvested).toLocaleString([], { weekday: "long", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }))} · ${esc(hunt.tag)}</p>
     <div class="tiles">
       <div class="tile"><b>${lb.toFixed(1)}</b><span>lb weighed</span></div>
@@ -969,16 +1045,42 @@ function render(cuts, hunt, log) {
 
 document.querySelectorAll("nav button").forEach(b => b.addEventListener("click", () => { if (b.dataset.view === "breakdown" && !BD) renderBreakdown(); show(b.dataset.view) }));
 
-$("#hunt").addEventListener("click", e => { const q = e.target.closest("[data-q]"); if (q) { e.preventDefault(); openBreakdown(q.dataset.q) } });
+$("#hunt").addEventListener("click", e => {
+  const q = e.target.closest("[data-q]"); if (q) { e.preventDefault(); openBreakdown(q.dataset.q) }
+  if (e.target.id === "csv") downloadLog();
+  if (e.target.id === "reset" && confirm("Clear every done cut and the whole freezer log from this phone? Download the log first if you want to keep it.")) { localStorage.removeItem(MKEY); BD = null; load() }
+});
 
 // The installed app runs over https (see setup.html); on the plain http address, point to the setup.
 if (isSecureContext && "serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 else if (location.protocol === "http:" && !/^(localhost|127\.)/.test(location.hostname)) $("#install").hidden = false;
+if (PUBLIC) {
+  $(".sub").textContent = "Cut guide, quarter-by-quarter breakdown and freezer log for elk. Hang it, find the landmark, make one cut at a time.";
+  $("nav [data-view=hunt]").textContent = "My freezer";
+  const inst = $("#install"), standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  let prompt = null;
+  const paint = () => {
+    const ios = /iPhone|iPad|iPod/.test(navigator.userAgent);
+    inst.innerHTML = [standalone ? "" : prompt ? `📱 <a href="#" id="inst">Install the app</a>: home screen, works without signal.` : ios ? "📱 To install: tap Share, then <b>Add to Home Screen</b>." : "",
+      navigator.share ? `<a href="#" id="share">Share this app</a>` : ""].filter(Boolean).join(" · ");
+    inst.hidden = !inst.innerHTML;
+  };
+  addEventListener("beforeinstallprompt", e => { e.preventDefault(); prompt = e; paint() });
+  inst.addEventListener("click", async e => {
+    e.preventDefault();
+    if (e.target.id === "inst" && prompt) { prompt.prompt(); await prompt.userChoice; prompt = null; paint() }
+    if (e.target.id === "share") navigator.share({ title: "Elk Butchering 101", text: "Elk cut guide and breakdown, step by step.", url: location.origin + location.pathname }).catch(() => {});
+  });
+  paint();
+}
 
 // Loaded again after "mark done", so the map, counts and order all update. The last good copy is kept
 // on the phone, so the page still works if the garage Wi-Fi drops.
 const CKEY = "elk-cache";
-const load = () => Promise.all([
+const load = () => PUBLIC ? Promise.all([
+  fetch("data/cuts.json", { cache: "no-cache" }).then(r => r.json()),
+  fetch("data/example.json", { cache: "no-cache" }).then(r => r.json()),
+]).then(([c, h]) => { localStorage.setItem(CKEY, JSON.stringify({ c, h })); render(c, h, applyMine(h)) }) : Promise.all([
   fetch("data/cuts.json", { cache: "no-cache" }).then(r => r.json()),
   fetch("data/hunts/2026-elk/hunt.json", { cache: "no-cache" }).then(r => r.json()),
   fetch("data/hunts/2026-elk/freezer-log.csv", { cache: "no-cache" }).then(r => r.text()).then(parseCSV),
@@ -991,6 +1093,7 @@ function applyQueued(h, l) { HUNT = h; LOG = l; queue().forEach(x => applyLocal(
 load().catch(e => {
   const c = JSON.parse(localStorage.getItem(CKEY) || "null");
   if (!c) { $("#guide").textContent = "Could not load data: " + e.message; return }
+  if (PUBLIC) return render(c.c, c.h, applyMine(c.h));
   applyQueued(c.h, c.l); render(c.c, c.h, c.l); netBanner(true);
 });
 </script>
