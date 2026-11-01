@@ -808,7 +808,297 @@
       "primal": "hindquarter",
       "name": "Hindquarter #1",
       "done": [],
-      "views": []
+      "views": [
+        {
+          "id": "inside-20261101-132947",
+          "label": "Inside",
+          "img": "photos/2026-elk/cut/hind-1-inside-20261101-132947.webp",
+          "box": [
+            474,
+            306,
+            387,
+            1343
+          ],
+          "raw": "photos/2026-elk/raw/hind-1-inside-20261101-132947.jpg",
+          "caption": "Hindquarter #1, inside face. Hung by the hock, so the shank is at the top and the hip end is at the bottom. No cuts are off yet.",
+          "regions": [
+            {
+              "type": "cut",
+              "cut": "hind-shank",
+              "pts": [
+                [
+                  598,
+                  318
+                ],
+                [
+                  762,
+                  318
+                ],
+                [
+                  758,
+                  520
+                ],
+                [
+                  774,
+                  690
+                ],
+                [
+                  766,
+                  790
+                ],
+                [
+                  600,
+                  780
+                ]
+              ]
+            },
+            {
+              "type": "line",
+              "name": "Knee (stifle), approx.",
+              "note": "Feel for the joint here, then cut through it to take the shank off.",
+              "pts": [
+                [
+                  612,
+                  775
+                ],
+                [
+                  655,
+                  790
+                ],
+                [
+                  705,
+                  785
+                ]
+              ]
+            },
+            {
+              "type": "cut",
+              "cut": "top-round",
+              "pts": [
+                [
+                  590,
+                  900
+                ],
+                [
+                  680,
+                  840
+                ],
+                [
+                  760,
+                  880
+                ],
+                [
+                  800,
+                  1000
+                ],
+                [
+                  830,
+                  1150
+                ],
+                [
+                  830,
+                  1300
+                ],
+                [
+                  760,
+                  1385
+                ],
+                [
+                  640,
+                  1420
+                ],
+                [
+                  530,
+                  1400
+                ],
+                [
+                  500,
+                  1270
+                ],
+                [
+                  530,
+                  1100
+                ]
+              ]
+            },
+            {
+              "type": "line",
+              "name": "Femur (approx.)",
+              "note": "Feel for the bone. Every round muscle comes off along the seams around it.",
+              "pts": [
+                [
+                  655,
+                  800
+                ],
+                [
+                  680,
+                  1000
+                ],
+                [
+                  700,
+                  1200
+                ],
+                [
+                  730,
+                  1420
+                ]
+              ]
+            },
+            {
+              "type": "landmark",
+              "name": "Hip end (cut face)",
+              "note": "Ball-joint end. The top sirloin comes off here.",
+              "pts": [
+                [
+                  680,
+                  1420
+                ],
+                [
+                  760,
+                  1400
+                ],
+                [
+                  830,
+                  1430
+                ],
+                [
+                  830,
+                  1560
+                ],
+                [
+                  800,
+                  1620
+                ],
+                [
+                  740,
+                  1610
+                ],
+                [
+                  700,
+                  1520
+                ]
+              ]
+            }
+          ],
+          "draft": true,
+          "unsure": "I can't see the femur in this photo, so the femur line is my guess along the middle of the leg. The knee line is a guess too: I put it where the narrow shank widens into the round. Feel for the joint before you cut. I didn't outline the bottom round or eye of round because they're on the outside/back of the leg and don't show from this side. I didn't outline the sirloin tip either: I can't tell which edge is the front of the leg in this photo. The ragged dark area at the bottom right looks like the cut face at the hip, where the top sirloin should be. I marked it as a landmark, not a cut, because I can't see where the sirloin's seams are. The top round outline is a rough edge of the big inside muscle. I can't see the seam between it and the sirloin tip."
+        },
+        {
+          "id": "outside-20261101-132947",
+          "label": "Outside",
+          "img": "photos/2026-elk/cut/hind-1-outside-20261101-132947.webp",
+          "box": [
+            452,
+            0,
+            492,
+            1579
+          ],
+          "raw": "photos/2026-elk/raw/hind-1-outside-20261101-132947.jpg",
+          "caption": "Hindquarter #1, outside face. It hangs by the hock, so the shank is at the top and the hip/sirloin end is at the bottom. No cuts are off yet.",
+          "regions": [
+            {
+              "type": "cut",
+              "cut": "hind-shank",
+              "pts": [
+                [
+                  560,
+                  235
+                ],
+                [
+                  665,
+                  235
+                ],
+                [
+                  675,
+                  420
+                ],
+                [
+                  735,
+                  600
+                ],
+                [
+                  750,
+                  850
+                ],
+                [
+                  690,
+                  872
+                ],
+                [
+                  560,
+                  835
+                ],
+                [
+                  548,
+                  700
+                ],
+                [
+                  585,
+                  480
+                ]
+              ]
+            },
+            {
+              "type": "line",
+              "name": "Knee (stifle), approx.",
+              "note": "Find the joint by feel. Cut the shank off through the joint, not through bone.",
+              "pts": [
+                [
+                  560,
+                  830
+                ],
+                [
+                  680,
+                  870
+                ],
+                [
+                  800,
+                  850
+                ]
+              ]
+            },
+            {
+              "type": "landmark",
+              "name": "Hip end (ball joint)",
+              "note": "The top sirloin sits over this. Cut it off the hip bone along the seam.",
+              "pts": [
+                [
+                  640,
+                  1440
+                ],
+                [
+                  760,
+                  1440
+                ],
+                [
+                  760,
+                  1530
+                ],
+                [
+                  640,
+                  1530
+                ]
+              ]
+            }
+          ],
+          "draft": true,
+          "unsure": "I couldn't trace the seams on this outside face well enough to split the bottom round from the eye of round, so the bottom-round shape is a rough outline of the big outside muscle. From this view I also can't tell which edge is the front (sirloin tip) and which is the back (bottom round/eye). The cut red edge on the left (around x 490-540, y 1000-1150) is probably the flank side, which would put the sirloin tip on the left, but please confirm by feel before cutting. The top round is on the inside face and isn't drawn. The knee line is an estimate taken from where the shank flares into the round. Find the stifle by feel. The top-sirloin outline at the bottom is approximate."
+        }
+      ],
+      "spin": {
+        "frames": [
+          "photos/2026-elk/cut/hind-1-360-20261101-133149-00.webp",
+          "photos/2026-elk/cut/hind-1-360-20261101-133149-01.webp",
+          "photos/2026-elk/cut/hind-1-360-20261101-133149-02.webp",
+          "photos/2026-elk/cut/hind-1-360-20261101-133149-03.webp",
+          "photos/2026-elk/cut/hind-1-360-20261101-133149-04.webp",
+          "photos/2026-elk/cut/hind-1-360-20261101-133149-05.webp",
+          "photos/2026-elk/cut/hind-1-360-20261101-133149-06.webp",
+          "photos/2026-elk/cut/hind-1-360-20261101-133149-07.webp",
+          "photos/2026-elk/cut/hind-1-360-20261101-133149-08.webp"
+        ],
+        "set": "hind1-a"
+      }
     },
     {
       "id": "hind-2",

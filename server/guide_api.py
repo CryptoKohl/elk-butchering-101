@@ -11,7 +11,7 @@ POST /api/done   JSON {piece, cut, done}
   Marks a cut done (or not) on one piece (e.g. shoulder-2) in hunt.json. A primal with no
   pieces listed (backstrap, tenderloin) is its own piece and only done_cuts changes.
 
-POST /api/photo  JSON {piece, kind: "view"|"spin", label, image (data URL), frame?, frames?}
+POST /api/photo  JSON {piece, kind: "view"|"spin", label, image (data URL), frame?, frames?, set?}
   Adds a photo to a piece in the background: cut it out (tools/cutout.py), and for a view have
   Claude draft the cut outlines on it. Returns {job}; GET /api/job/<id> reports progress.
 POST /api/view   JSON {piece, view, action: "approve"|"save"|"redraw"|"delete", regions?, note?}
@@ -217,6 +217,7 @@ def add_photo(body):
     stamp = time.strftime("%Y%m%d-%H%M%S")
     slug = re.sub(r"[^a-z0-9]+", "-", label.lower()).strip("-") or "photo"
     frame = int(body.get("frame") or 0)
+    set_id = re.sub(r"[^\w-]", "", str(body.get("set") or stamp))[:40]  # every frame of one 360 set carries the same id
     name = f"{piece['id']}-{slug}-{stamp}" + (f"-{frame:02d}" if kind == "spin" else "")
     raw = PHOTOS / "raw" / f"{name}.jpg"
     raw.write_bytes(base64.b64decode(str(body.get("image") or "").split(",", 1)[-1]))
@@ -229,10 +230,11 @@ def add_photo(body):
         if kind == "spin":
             def put(hunt):
                 p = next(p for p in hunt["pieces"] if p["id"] == piece["id"])
-                frames = p.setdefault("spin", {}).setdefault("frames", [])
+                spin = p.setdefault("spin", {})
                 total = int(body.get("frames") or 0)
-                if frame == 0:
-                    frames.clear()
+                if spin.get("set") != set_id:  # a new 360 set replaces the old one; frames finish in any order
+                    spin["set"], spin["frames"] = set_id, []
+                frames = spin["frames"]
                 frames.extend([""] * max(0, frame + 1 - len(frames)))
                 frames[frame] = img
                 if total:

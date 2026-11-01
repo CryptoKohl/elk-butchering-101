@@ -693,11 +693,11 @@ function photoSheet() {
     if (!e.target.files?.length) return;
     const files = [...e.target.files], kind = f.kind.value, spin = kind === "360";
     const label = spin ? "360" : kind === "Other" ? (f.label.value.trim() || "Photo") : kind;
-    let lastView = null, ok = 0;
+    let lastView = null, ok = 0; const set = "s" + Date.now();
     for (const [i, file] of files.entries()) {
       const li = document.createElement("li"); li.textContent = `${spin ? "Frame " + (i + 1) : label}: uploading…`; $("#jobs", d).append(li);
       try {
-        const { job } = await post("api/photo", { piece: BD, kind: spin ? "spin" : "view", label, image: await shrink(file, 2000), frame: i, frames: files.length });
+        const { job } = await post("api/photo", { piece: BD, kind: spin ? "spin" : "view", label, image: await shrink(file, 2000), frame: i, frames: files.length, set });
         const j = await pollJob(job, j => { li.textContent = `${spin ? "Frame " + (i + 1) : label}: ${JOB_TEXT[j.state] || j.state}${j.state === "error" ? j.error : ""}` });
         if (j.state === "done") { ok++; lastView = j.view || lastView }
       } catch (err) { li.textContent = `${spin ? "Frame " + (i + 1) : label}: ✗ ${err.message}` }
