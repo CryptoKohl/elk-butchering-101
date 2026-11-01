@@ -33,7 +33,7 @@ A piece's `views` are cut-out photos with the cuts outlined on them:
 
 ```sh
 # raw photos go in photos/<hunt>/raw/ (not in git); @x0,y0,x1,y1 erases a box of junk first
-uv run --with "rembg[cpu]" --with scipy tools/cutout.py photos/2026-elk/cut s2-outside=photos/2026-elk/raw/s2-outside.jpg
+uv run --with "rembg[cpu]" --with scipy --with opencv-python-headless tools/cutout.py photos/2026-elk/cut s2-outside=photos/2026-elk/raw/s2-outside.jpg
 ```
 
 It prints the `img` and `box` for the view. Region points are in the photo shrunk to fit 1500x2000
