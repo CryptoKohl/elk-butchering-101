@@ -22,7 +22,16 @@ with read-only tools, using the Claude login on Kassandra. Uploaded photos stay 
 The elk on the cut map (`img/elk.webp`) was generated locally with RealVisXL (SDXL) on the RTX 4070 (`~/ai/sdxl/gen.py`)
 and cut out with rembg. The mask `img/elk-mask.png` trims the cut regions to the animal.
 
-## Quarter photos and outlines (Break down tab)
+## At the carcass (Break down tab)
+
+Pick the piece on the hook. **Next cut** shows that cut zoomed on the piece's photo with big numbered steps;
+the bar at the bottom has **Done** (then a sheet to undo or log packages to `freezer-log.csv` via `POST /api/log`)
+and **📷 Ask** (camera straight to Claude; the marked-up photo opens full screen). Photos pinch, wheel or
+double-tap to zoom. The screen is kept on while a piece is open (Wake Lock needs https, so on this LAN page a
+tiny silent looping video, `img/keepawake.mp4`, does it). If the Wi-Fi drops, the page keeps its last data, and
+Done and package logs are saved on the phone and sent when it's back. Ask Claude needs the network.
+
+## Quarter photos and outlines
 
 Each physical piece (front shoulder #1, #2, hindquarter #1, #2) is listed under `pieces` in
 `data/hunts/<hunt>/hunt.json` with its own `done` and `in_progress` cuts, so the two shoulders are tracked

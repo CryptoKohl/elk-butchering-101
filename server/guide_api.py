@@ -11,9 +11,13 @@ POST /api/done   JSON {piece, cut, done}
   Marks a cut done (or not) on one piece (e.g. shoulder-2) in hunt.json. A primal with no
   pieces listed (backstrap, tenderloin) is its own piece and only done_cuts changes.
 
+POST /api/log    JSON {date, source, cut, packages, package_size, total_lb, packaging, notes}
+  Appends a row to the hunt's freezer-log.csv.
+
 Listens on 127.0.0.1:8091; nginx proxies /api/ to it. One Claude run at a time.
 """
 import base64
+import csv
 import io
 import json
 import os
@@ -86,6 +90,28 @@ def set_done(body):
     tmp.write_text(json.dumps(hunt, indent=2) + "\n")
     tmp.replace(HUNT)
     return {"ok": True, "piece": piece_id, "cut": cut, "done": on}
+
+
+FREEZER = ROOT / "data/hunts/2026-elk/freezer-log.csv"
+
+
+def log_package(body):
+    clean = lambda k, n=80: re.sub(r"[\r\n]+", " ", str(body.get(k) or "")).strip()[:n]
+    row = {k: clean(k) for k in ("date", "source", "cut", "package_size", "packaging")}
+    row["notes"] = clean("notes", 300)
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", row["date"]) or not row["cut"]:
+        raise ValueError("need a date and what was packed")
+    for k, cast in (("packages", int), ("total_lb", float)):
+        v = clean(k)
+        try:
+            row[k] = str(cast(v)) if v else ""
+        except ValueError:
+            raise ValueError(f"{k} must be a number")
+    with FREEZER.open(newline="") as f:
+        head = next(csv.reader(f))
+    with FREEZER.open("a", newline="") as f:
+        csv.DictWriter(f, head, extrasaction="ignore", lineterminator="\n").writerow(row)
+    return {"ok": True, "row": row}
 
 
 def context(primal_id, side, piece_id=None):
@@ -203,14 +229,15 @@ class Handler(BaseHTTPRequestHandler):
         self._send(200, {"ok": True}) if self.path == "/api/health" else self._send(404, {"error": "not found"})
 
     def do_POST(self):
-        if self.path not in ("/api/guide", "/api/done"):
+        if self.path not in ("/api/guide", "/api/done", "/api/log"):
             return self._send(404, {"error": "not found"})
         length = int(self.headers.get("Content-Length") or 0)
         if not 0 < length <= MAX_BODY:
             return self._send(413, {"error": "photo too large"})
         try:
             body = json.loads(self.rfile.read(length))
-            self._send(200, set_done(body) if self.path == "/api/done" else guide(body))
+            handler = {"/api/done": set_done, "/api/log": log_package}.get(self.path, guide)
+            self._send(200, handler(body))
         except (ValueError, KeyError) as e:
             self._send(400, {"error": str(e)})
         except subprocess.TimeoutExpired:
