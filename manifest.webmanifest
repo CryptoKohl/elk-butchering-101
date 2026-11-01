@@ -1,0 +1,16 @@
+{
+  "name": "Elk Butchering 101",
+  "short_name": "Elk 101",
+  "description": "Cut guide, quarter-by-quarter breakdown and freezer log.",
+  "start_url": "./?app=1",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#efe6d6",
+  "theme_color": "#9b2a1f",
+  "icons": [
+    { "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "img/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "img/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

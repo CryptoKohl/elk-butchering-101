@@ -11,6 +11,12 @@ POST /api/done   JSON {piece, cut, done}
   Marks a cut done (or not) on one piece (e.g. shoulder-2) in hunt.json. A primal with no
   pieces listed (backstrap, tenderloin) is its own piece and only done_cuts changes.
 
+POST /api/photo  JSON {piece, kind: "view"|"spin", label, image (data URL), frame?, frames?}
+  Adds a photo to a piece in the background: cut it out (tools/cutout.py), and for a view have
+  Claude draft the cut outlines on it. Returns {job}; GET /api/job/<id> reports progress.
+POST /api/view   JSON {piece, view, action: "approve"|"save"|"redraw"|"delete", regions?, note?}
+  Approve or edit Claude's drafted outlines, ask for a redraw, or remove the photo.
+
 POST /api/log    JSON {date, source, cut, packages, package_size, total_lb, packaging, notes}
   Appends a row to the hunt's freezer-log.csv.
 
@@ -68,10 +74,26 @@ def load(rel):
 
 
 HUNT = ROOT / "data/hunts/2026-elk/hunt.json"
+HUNT_LOCK = threading.Lock()
+
+
+def update_hunt(change):
+    """Read hunt.json, let change(hunt) edit it, write it back atomically. Returns change's result."""
+    with HUNT_LOCK:
+        hunt = json.loads(HUNT.read_text())
+        out = change(hunt)
+        tmp = HUNT.with_suffix(".tmp")
+        tmp.write_text(json.dumps(hunt, indent=2) + "\n")
+        tmp.replace(HUNT)
+        return out
 
 
 def set_done(body):
-    cuts, hunt = load("data/cuts.json"), json.loads(HUNT.read_text())
+    return update_hunt(lambda hunt: _set_done(hunt, body))
+
+
+def _set_done(hunt, body):
+    cuts = load("data/cuts.json")
     piece_id, cut, on = body.get("piece"), body.get("cut"), bool(body.get("done"))
     pieces = {p["id"]: p for p in hunt.get("pieces", [])}
     primal = next((p for p in cuts["primals"] if p["id"] == (pieces[piece_id]["primal"] if piece_id in pieces else piece_id)), None)
@@ -86,10 +108,175 @@ def set_done(body):
     on_any = on or any(cut in p["done"] for p in pieces.values())
     done = [c for c in hunt.get("done_cuts", []) if c != cut]
     hunt["done_cuts"] = done + [cut] if on_any else done
-    tmp = HUNT.with_suffix(".tmp")
-    tmp.write_text(json.dumps(hunt, indent=2) + "\n")
-    tmp.replace(HUNT)
     return {"ok": True, "piece": piece_id, "cut": cut, "done": on}
+
+
+# ---- Photos of a piece: cut out, outlines drafted by Claude, reviewed in the app.
+PHOTOS = ROOT / "photos/2026-elk"
+UV = os.environ.get("UV_BIN", str(Path.home() / ".local/bin/uv"))
+SDXL = Path.home() / "ai/sdxl"  # the uv project that already has torch-free rembg deps cached
+JOBS = {}
+
+REGION = {"type": "object", "properties": {
+    "type": {"type": "string", "enum": ["cut", "landmark", "line"]},
+    "cut": {"type": "string", "description": "for type cut: the cut id"},
+    "name": {"type": "string", "description": "for landmark/line: short name, e.g. 'Blade cartilage', 'Elbow'"},
+    "note": {"type": "string", "description": "for landmark/line: one short instruction, e.g. 'Leave it on.'"},
+    "pts": {"type": "array", "items": PT, "minItems": 2}}, "required": ["type", "pts"]}
+OUTLINE_SCHEMA = {"type": "object", "properties": {
+    "caption": {"type": "string", "description": "Short caption: which face, orientation, what's already off"},
+    "unsure": {"type": "string", "description": "What you could not place or are unsure of; empty if nothing"},
+    "regions": {"type": "array", "items": REGION}}, "required": ["caption", "unsure", "regions"]}
+
+
+def outline_prompt(piece, primal, cuts, hunt, label, size, note=""):
+    by_id = {c["id"]: c for c in cuts["cuts"]}
+    order = [{"id": i, "name": by_id[i]["name"], "find": by_id[i]["find"]} for i in primal["order"] if i in by_id]
+    return (
+        f"Read ./photo.jpg: {piece['name']}, {label} face, {size[0]}x{size[1]} px. Lance uses they/them.\n"
+        f"Primal guide: {json.dumps({k: primal[k] for k in ('summary', 'landmarks')})}\n"
+        f"Cuts on this primal, in cutting order: {json.dumps(order)}\n"
+        f"Already done on this piece: {json.dumps(piece.get('done', []))}\n"
+        f"Lessons learned: {json.dumps(hunt.get('lessons', []))}\n"
+        "Draw the outlines for the app's photo viewer:\n"
+        "1. Find the landmarks first (blade ridge, cartilage, elbow, femur, knee, seams).\n"
+        "2. type 'cut': a polygon of 5 to 12 points around each cut you can see on this face, following the "
+        "muscle seams, with its id from the list. Skip cuts that are already off or not visible from this side.\n"
+        "3. type 'landmark': polygons for things to leave on or avoid (e.g. blade cartilage), with name and note.\n"
+        "4. type 'line': polylines for cut lines and landmarks (blade ridge, elbow, seams), with name and note.\n"
+        "Coordinates are pixels in THIS image, origin top-left. Only draw what you can place with confidence; "
+        "put the rest in 'unsure'.\n"
+        "Known mistake: on a shoulder hung by the shank, the pale rubbery edge at the bottom is blade cartilage, not a brisket flap.\n"
+        + (f"Lance's note on the last draft: {note}\n" if note else "")
+    )
+
+
+def draft_outlines(job, piece_id, view_id, note=""):
+    hunt, cuts = json.loads(HUNT.read_text()), load("data/cuts.json")
+    piece = next(p for p in hunt["pieces"] if p["id"] == piece_id)
+    view = next(v for v in piece["views"] if v["id"] == view_id)
+    primal = next(p for p in cuts["primals"] if p["id"] == piece["primal"])
+    src = ROOT / view["raw"]
+    workdir = UPLOADS / ("outline-" + uuid.uuid4().hex)
+    workdir.mkdir(parents=True)
+    im = ImageOps.exif_transpose(Image.open(src)).convert("RGB")
+    im.thumbnail((1500, 2000))
+    im.save(workdir / "photo.jpg", quality=88)
+    job["state"] = "outlining"
+    cmd = [CLAUDE, "-p", "--restricted", "--strict-mcp-config", "--tools", "Read", "--model", MODEL,
+           "--output-format", "json", "--json-schema", json.dumps(OUTLINE_SCHEMA),
+           outline_prompt(piece, primal, cuts, hunt, view["label"], im.size, note)]
+    with LOCK:
+        out = subprocess.run(cmd, cwd=workdir, capture_output=True, text=True, timeout=400)
+    res = json.loads(out.stdout or "{}")
+    g = res.get("structured_output")
+    if out.returncode or res.get("is_error") or not g:
+        raise RuntimeError((res.get("result") or out.stderr or "Claude did not answer")[:300])
+    valid = set(primal["order"])
+    regions = [r for r in g["regions"] if r["type"] != "cut" or r.get("cut") in valid]
+    regions = [{k: r[k] for k in ("type", "cut", "name", "note", "pts") if r.get(k)} for r in regions]
+
+    def put(hunt):
+        v = next(v for p in hunt["pieces"] if p["id"] == piece_id for v in p["views"] if v["id"] == view_id)
+        v.update(regions=regions, draft=True, caption=v.get("caption") or g["caption"], unsure=g["unsure"])
+    update_hunt(put)
+
+
+def cutout(name, src):
+    cmd = [UV, "run", "--project", str(SDXL), "--with", "rembg[cpu]", "--with", "scipy", "--with", "opencv-python-headless",
+           "python", str(ROOT / "tools/cutout.py"), str(PHOTOS / "cut"), f"{name}={src}"]
+    out = subprocess.run(cmd, capture_output=True, text=True, timeout=600, cwd=ROOT)
+    line = next((l for l in out.stdout.splitlines() if l.startswith("{")), None)
+    if out.returncode or not line:
+        raise RuntimeError("cutting out the photo failed: " + (out.stderr.strip().splitlines() or ["?"])[-1][:200])
+    return json.loads(line)
+
+
+def run_job(job, fn):
+    try:
+        fn(job)
+        job["state"] = "done"
+    except Exception as e:  # noqa: BLE001
+        job.update(state="error", error=str(e)[:300])
+
+
+def start_job(fn, **info):
+    jid = uuid.uuid4().hex
+    JOBS[jid] = job = {"id": jid, "state": "queued", **info}
+    threading.Thread(target=run_job, args=(job, fn), daemon=True).start()
+    return {"job": jid}
+
+
+def add_photo(body):
+    hunt = json.loads(HUNT.read_text())
+    piece = next((p for p in hunt.get("pieces", []) if p["id"] == body.get("piece")), None)
+    if not piece:
+        raise ValueError("unknown piece")
+    kind = "spin" if body.get("kind") == "spin" else "view"
+    label = re.sub(r"[^\w ,'#-]", "", str(body.get("label") or ("360" if kind == "spin" else "Photo")))[:30].strip() or "Photo"
+    stamp = time.strftime("%Y%m%d-%H%M%S")
+    slug = re.sub(r"[^a-z0-9]+", "-", label.lower()).strip("-") or "photo"
+    frame = int(body.get("frame") or 0)
+    name = f"{piece['id']}-{slug}-{stamp}" + (f"-{frame:02d}" if kind == "spin" else "")
+    raw = PHOTOS / "raw" / f"{name}.jpg"
+    raw.write_bytes(base64.b64decode(str(body.get("image") or "").split(",", 1)[-1]))
+    Image.open(raw).verify()  # a real image, or this raises
+
+    def work(job):
+        job["state"] = "cutting out"
+        c = cutout(name, raw)
+        img = str(Path(c["img"]).relative_to(ROOT)) if Path(c["img"]).is_absolute() else c["img"]
+        if kind == "spin":
+            def put(hunt):
+                p = next(p for p in hunt["pieces"] if p["id"] == piece["id"])
+                frames = p.setdefault("spin", {}).setdefault("frames", [])
+                total = int(body.get("frames") or 0)
+                if frame == 0:
+                    frames.clear()
+                frames.extend([""] * max(0, frame + 1 - len(frames)))
+                frames[frame] = img
+                if total:
+                    del frames[total:]
+            update_hunt(put)
+            return
+        view_id = f"{slug}-{stamp}"
+
+        def put(hunt):
+            p = next(p for p in hunt["pieces"] if p["id"] == piece["id"])
+            p.setdefault("views", []).append({"id": view_id, "label": label, "img": img, "box": c["box"],
+                                              "raw": str(raw.relative_to(ROOT)), "caption": "", "regions": [], "draft": True})
+        update_hunt(put)
+        job["view"] = view_id
+        draft_outlines(job, piece["id"], view_id)
+
+    return start_job(work, piece=piece["id"], kind=kind)
+
+
+def edit_view(body):
+    piece_id, view_id, action = body.get("piece"), body.get("view"), body.get("action")
+    if action == "redraw":
+        return start_job(lambda job: draft_outlines(job, piece_id, view_id, str(body.get("note") or "")[:500]),
+                         piece=piece_id, view=view_id)
+
+    def change(hunt):
+        p = next((p for p in hunt.get("pieces", []) if p["id"] == piece_id), None)
+        v = next((v for v in (p or {}).get("views", []) if v["id"] == view_id), None)
+        if not v:
+            raise ValueError("unknown piece or photo")
+        if action == "delete":
+            p["views"].remove(v)  # the files stay on disk
+        elif action in ("approve", "save"):
+            if action == "save":
+                regions = body.get("regions")
+                if not isinstance(regions, list) or not all(isinstance(r, dict) and isinstance(r.get("pts"), list) for r in regions):
+                    raise ValueError("bad outlines")
+                v["regions"] = [{k: r[k] for k in ("type", "cut", "name", "note", "pts") if r.get(k)} for r in regions]
+            v.pop("draft", None)
+            v.pop("unsure", None)
+        else:
+            raise ValueError("unknown action")
+        return {"ok": True}
+    return update_hunt(change)
 
 
 FREEZER = ROOT / "data/hunts/2026-elk/freezer-log.csv"
@@ -226,17 +413,20 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(data)
 
     def do_GET(self):
-        self._send(200, {"ok": True}) if self.path == "/api/health" else self._send(404, {"error": "not found"})
+        if self.path == "/api/health":
+            return self._send(200, {"ok": True})
+        job = JOBS.get(self.path.removeprefix("/api/job/")) if self.path.startswith("/api/job/") else None
+        self._send(200, job) if job else self._send(404, {"error": "not found"})
 
     def do_POST(self):
-        if self.path not in ("/api/guide", "/api/done", "/api/log"):
+        if self.path not in ("/api/guide", "/api/done", "/api/log", "/api/photo", "/api/view"):
             return self._send(404, {"error": "not found"})
         length = int(self.headers.get("Content-Length") or 0)
         if not 0 < length <= MAX_BODY:
             return self._send(413, {"error": "photo too large"})
         try:
             body = json.loads(self.rfile.read(length))
-            handler = {"/api/done": set_done, "/api/log": log_package}.get(self.path, guide)
+            handler = {"/api/done": set_done, "/api/log": log_package, "/api/photo": add_photo, "/api/view": edit_view}.get(self.path, guide)
             self._send(200, handler(body))
         except (ValueError, KeyError) as e:
             self._send(400, {"error": str(e)})

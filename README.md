@@ -22,6 +22,21 @@ with read-only tools, using the Claude login on Kassandra. Uploaded photos stay 
 The elk on the cut map (`img/elk.webp`) was generated locally with RealVisXL (SDXL) on the RTX 4070 (`~/ai/sdxl/gen.py`)
 and cut out with rembg. The mask `img/elk-mask.png` trims the cut regions to the animal.
 
+## Install on a phone (https)
+
+nginx serves the app on **https://10.98.1.210:8443** (and still on http :8090). The certificate comes from a
+home CA in `~/.local/share/elk-ca` (not in git; `ca.key` is owner-only). The CA is name-constrained to
+Kassandra's addresses, so a phone that trusts it trusts nothing else with it. `setup.html` walks a phone
+through installing `elk-ca.crt` and adding the app to the home screen. Over https the app gets a service worker
+(`sw.js`: opens offline), the manifest (home screen, full screen) and the real Wake Lock.
+
+The server certificate lasts 397 days (until Dec 2027). To renew, from `~/.local/share/elk-ca`:
+
+```sh
+openssl x509 -req -in server.csr -CA elk-ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days 397 -sha256 -extfile ext.cnf
+docker compose restart web   # from the repo
+```
+
 ## At the carcass (Break down tab)
 
 Pick the piece on the hook. **Next cut** shows that cut zoomed on the piece's photo with big numbered steps;
@@ -32,6 +47,11 @@ tiny silent looping video, `img/keepawake.mp4`, does it). If the Wi-Fi drops, th
 Done and package logs are saved on the phone and sent when it's back. Ask Claude needs the network.
 
 ## Quarter photos and outlines
+
+In the app: **Photos → ＋ Add photos** (outside, inside, other, or a 360° set). The server saves the photo,
+cuts it out, and for a view has Claude draft the outlines (`POST /api/photo`, progress at `GET /api/job/<id>`).
+Drafts show a banner: **Looks right**, **Fix outlines** (tap an outline, drag its corners, change which cut it
+is), **Redraw** (with a note for Claude) or **Delete photo** (`POST /api/view`). By hand, as before:
 
 Each physical piece (front shoulder #1, #2, hindquarter #1, #2) is listed under `pieces` in
 `data/hunts/<hunt>/hunt.json` with its own `done` and `in_progress` cuts, so the two shoulders are tracked

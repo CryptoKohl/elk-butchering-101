@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Elk Butchering 101</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#9b2a1f">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Elk 101">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
 <style>
@@ -89,6 +95,7 @@ dialog { border:none; padding:0; background:transparent; max-width: 96vw } dialo
 label.file { display:inline-flex } label.file input { display:none }
 .preview { max-height: 120px; border-radius: 4px; border:1px solid var(--rule) }
 .empty { color: var(--muted) }
+.install { margin: 0 0 12px; font-size: .95rem } .install a { color: var(--accent); font-weight: 600 } body.has-bar .install { display:none }
 .st.pg { color:#b5761a; border:1px solid #b5761a } .bd ol.order > li.prog { box-shadow: inset 4px 0 0 #c98a1b }
 .btn.sm { font-size:.85rem; padding: 5px 10px } .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap }
 h3.day { font: 500 1.05rem Oswald, sans-serif; text-transform:uppercase; margin: 12px 0 2px; color: var(--muted) }
@@ -172,12 +179,26 @@ body:not(.has-bar) .actionbar { display:none }
 details.pcards > summary { cursor:pointer; color: var(--accent); padding: 10px 0; min-height: 44px; font-size: .95rem }
 .gallery { grid-template-columns: repeat(auto-fill, minmax(140px,1fr)) } .gallery img.cutout { object-fit: contain; background: var(--card) }
 @media (max-width: 420px) { h3.big { font-size: 1.7rem } .seg button { font-size: .85rem } }
+[hidden] { display:none !important }
+.sheet label.btn { display:inline-flex; align-items:center; justify-content:center; color: var(--card); text-transform: uppercase; font: 500 1.1rem Oswald, sans-serif; margin: 0 } .sheet label.btn.ghost { color: var(--accent) }
+.vtabs .add { border-style: dashed; color: var(--accent); border-color: var(--accent) }
+.draft, .editbar { border-left: 4px solid #c98a1b; background: rgba(201,138,27,.12); padding: 8px 12px; margin: 8px 0 } .draft p, .editbar p { margin: 4px 0 }
+.editbar label { display:flex; gap:8px; align-items:center; margin: 6px 0 } .editbar select, .editbar input { font: inherit; padding: 8px; min-height: 44px; border:1px solid var(--rule); background: var(--bg); color: var(--ink); flex: 1 }
+svg.photo.editing .vr { cursor: pointer } .hdl { fill: #fff; stroke: var(--accent); stroke-width: 4px; vector-effect: non-scaling-stroke; cursor: grab; touch-action: none }
+.vmanage { font-size: .9rem; color: var(--muted) } .vmanage a { color: var(--muted) }
+.kinds { display:grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0 } .kinds label { display:block; margin:0 } .kinds input { position:absolute; opacity:0; width:1px; height:1px; pointer-events:none }
+.kinds span { display:block; text-align:center; padding: 12px 6px; min-height: 52px; border:1px solid var(--rule); border-radius: 4px; color: var(--ink); text-transform:none; font: 1rem "Source Serif 4", serif }
+.kinds input:checked + span { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); background: var(--accent-soft) }
+.kinds input:focus-visible + span { outline: 2px solid var(--accent) }
+.jobs { padding-left: 20px } .jobs li { margin: 6px 0 }
+.speak { margin: 0 0 8px } ol.steps li.reading { background: var(--accent-soft) }
 </style>
 </head>
 <body>
 <header>
   <h1>Elk Butchering <span>101</span></h1>
   <p class="sub">Cut guide and freezer log, Kohl family. Hang it, find the landmark, make one cut at a time.</p>
+  <p class="install" id="install" hidden>📱 <a href="setup.html">Install it on your phone</a>: home screen, screen stays on, works without Wi-Fi. One-time setup.</p>
   <nav><button data-view="guide" aria-pressed="true">Cut guide</button><button data-view="breakdown" aria-pressed="false">Break down</button><button data-view="hunt" aria-pressed="false">2026 elk</button></nav>
 </header>
 <main>
@@ -335,7 +356,7 @@ function show(view) {
 // From the map a primal id comes in: open its first piece that still has cuts left.
 function openBreakdown(id) {
   const piece = pieceById(id) || pieces().find(x => x.primal === id && nextCut(x)) || pieces().find(x => x.primal === id);
-  if (piece?.id !== BD) { VIEW = 0; SEL = null; TAB = "next" }
+  if (piece?.id !== BD) { VIEW = 0; SEL = null; TAB = "next"; EDIT = null; speechSynthesis?.cancel() }
   BD = piece?.id || null; renderBreakdown(); show("breakdown"); window.scrollTo({ top: 0 });
   if (BD && localStorage.getItem("elk-awake") !== "0") setAwake(true);  // a tap started this, so it's allowed
 }
@@ -376,6 +397,7 @@ function renderPane() {
     pane.innerHTML = `<div class="focus">
       <p class="pr">Cut ${i + 1} of ${p.order.length}${stateOf(piece, nx) === "prog" ? " · in progress" : ""}</p>
       <h3 class="big">${esc(c.name)}</h3>
+      ${"speechSynthesis" in window ? `<button class="btn ghost sm speak" id="speak">🔊 Read it to me</button>` : ""}
       ${hasRegion(nx) ? `<div id="viewer" data-focus="${nx}"></div>` : (piece.views || []).length ? `<p class="aka">This cut isn't outlined on a photo yet. <a href="#" data-tab="photos">See the photos</a> or tap 📷 Ask.</p>` : ""}
       <p class="find"><b>Find it:</b> ${esc(c.find)}</p>
       <ol class="steps">${c.steps.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
@@ -419,15 +441,17 @@ function renderViewer() {
   const box = $("#viewer"); if (!box) return;
   const piece = pieceById(BD), views = piece.views || [], spin = piece.spin?.frames?.length, focus = box.dataset.focus;
   if (!views.length && !spin) {
-    box.innerHTML = `<div class="viewer novw"><p><b>No photos of this one yet.</b> When it's on the hook, send a photo of the outside and one of the inside (or a 360 set) and the cuts get outlined on it here.</p></div>`;
+    box.innerHTML = `<div class="viewer novw"><p><b>No photos of this one yet.</b> When it's on the hook, add a photo of the outside and one of the inside (or a 360 set). Claude outlines the cuts on them for you to check.</p>
+      ${piece.implicit ? "" : `<p><button class="btn big" data-addphoto>📷 Add photos</button></p>`}</div>`;
     return;
   }
   let vi = VIEW;
   if (focus) vi = views.findIndex(v => v.regions.some(r => r.cut === focus));
   if (vi !== "spin" && !views[vi]) vi = VIEW = 0;
-  const tabs = focus ? "" : `<div class="vtabs">${views.map((v, i) => `<button data-vw="${i}" aria-pressed="${i === vi}">${esc(v.label)}</button>`).join("")}${spin ? `<button data-vw="spin" aria-pressed="${vi === "spin"}">360°</button>` : ""}</div>`;
+  const tabs = focus ? "" : `<div class="vtabs">${views.map((v, i) => `<button data-vw="${i}" aria-pressed="${i === vi}">${esc(v.label)}${v.draft ? " •" : ""}</button>`).join("")}${spin ? `<button data-vw="spin" aria-pressed="${vi === "spin"}">360°</button>` : ""}${piece.implicit ? "" : `<button class="add" data-addphoto>＋ Add photos</button>`}</div>`;
   if (vi === "spin") { box.innerHTML = `<div class="viewer">${tabs}${spinner(piece.spin)}</div>`; wireSpin(); return }
   const v = views[vi], [x, y, w, h] = v.box, fs = Math.round(Math.max(w, h * .6) / 17);
+  const editing = !focus && EDIT?.vid === v.id, regs = editing ? EDIT.regions : v.regions;
   const order = primalById(piece.primal).order;
   const pts = r => r.pts.map(q => q.join(",")).join(" ");
   const mid = r => {  // area centroid, so labels sit inside the shape
@@ -435,15 +459,16 @@ function renderViewer() {
     r.pts.forEach(([x1, y1], i) => { const [x2, y2] = r.pts[(i + 1) % r.pts.length], k = x1 * y2 - x2 * y1; a += k; cx += (x1 + x2) * k; cy += (y1 + y2) * k });
     return [cx / (3 * a), cy / (3 * a)];
   };
-  const on = r => SEL && (r.cut ? SEL === r.cut : SEL === "m" + v.regions.indexOf(r));
-  const shapes = v.regions.map((r, i) => {
-    if (r.type === "cut") return `<polygon points="${pts(r)}" class="vr cut ${stateOf(piece, r.cut)}${on(r) || r.cut === focus ? " sel" : ""}" data-sel="${r.cut}" tabindex="0" role="button" aria-label="${esc(cutById(r.cut)?.name)}"/>`;
-    if (r.type === "landmark") return `<polygon points="${pts(r)}" class="vr mark${on(r) ? " sel" : ""}" data-sel="m${i}" tabindex="0" role="button" aria-label="${esc(r.name)}"/>`;
+  const on = (r, i) => editing ? EDIT.sel === i : SEL && (r.cut ? SEL === r.cut : SEL === "m" + i);
+  const shapes = regs.map((r, i) => {
+    if (r.type === "cut") return `<polygon points="${pts(r)}" class="vr cut ${stateOf(piece, r.cut)}${on(r, i) || r.cut === focus ? " sel" : ""}" data-sel="${r.cut}" data-ri="${i}" tabindex="0" role="button" aria-label="${esc(cutById(r.cut)?.name)}"/>`;
+    if (r.type === "landmark") return `<polygon points="${pts(r)}" class="vr mark${on(r, i) ? " sel" : ""}" data-sel="m${i}" data-ri="${i}" tabindex="0" role="button" aria-label="${esc(r.name)}"/>`;
     return "";
   }).join("");
-  const lines = v.regions.map((r, i) => r.type === "line" ? `<g class="vl${on(r) ? " sel" : ""}" data-sel="m${i}" tabindex="0" role="button" aria-label="${esc(r.name)}"><polyline points="${pts(r)}" class="hit"/><polyline points="${pts(r)}" class="ln"/></g>` : "").join("");
+  const lines = regs.map((r, i) => r.type === "line" ? `<g class="vl${on(r, i) ? " sel" : ""}" data-sel="m${i}" data-ri="${i}" tabindex="0" role="button" aria-label="${esc(r.name)}"><polyline points="${pts(r)}" class="hit"/><polyline points="${pts(r)}" class="ln"/></g>` : "").join("");
+  const handles = editing && EDIT.sel != null && regs[EDIT.sel] ? regs[EDIT.sel].pts.map(([hx, hy], j) => `<circle class="hdl" data-pi="${j}" cx="${hx}" cy="${hy}" r="${(w / 40).toFixed(1)}"/>`).join("") : "";
   const seen = new Set();
-  const labels = v.regions.map((r, i) => {
+  const labels = regs.map((r, i) => {
     if (r.type === "line") return "";
     const key = r.cut || "m" + i; if (seen.has(key)) return ""; seen.add(key);
     const [cx, cy] = mid(r), n = order.indexOf(r.cut) + 1, xs = r.pts.map(q => q[0]);
@@ -456,7 +481,7 @@ function renderViewer() {
   // Starting view: the whole photo, or (Next cut) the cut with room around it. Same aspect as the photo.
   let vb = [x, y, w, h];
   if (focus) {
-    const ps = v.regions.filter(r => r.cut === focus).flatMap(r => r.pts), xs = ps.map(q => q[0]), ys = ps.map(q => q[1]);
+    const ps = regs.filter(r => r.cut === focus).flatMap(r => r.pts), xs = ps.map(q => q[0]), ys = ps.map(q => q[1]);
     // Its own frame shape (between portrait and landscape) so a wide cut on a tall photo still fills it.
     const rw = Math.max(...xs) - Math.min(...xs), rh = Math.max(...ys) - Math.min(...ys);
     const ar = Math.min(Math.max(rw / rh, .75), 1.4);
@@ -471,18 +496,21 @@ function renderViewer() {
   const sw = (w / 200).toFixed(1);
   box.innerHTML = `<div class="viewer">${tabs}
     <div class="stage">
-    <svg class="photo" viewBox="${vb.join(" ")}" data-box="${v.box.join(" ")}" data-zkey="${zkey}" role="img" aria-label="${esc(piece.name)}, ${esc(v.label)}">
+    <svg class="photo${editing ? " editing" : ""}" viewBox="${vb.join(" ")}" data-box="${v.box.join(" ")}" data-zkey="${zkey}" ${editing ? `data-edit="1"` : ""} role="img" aria-label="${esc(piece.name)}, ${esc(v.label)}">
       <defs><mask id="vmask" maskUnits="userSpaceOnUse" x="${x}" y="${y}" width="${w}" height="${h}" style="mask-type:alpha"><image href="${esc(v.img)}" x="${x}" y="${y}" width="${w}" height="${h}"/></mask>
         <pattern id="vhatch" width="${fs * .5}" height="${fs * .5}" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="${fs * .5}" height="${fs * .5}" fill="rgba(90,90,90,.35)"/><line x1="0" y1="0" x2="0" y2="${fs * .5}" stroke="rgba(255,248,238,.85)" stroke-width="${fs * .12}"/></pattern></defs>
       <image href="${esc(v.img)}" x="${x}" y="${y}" width="${w}" height="${h}"/>
-      <g mask="url(#vmask)" style="--sw:${sw}px">${shapes}</g><g style="--sw:${sw}px">${lines}</g>${labels}
+      <g mask="url(#vmask)" style="--sw:${sw}px">${shapes}</g><g style="--sw:${sw}px">${lines}</g>${labels}${handles}
     </svg>
     <div class="zbtns"><button data-zoom="in" aria-label="Zoom in">+</button><button data-zoom="out" aria-label="Zoom out">−</button><button data-zoom="fit" aria-label="Whole photo">⤢</button></div>
     </div>
-    ${focus ? "" : `<div class="vkey"><span><i class="k next"></i>next</span><span><i class="k prog"></i>in progress</span><span><i class="k done"></i>done</span><span><i class="k later"></i>later</span><span><i class="k mark"></i>leave on</span><span><i class="k line"></i>cut line / landmark</span></div>`}
+    ${editing ? editBar(piece, regs) : focus ? "" : v.draft ? draftBar(v) : ""}
+    ${focus || editing ? "" : `<div class="vkey"><span><i class="k next"></i>next</span><span><i class="k prog"></i>in progress</span><span><i class="k done"></i>done</span><span><i class="k later"></i>later</span><span><i class="k mark"></i>leave on</span><span><i class="k line"></i>cut line / landmark</span></div>`}
     <p class="aka">${focus ? "" : esc(v.caption || "") + (v.caption ? ". " : "")}Outlines are drawn by eye: confirm by feel before you cut. Pinch or double-tap to zoom.</p>
-    ${focus ? "" : `<div id="vinfo" aria-live="polite">${info(piece, v)}</div>`}</div>`;
+    ${focus || editing ? "" : `<div id="vinfo" aria-live="polite">${info(piece, v)}</div>`}
+    ${focus || editing || v.draft || piece.implicit ? "" : `<p class="vmanage"><a href="#" data-vact="edit">Fix outlines</a> · <a href="#" data-vact="redraw">Have Claude redraw them</a> · <a href="#" data-vact="delete">Delete this photo</a></p>`}</div>`;
   wireZoom($("svg.photo", box));
+  if (editing) wireEdit($("svg.photo", box));
 }
 
 // Pan and zoom by rewriting the viewBox, kept to the photo's box and aspect.
@@ -497,7 +525,7 @@ function wireZoom(svg) {
     vb[2] = Math.min(Math.max(vb[2], bw / 8), maxW); vb[3] = vb[2] / ar;
     vb[0] = clampAxis(vb[0], vb[2], bx, bw); vb[1] = clampAxis(vb[1], vb[3], by, bh);
     svg.setAttribute("viewBox", vb.join(" ")); ZOOMS[zkey] = [...vb];
-    svg.style.touchAction = vb[2] < bw * .98 || vb[3] < bh * .98 ? "none" : "pan-y";  // zoomed in: one finger pans the photo
+    svg.style.touchAction = svg.dataset.edit || vb[2] < bw * .98 || vb[3] < bh * .98 ? "none" : "pan-y";  // zoomed in: one finger pans the photo
   };
   const toSvg = (cx, cy) => { const r = svg.getBoundingClientRect(); return [vb[0] + (cx - r.left) / r.width * vb[2], vb[1] + (cy - r.top) / r.height * vb[3]] };
   const zoomAt = (px, py, f) => { const nw = Math.min(Math.max(vb[2] / f, bw / 8), maxW); vb[0] = px - (px - vb[0]) * nw / vb[2]; vb[1] = py - (py - vb[1]) * nw / vb[2]; vb[2] = nw; apply() };
@@ -513,7 +541,7 @@ function wireZoom(svg) {
       const [a, b] = [...pts.values()], d = Math.hypot(a[0] - b[0], a[1] - b[1]), m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
       if (last) { const [px, py] = toSvg(...m); zoomAt(px, py, d / last) }
       last = d; moved += 10;
-    } else if (pts.size === 1 && svg.style.touchAction === "none") {
+    } else if (pts.size === 1 && svg.style.touchAction === "none" && !svg.dataset.dragging) {
       const r = svg.getBoundingClientRect(), dx = e.clientX - prev[0], dy = e.clientY - prev[1];
       vb[0] -= dx / r.width * vb[2]; vb[1] -= dy / r.height * vb[3]; moved += Math.abs(dx) + Math.abs(dy); apply();
     }
@@ -549,12 +577,13 @@ function select(id, keep = false) {
 
 // 360: frames shot every 30° or so; drag (or use the slider) to turn the quarter.
 function spinner(sp) {
+  sp = { ...sp, frames: sp.frames.filter(Boolean) };
   return `<div class="spin" tabindex="0" aria-label="Drag to turn the quarter"><img src="${esc(sp.frames[0])}" alt="Quarter, turned" draggable="false"></div>
     <input type="range" class="spinr" min="0" max="${sp.frames.length - 1}" value="0" aria-label="Turn">
     <p class="aka">Drag the photo or the slider to turn it.</p>`;
 }
 function wireSpin() {
-  const sp = pieceById(BD).spin, el = $(".spin"), img = $("img", el), r = $(".spinr"), n = sp.frames.length;
+  const sp = { frames: pieceById(BD).spin.frames.filter(Boolean) }, el = $(".spin"), img = $("img", el), r = $(".spinr"), n = sp.frames.length;
   sp.frames.forEach(f => { new Image().src = f });
   let i = 0, x0 = null, i0 = 0;
   const go = k => { i = ((k % n) + n) % n; img.src = sp.frames[i]; r.value = i };
@@ -563,6 +592,128 @@ function wireSpin() {
   el.addEventListener("pointerup", () => { x0 = null });
   el.addEventListener("keydown", e => { if (e.key === "ArrowRight") go(i + 1); if (e.key === "ArrowLeft") go(i - 1) });
   r.addEventListener("input", () => go(+r.value));
+}
+
+
+// ---- Photos: add them, check Claude's drafted outlines, fix them by dragging the corners.
+let EDIT = null;  // { vid, regions (a copy), sel, dirty } while fixing one photo's outlines
+const draftBar = v => `<div class="draft"><p><b>Claude drafted these outlines.</b> Check them against the meat before you trust them.</p>
+  ${v.unsure ? `<details><summary>What Claude wasn't sure about</summary><p>${esc(v.unsure)}</p></details>` : ""}
+  <div class="row"><button class="btn sm" data-vact="approve">✓ Looks right</button><button class="btn ghost sm" data-vact="edit">Fix outlines</button><button class="btn ghost sm" data-vact="redraw">Redraw</button><button class="btn ghost sm" data-vact="delete">Delete photo</button></div></div>`;
+function editBar(piece, regs) {
+  const r = EDIT.sel != null ? regs[EDIT.sel] : null, order = primalById(piece.primal).order;
+  return `<div class="editbar">${r ? `<p><b>Drag the dots</b> to move this outline's corners.</p>
+      ${r.type === "cut" ? `<label>This is<select id="ecut">${order.map(id => `<option value="${id}" ${id === r.cut ? "selected" : ""}>${esc(cutById(id)?.name)}</option>`).join("")}</select></label>`
+                         : `<label>Name<input id="ename" value="${esc(r.name || "")}"></label>`}
+      <p class="row"><button class="btn ghost sm" data-eact="remove">Delete this outline</button><button class="btn ghost sm" data-eact="none">Pick another</button></p>`
+    : `<p><b>Tap an outline</b> to move its corners. Zoom in (+ or pinch) for small ones.</p>`}
+    <p class="row"><button class="btn sm" data-eact="save">Save outlines</button><button class="btn ghost sm" data-eact="cancel">Cancel</button></p></div>`;
+}
+function wireEdit(svg) {
+  const toSvg = (cx, cy) => { const q = new DOMPoint(cx, cy).matrixTransform(svg.getScreenCTM().inverse()); return [Math.round(q.x), Math.round(q.y)] };
+  svg.querySelectorAll(".hdl").forEach(h => {
+    h.addEventListener("pointerdown", e => { e.stopPropagation(); e.preventDefault(); h.setPointerCapture(e.pointerId); svg.dataset.dragging = "1" });
+    h.addEventListener("pointermove", e => {
+      if (!h.hasPointerCapture(e.pointerId)) return; e.stopPropagation();
+      const [x, y] = toSvg(e.clientX, e.clientY), r = EDIT.regions[EDIT.sel], pts = r.pts.map(q => q.join(",")).join(" ");
+      r.pts[+h.dataset.pi] = [x, y]; h.setAttribute("cx", x); h.setAttribute("cy", y); EDIT.dirty = true;
+      svg.querySelectorAll(`polygon[data-ri="${EDIT.sel}"], g[data-ri="${EDIT.sel}"] polyline`).forEach(el => el.setAttribute("points", r.pts.map(q => q.join(",")).join(" ")));
+    });
+    const end = () => { delete svg.dataset.dragging; svg.dataset.dragged = "1" };  // so letting go isn't taken as a tap
+    h.addEventListener("pointerup", end); h.addEventListener("pointercancel", end);
+  });
+}
+
+async function post(path, body) {  // no offline queue: photos and outline edits need the network
+  const res = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const r = await res.json().catch(() => ({})); if (!res.ok) throw new Error(r.error || res.statusText); return r;
+}
+const JOB_TEXT = { queued: "Waiting…", "cutting out": "Removing the background…", outlining: "Claude is drawing the outlines (about 30 seconds)…", done: "✓ Ready", error: "✗ " };
+async function pollJob(id, onState) {
+  for (;;) {
+    const j = await fetch("api/job/" + id).then(r => r.json()); onState(j);
+    if (j.state === "done" || j.state === "error") return j;
+    await new Promise(ok => setTimeout(ok, 2000));
+  }
+}
+const currentView = () => (pieceById(BD).views || [])[VIEW];
+
+async function viewAction(act) {
+  const v = currentView(); if (!v) return;
+  try {
+    if (act === "edit") { EDIT = { vid: v.id, regions: structuredClone(v.regions), sel: null, dirty: false }; return renderViewer() }
+    if (act === "approve") { await post("api/view", { piece: BD, view: v.id, action: "approve" }); toast("Outlines checked."); return load() }
+    if (act === "delete") { if (!confirm(`Remove the "${v.label}" photo from ${pieceById(BD).name}?`)) return; await post("api/view", { piece: BD, view: v.id, action: "delete" }); VIEW = 0; return load() }
+    if (act === "redraw") {
+      const note = prompt("What should Claude fix? (optional, e.g. 'the clod is higher, by the elbow')", ""); if (note === null) return;
+      const { job } = await post("api/view", { piece: BD, view: v.id, action: "redraw", note });
+      toast("Claude is redrawing the outlines (about 30 seconds)…");
+      const j = await pollJob(job, () => {}); if (j.state === "error") throw new Error(j.error);
+      toast("New outlines drafted. Check them."); return load();
+    }
+  } catch (e) { alert("Didn't work: " + e.message) }
+}
+async function editAction(act) {
+  if (act === "remove") { EDIT.regions.splice(EDIT.sel, 1); EDIT.sel = null; EDIT.dirty = true }
+  if (act === "none") EDIT.sel = null;
+  if (act === "cancel") { if (EDIT.dirty && !confirm("Throw away your changes to these outlines?")) return; EDIT = null }
+  if (act === "save") {
+    try { await post("api/view", { piece: BD, view: EDIT.vid, action: "save", regions: EDIT.regions }); EDIT = null; toast("Outlines saved."); return load() }
+    catch (e) { return alert("Couldn't save: " + e.message) }
+  }
+  renderViewer();
+}
+
+function photoSheet() {
+  const piece = pieceById(BD), d = $("#sheet"); d.onclose = null;
+  const kinds = [["Outside", "Outside face"], ["Inside", "Inside face"], ["Other", "Something else"], ["360", "360° set"]];
+  const help = { Outside: "One photo of the whole outside face, good light, about 6 feet back.", Inside: "One photo of the whole inside face, good light, about 6 feet back.",
+    Other: "Any other view, e.g. after a cut came off.", "360": "Take about 12 photos with the camera, turning the piece a little each time, then pick them all here in order." };
+  d.innerHTML = `<form method="dialog" id="addform"><h3>Add photos: ${esc(piece.name)}</h3>
+    <div class="kinds">${kinds.map(([k, l], i) => `<label><input type="radio" name="kind" value="${k}" ${i ? "" : "checked"}><span>${l}</span></label>`).join("")}</div>
+    <label id="otherlbl" hidden>Call it<input name="label" placeholder="e.g. After the flat iron"></label>
+    <p class="aka" id="kindhelp">${help.Outside}</p>
+    <div class="row"><label class="btn big" id="camlbl">📷 Take photo<input type="file" accept="image/*" capture="environment" name="cam" hidden></label>
+      <label class="btn big ghost">🖼 Pick photos<input type="file" accept="image/*" multiple name="pick" hidden></label></div>
+    <ol id="jobs" class="jobs"></ol>
+    <div class="row sh-btns"><button class="btn big ghost" value="close">Close</button></div></form>`;
+  d.showModal();
+  const f = $("#addform", d);
+  f.addEventListener("change", async e => {
+    if (e.target.name === "kind") { $("#otherlbl", d).hidden = f.kind.value !== "Other"; $("#kindhelp", d).textContent = help[f.kind.value]; $("#camlbl", d).hidden = f.kind.value === "360"; return }
+    if (!e.target.files?.length) return;
+    const files = [...e.target.files], kind = f.kind.value, spin = kind === "360";
+    const label = spin ? "360" : kind === "Other" ? (f.label.value.trim() || "Photo") : kind;
+    let lastView = null, ok = 0;
+    for (const [i, file] of files.entries()) {
+      const li = document.createElement("li"); li.textContent = `${spin ? "Frame " + (i + 1) : label}: uploading…`; $("#jobs", d).append(li);
+      try {
+        const { job } = await post("api/photo", { piece: BD, kind: spin ? "spin" : "view", label, image: await shrink(file, 2000), frame: i, frames: files.length });
+        const j = await pollJob(job, j => { li.textContent = `${spin ? "Frame " + (i + 1) : label}: ${JOB_TEXT[j.state] || j.state}${j.state === "error" ? j.error : ""}` });
+        if (j.state === "done") { ok++; lastView = j.view || lastView }
+      } catch (err) { li.textContent = `${spin ? "Frame " + (i + 1) : label}: ✗ ${err.message}` }
+    }
+    if (!ok) return;
+    await load();
+    const views = pieceById(BD).views || [];
+    VIEW = spin ? "spin" : Math.max(0, views.findIndex(v => v.id === lastView)); TAB = "photos"; renderBreakdown();
+    d.close(); toast(spin ? "360° set added." : "Photo added. Check Claude's outlines.");
+  });
+}
+
+// Read the next cut aloud, highlighting each step as it's read.
+function speakSteps(btn) {
+  const ss = speechSynthesis, reset = () => { document.querySelectorAll("ol.steps li.reading").forEach(l => l.classList.remove("reading")); btn.textContent = "🔊 Read it to me" };
+  if (ss.speaking) { ss.cancel(); return reset() }
+  const c = cutById(nextCut(pieceById(BD))), lis = [...document.querySelectorAll("ol.steps li")];
+  const parts = [[c.name + ".", null], ["Find it. " + c.find, null], ...c.steps.map((x, i) => [`Step ${i + 1}. ${x}`, lis[i]])];
+  btn.textContent = "⏹ Stop reading";
+  parts.forEach(([text, li], i) => {
+    const u = new SpeechSynthesisUtterance(text); u.rate = .95;
+    u.onstart = () => { lis.forEach(l => l.classList.toggle("reading", l === li)); li?.scrollIntoView({ block: "center", behavior: "smooth" }) };
+    if (i === parts.length - 1) u.onend = reset;
+    ss.speak(u);
+  });
 }
 
 // ---- Saving: POST to the API; if the Wi-Fi is down, apply it here, queue it, and send it later.
@@ -677,11 +828,11 @@ function renderMsg(m) {
     ${r.need ? `<p class="warn">📷 ${esc(r.need)}</p>` : ""}</div>`;
 }
 
-function shrink(file) {
+function shrink(file, max = 1600) {
   return new Promise((ok, bad) => {
     const img = new Image(); img.onerror = () => bad(new Error("Could not read that photo"));
     img.onload = () => {
-      const k = Math.min(1, 1600 / Math.max(img.width, img.height)), cv = document.createElement("canvas");
+      const k = Math.min(1, max / Math.max(img.width, img.height)), cv = document.createElement("canvas");
       cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
       cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height); URL.revokeObjectURL(img.src); ok(cv.toDataURL("image/jpeg", .85));
     };
@@ -716,11 +867,16 @@ $("#breakdown").addEventListener("click", e => {
   const svg = e.target.closest("svg.photo");
   if (svg?.dataset.dragged) { delete svg.dataset.dragged; return }  // that was a pan or pinch, not a tap
   const q = e.target.closest("[data-q]"); if (q) return openBreakdown(q.dataset.q);
+  if (e.target.closest("[data-addphoto]")) return photoSheet();
+  const va = e.target.closest("[data-vact]"); if (va) { e.preventDefault(); return viewAction(va.dataset.vact) }
+  const ea = e.target.closest("[data-eact]"); if (ea) return editAction(ea.dataset.eact);
+  const ri = e.target.closest("svg.editing [data-ri]"); if (ri) { EDIT.sel = +ri.dataset.ri; return renderViewer() }
+  if (e.target.id === "speak") return speakSteps(e.target);
   const tab = e.target.closest("[data-tab]"); if (tab) { e.preventDefault(); TAB = tab.dataset.tab; renderBreakdown(); return }
   const d = e.target.closest("[data-done]"); if (d) return markDone(d.dataset.done, d.dataset.on === "1", d);
   const lp = e.target.closest("[data-logpk]"); if (lp) return packSheet(lp.dataset.logpk || nextCut(pieceById(BD)) || "", false);
   if (e.target.id === "awake") return setAwake(!AWAKE);
-  const vw = e.target.closest("[data-vw]"); if (vw) { VIEW = vw.dataset.vw === "spin" ? "spin" : +vw.dataset.vw; return renderViewer() }
+  const vw = e.target.closest("[data-vw]"); if (vw) { if (EDIT?.dirty && !confirm("Throw away your changes to these outlines?")) return; EDIT = null; VIEW = vw.dataset.vw === "spin" ? "spin" : +vw.dataset.vw; return renderViewer() }
   const st = e.target.closest("[data-steps]");
   if (st) { e.preventDefault(); TAB = "all"; renderBreakdown(); const li = document.getElementById("step-" + st.dataset.steps); $("details", li).open = true; li.scrollIntoView({ behavior: "smooth", block: "center" }); return }
   const sel = e.target.closest("[data-sel]");
@@ -733,6 +889,8 @@ $("#breakdown").addEventListener("keydown", e => {
   if (sel && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); select(sel.dataset.sel) }
 });
 $("#breakdown").addEventListener("change", e => {
+  if (e.target.id === "ecut") { EDIT.regions[EDIT.sel].cut = e.target.value; EDIT.dirty = true; return renderViewer() }
+  if (e.target.id === "ename") { EDIT.regions[EDIT.sel].name = e.target.value; EDIT.dirty = true; return }
   if (e.target.id === "quickcam") { const f = e.target.files[0]; if (!f) return; TAB = "ask"; renderBreakdown(); send(f, "", null); return }
   if (e.target.name !== "photo") return; const f = e.target.files[0], pv = $("#preview");
   pv.hidden = !f; if (f) pv.src = URL.createObjectURL(f);
@@ -812,6 +970,10 @@ function render(cuts, hunt, log) {
 document.querySelectorAll("nav button").forEach(b => b.addEventListener("click", () => { if (b.dataset.view === "breakdown" && !BD) renderBreakdown(); show(b.dataset.view) }));
 
 $("#hunt").addEventListener("click", e => { const q = e.target.closest("[data-q]"); if (q) { e.preventDefault(); openBreakdown(q.dataset.q) } });
+
+// The installed app runs over https (see setup.html); on the plain http address, point to the setup.
+if (isSecureContext && "serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+else if (location.protocol === "http:" && !/^(localhost|127\.)/.test(location.hostname)) $("#install").hidden = false;
 
 // Loaded again after "mark done", so the map, counts and order all update. The last good copy is kept
 // on the phone, so the page still works if the garage Wi-Fi drops.

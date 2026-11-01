@@ -2,7 +2,13 @@ services:
   web:
     image: nginx:1.27-alpine
     restart: unless-stopped
-    network_mode: host          # :8090, and reaches the guide API on 127.0.0.1:8091
+    network_mode: host          # :8090 and :8443, and reaches the guide API on 127.0.0.1:8091
     volumes:
       - ./:/usr/share/nginx/html:ro
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx-site.inc:/etc/nginx/elk-site.inc:ro
+      # server.crt/.key and the CA's public certs only; ca.key is never read by nginx
+      - ${HOME}/.local/share/elk-ca/server.crt:/etc/nginx/ca/server.crt:ro
+      - ${HOME}/.local/share/elk-ca/server.key:/etc/nginx/ca/server.key:ro
+      - ${HOME}/.local/share/elk-ca/elk-ca.crt:/etc/nginx/ca/elk-ca.crt:ro
+      - ${HOME}/.local/share/elk-ca/elk-ca.cer:/etc/nginx/ca/elk-ca.cer:ro

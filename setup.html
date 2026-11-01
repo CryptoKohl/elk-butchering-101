@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install Elk Butchering 101 on your phone</title>
+<style>
+  body { margin:0 auto; max-width: 640px; padding: 20px 16px 60px; background:#efe6d6; color:#2a2420; font: 18px/1.55 Georgia, serif }
+  h1 { font: 600 1.7rem "Arial Narrow", sans-serif; text-transform: uppercase; margin: 0 0 6px } h1 span { color:#9b2a1f }
+  h2 { font: 600 1.2rem "Arial Narrow", sans-serif; text-transform: uppercase; border-bottom: 2px solid #2a2420; margin-top: 28px }
+  .btn { display:block; text-align:center; background:#9b2a1f; color:#f8f2e7; text-decoration:none; padding: 16px; border-radius: 4px; font: 600 1.1rem "Arial Narrow", sans-serif; text-transform: uppercase; margin: 12px 0 }
+  .btn.ghost { background: transparent; color:#9b2a1f; border: 2px solid #9b2a1f }
+  ol li { margin: 10px 0 } code { background:#f8f2e7; padding: 1px 5px } .note { color:#6f6357; font-size: .95rem }
+  details { background:#f8f2e7; border:1px solid #d6c8b2; padding: 4px 14px; margin: 10px 0 } summary { cursor:pointer; padding: 10px 0; font-weight: 600 }
+</style>
+</head>
+<body>
+<h1>Elk Butchering <span>101</span>: install it</h1>
+<p>One-time setup, about a minute. After it, the app opens from your home screen like any app, full screen, keeps the screen on while you cut, and still opens if the garage Wi-Fi drops.</p>
+
+<h2>1. Trust Kassandra</h2>
+<p>Your phone needs Kassandra's certificate so it can talk to it securely.</p>
+<a class="btn" href="elk-ca.crt" download="Kassandra-home-CA.crt">Download Kassandra's certificate</a>
+
+<details open><summary>Android (Samsung, Pixel)</summary>
+<ol>
+  <li>Tap the button above. It saves to Downloads.</li>
+  <li>Open <b>Settings</b> and search for <b>CA certificate</b> (on Samsung: Security and privacy → More security settings → Install from device storage → <b>CA certificate</b>).</li>
+  <li>Tap <b>Install anyway</b>, then pick <code>Kassandra-home-CA.crt</code>.</li>
+</ol></details>
+
+<details><summary>iPhone</summary>
+<ol>
+  <li>Open this page in <b>Safari</b>, tap the button above, then <b>Allow</b> and <b>Close</b>.</li>
+  <li>Open <b>Settings</b>, tap <b>Profile Downloaded</b> near the top, then <b>Install</b>.</li>
+  <li>Settings → General → About → <b>Certificate Trust Settings</b> → turn on <b>Kassandra home CA</b>.</li>
+</ol></details>
+
+<p class="note">This certificate only works for Kassandra (10.98.1.210). It can't be used for any other website. To remove it later: Settings → search "user certificates" (Android) or Settings → General → VPN &amp; Device Management (iPhone).</p>
+
+<h2>2. Open the secure app and add it to your home screen</h2>
+<a class="btn" href="https://10.98.1.210:8443/">Open https://10.98.1.210:8443</a>
+<ol>
+  <li><b>Android, Chrome:</b> ⋮ menu → <b>Add to home screen</b> → <b>Install</b>.</li>
+  <li><b>iPhone, Safari:</b> Share → <b>Add to Home Screen</b>.</li>
+</ol>
+<p class="note">If the secure link shows a warning, step 1 isn't finished yet. The old address, http://10.98.1.210:8090, keeps working too.</p>
+<a class="btn ghost" href="./">Back to the app</a>
+</body>
+</html>
