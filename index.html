@@ -776,6 +776,21 @@ function applyMine(h) {
   (h.pieces || []).forEach(x => { x.done = m.pieces[x.id] || []; x.in_progress = [] });
   h.done_cuts = m.done_cuts; return m.log;
 }
+// A message for the person's own assistant: save these rows to their Dremur freezer log.
+function forAI() {
+  const cols = ["date", "source", "cut", "packages", "package_size", "total_lb", "packaging", "notes"], q = v => /[",\n]/.test(v ?? "") ? `"${String(v).replace(/"/g, '""')}"` : (v ?? "");
+  const year = (LOG[0]?.date || new Date().toISOString()).slice(0, 4);
+  const prog = pieces().filter(x => x.done.length).map(x => `${x.name}: ${x.done.map(id => cutById(id)?.name.toLowerCase() || id).join(", ")}`);
+  return `From my Elk Butchering 101 app. If you have Dremur, save these rows to my Dremur CSV document "Elk ${year} Freezer Log" (make it if it doesn't exist, with this header). Skip rows already in it, then tell me the totals.\n\n`
+    + [cols, ...LOG.map(r => cols.map(c => r[c]))].map(r => r.map(q).join(",")).join("\n")
+    + (prog.length ? `\n\nCuts done so far:\n${prog.map(x => "- " + x).join("\n")}` : "");
+}
+async function sendToAI() {
+  const text = forAI();
+  if (navigator.share) { try { await navigator.share({ title: "Elk freezer log", text }); return } catch (e) { if (e.name === "AbortError") return } }
+  try { await navigator.clipboard.writeText(text); toast("Copied. Paste it into Claude (with Dremur connected).") }
+  catch { prompt("Copy this and paste it into your AI:", text) }
+}
 function downloadLog() {
   const cols = ["date", "source", "cut", "packages", "package_size", "total_lb", "packaging", "notes"], q = v => /[",\n]/.test(v ?? "") ? `"${String(v).replace(/"/g, '""')}"` : (v ?? "");
   const a = Object.assign(document.createElement("a"), { download: "freezer-log.csv", href: URL.createObjectURL(new Blob([[cols, ...LOG.map(r => cols.map(c => r[c]))].map(r => r.map(q).join(",")).join("\n") + "\n"], { type: "text/csv" })) });
@@ -1014,7 +1029,8 @@ function render(cuts, hunt, log) {
     <details class="pcards"><summary>Freezer log, every entry (${log.length})</summary>
     <div class="table-wrap"><table><thead><tr>${cols.map(c => `<th>${c.replace("_", " ")}</th>`).join("")}</tr></thead>
     <tbody>${log.map(r => `<tr>${cols.map(c => `<td class="${["packages", "total_lb"].includes(c) ? "num" : ""}">${esc(r[c])}</td>`).join("")}</tr>`).join("")}</tbody></table></div></details>
-    <p class="row"><button class="btn ghost sm" id="csv">Download the log (spreadsheet)</button></p>` : `<p class="aka">Nothing logged yet. After you mark a cut done you can log its packages.</p>`}
+    <p class="row"><button class="btn sm" id="toai">Send to my AI (Dremur)</button><button class="btn ghost sm" id="csv">Download the log (spreadsheet)</button></p>
+    <p class="aka">Send to my AI hands the log to Claude (or another assistant) with a note asking it to save the rows to Dremur, if you've connected Dremur to it. It sends only what you choose to share.</p>` : `<p class="aka">Nothing logged yet. After you mark a cut done you can log its packages.</p>`}
     <h2>Quarters</h2><div class="plist">${pieces().map(x => { const n = primalById(x.primal).order.length, nx = nextCut(x);
       return `<a href="#" data-q="${x.id}" class="prow">${ring(x.done.length, n)}<span><b>${esc(x.name)}</b><small>${nx ? `next: ${esc(cutById(nx)?.name.toLowerCase())}` : "all done"}</small></span></a>` }).join("")}</div>
     <h2>Lessons</h2><ul class="marks">${hunt.lessons.map(r => `<li>${esc(r)}</li>`).join("")}</ul>
@@ -1048,6 +1064,7 @@ document.querySelectorAll("nav button").forEach(b => b.addEventListener("click",
 $("#hunt").addEventListener("click", e => {
   const q = e.target.closest("[data-q]"); if (q) { e.preventDefault(); openBreakdown(q.dataset.q) }
   if (e.target.id === "csv") downloadLog();
+  if (e.target.id === "toai") sendToAI();
   if (e.target.id === "reset" && confirm("Clear every done cut and the whole freezer log from this phone? Download the log first if you want to keep it.")) { localStorage.removeItem(MKEY); BD = null; load() }
 });
 
