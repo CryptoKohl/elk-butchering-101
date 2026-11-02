@@ -1,1128 +1,1128 @@
 {
- "id": "2026-elk",
- "animal": "elk",
- "title": "2026 bull elk, GMU 681",
- "harvested": "2026-10-28T15:00:00-06:00",
- "tag": "OTC 2nd rifle bull elk, GMU 681",
- "handling": [
-  "Quartered in the field.",
-  "Quarters kept in a cooler in the garage; ice changed daily and the meat left to breathe.",
-  "Body pelt only (no neck) frozen in a trash bag with the air pushed out.",
-  "Grind packed in 1-gal zip-top bags and frozen."
- ],
- "progress": [
-  {
-   "date": "2026-10-30",
-   "done": [
-    "rib trim for grind",
-    "tenderloin (only one recovered)"
-   ]
-  },
-  {
-   "date": "2026-10-31",
-   "done": [
-    "backstrap",
-    "front shoulder #1: flat iron, mock tender",
-    "front shoulder #2: brisket pulled off along its seam (kept whole)"
-   ],
-   "in_progress": [
-    "front shoulder #1: clod, shank, trim",
-    "front shoulder #2: rib flaps, then flat iron"
-   ]
-  }
- ],
- "done_cuts": [
-  "rib-trim",
-  "tenderloin",
-  "backstrap-steaks",
-  "backstrap-roast",
-  "backstrap-trim",
-  "flat-iron",
-  "mock-tender"
- ],
- "remaining": [
-  "front shoulder #2",
-  "hindquarter #1",
-  "hindquarter #2"
- ],
- "lessons": [
-  "The pale rubbery edge at the bottom of a shoulder hung by the shank is the blade cartilage, not a brisket flap.",
-  "Find the blade ridge by feel first and mark it; every shoulder cut is located from it.",
-  "Only one tenderloin came out. Get both before or right after quartering.",
-  "On the inside face, the pale whitish patch with rough red tissue at the bottom is also blade cartilage. The brisket is the thick flap that pulls away from the shoulder along a seam."
- ],
- "photos": [
-  {
-   "file": "photos/2026-elk/shoulder_outside.jpg",
-   "caption": "Front shoulder #1, outside face, hung by the shank"
-  },
-  {
-   "file": "photos/2026-elk/shoulder_inside.jpg",
-   "caption": "Front shoulder #1, inside face"
-  },
-  {
-   "file": "photos/2026-elk/blade_cartilage.jpg",
-   "caption": "Blade cartilage close-up"
-  },
-  {
-   "file": "photos/2026-elk/elk_shoulder_ridge.jpg",
-   "caption": "Blade ridge, marked",
-   "cuts": [
+  "id": "2026-elk",
+  "animal": "elk",
+  "title": "2026 bull elk, GMU 681",
+  "harvested": "2026-10-28T15:00:00-06:00",
+  "tag": "OTC 2nd rifle bull elk, GMU 681",
+  "handling": [
+    "Quartered in the field.",
+    "Quarters kept in a cooler in the garage; ice changed daily and the meat left to breathe.",
+    "Body pelt only (no neck) frozen in a trash bag with the air pushed out.",
+    "Grind packed in 1-gal zip-top bags and frozen."
+  ],
+  "progress": [
+    {
+      "date": "2026-10-30",
+      "done": [
+        "rib trim for grind",
+        "tenderloin (only one recovered)"
+      ]
+    },
+    {
+      "date": "2026-10-31",
+      "done": [
+        "backstrap",
+        "front shoulder #1: flat iron, mock tender",
+        "front shoulder #2: brisket pulled off along its seam (kept whole)"
+      ],
+      "in_progress": [
+        "front shoulder #1: clod, shank, trim",
+        "front shoulder #2: rib flaps, then flat iron"
+      ]
+    }
+  ],
+  "done_cuts": [
+    "rib-trim",
+    "tenderloin",
+    "backstrap-steaks",
+    "backstrap-roast",
+    "backstrap-trim",
     "flat-iron",
     "mock-tender"
-   ]
-  },
-  {
-   "file": "photos/2026-elk/elk_shoulder_cuts23.jpg",
-   "caption": "Flat iron and mock tender, either side of the ridge",
-   "cuts": [
-    "flat-iron",
-    "mock-tender"
-   ]
-  },
-  {
-   "file": "photos/2026-elk/flat_iron_split.png",
-   "caption": "Splitting the flat iron at the gristle",
-   "cuts": [
-    "flat-iron"
-   ]
-  },
-  {
-   "file": "photos/2026-elk/elk_shoulder_clod.jpg",
-   "caption": "Clod (orange) and shank cut at the elbow (red)",
-   "cuts": [
-    "clod",
-    "fore-shank"
-   ]
-  },
-  {
-   "file": "photos/2026-elk/cut/s2-outside.webp",
-   "caption": "Front shoulder #2, outside, uncut"
-  },
-  {
-   "file": "photos/2026-elk/cut/s2-outside-close.webp",
-   "caption": "Front shoulder #2: brisket at the bottom"
-  },
-  {
-   "file": "photos/2026-elk/cut/s2-inside-close.webp",
-   "caption": "Front shoulder #2: brisket flap on its seam",
-   "cuts": [
-    "brisket-rib-flaps"
-   ]
-  }
- ],
- "pieces": [
-  {
-   "id": "shoulder-1",
-   "primal": "front-shoulder",
-   "name": "Front shoulder #1",
-   "done": [
-    "flat-iron",
-    "mock-tender"
-   ],
-   "in_progress": [
-    "clod",
-    "fore-shank",
-    "shoulder-trim"
-   ],
-   "views": [
+  ],
+  "remaining": [
+    "front shoulder #2",
+    "hindquarter #1",
+    "hindquarter #2"
+  ],
+  "lessons": [
+    "The pale rubbery edge at the bottom of a shoulder hung by the shank is the blade cartilage, not a brisket flap.",
+    "Find the blade ridge by feel first and mark it; every shoulder cut is located from it.",
+    "Only one tenderloin came out. Get both before or right after quartering.",
+    "On the inside face, the pale whitish patch with rough red tissue at the bottom is also blade cartilage. The brisket is the thick flap that pulls away from the shoulder along a seam."
+  ],
+  "photos": [
     {
-     "id": "outside",
-     "label": "Outside",
-     "img": "photos/2026-elk/cut/s1-outside.webp",
-     "box": [
-      30,
-      0,
-      805,
-      1605
-     ],
-     "caption": "Hung by the shank, before the flat iron and mock tender came off",
-     "regions": [
-      {
-       "type": "cut",
-       "cut": "fore-shank",
-       "pts": [
-        [
-         238,
-         0
-        ],
-        [
-         572,
-         0
-        ],
-        [
-         575,
-         260
-        ],
-        [
-         560,
-         400
-        ],
-        [
-         180,
-         400
-        ],
-        [
-         205,
-         300
-        ],
-        [
-         225,
-         200
-        ]
-       ]
-      },
-      {
-       "type": "cut",
-       "cut": "clod",
-       "pts": [
-        [
-         180,
-         420
-        ],
-        [
-         560,
-         420
-        ],
-        [
-         590,
-         560
-        ],
-        [
-         600,
-         700
-        ],
-        [
-         470,
-         800
-        ],
-        [
-         330,
-         880
-        ],
-        [
-         190,
-         820
-        ],
-        [
-         175,
-         640
-        ]
-       ]
-      },
-      {
-       "type": "cut",
-       "cut": "flat-iron",
-       "pts": [
-        [
-         330,
-         880
-        ],
-        [
-         470,
-         800
-        ],
-        [
-         640,
-         880
-        ],
-        [
-         610,
-         1050
-        ],
-        [
-         575,
-         1200
-        ],
-        [
-         540,
-         1400
-        ],
-        [
-         520,
-         1470
-        ],
-        [
-         300,
-         1460
-        ],
-        [
-         260,
-         1300
-        ],
-        [
-         290,
-         1100
-        ]
-       ]
-      },
-      {
-       "type": "cut",
-       "cut": "mock-tender",
-       "pts": [
-        [
-         640,
-         880
-        ],
-        [
-         740,
-         830
-        ],
-        [
-         770,
-         950
-        ],
-        [
-         770,
-         1150
-        ],
-        [
-         700,
-         1300
-        ],
-        [
-         600,
-         1440
-        ],
-        [
-         520,
-         1470
-        ],
-        [
-         540,
-         1400
-        ],
-        [
-         575,
-         1200
-        ],
-        [
-         610,
-         1050
-        ]
-       ]
-      },
-      {
-       "type": "landmark",
-       "name": "Blade cartilage",
-       "note": "Pale and rubbery. Leave it on the blade.",
-       "pts": [
-        [
-         30,
-         1450
-        ],
-        [
-         120,
-         1360
-        ],
-        [
-         220,
-         1340
-        ],
-        [
-         300,
-         1460
-        ],
-        [
-         520,
-         1470
-        ],
-        [
-         560,
-         1440
-        ],
-        [
-         530,
-         1520
-        ],
-        [
-         400,
-         1560
-        ],
-        [
-         200,
-         1570
-        ],
-        [
-         60,
-         1530
-        ]
-       ]
-      },
-      {
-       "type": "line",
-       "name": "Blade ridge",
-       "note": "Hard raised line. Slice along it to the bone.",
-       "pts": [
-        [
-         640,
-         880
-        ],
-        [
-         610,
-         1050
-        ],
-        [
-         575,
-         1200
-        ],
-        [
-         540,
-         1400
-        ],
-        [
-         520,
-         1470
-        ]
-       ]
-      },
-      {
-       "type": "line",
-       "name": "Elbow",
-       "note": "The shank comes off through this joint.",
-       "pts": [
-        [
-         180,
-         405
-        ],
-        [
-         565,
-         405
-        ]
-       ]
-      }
-     ]
+      "file": "photos/2026-elk/shoulder_outside.jpg",
+      "caption": "Front shoulder #1, outside face, hung by the shank"
     },
     {
-     "id": "inside",
-     "label": "Inside",
-     "img": "photos/2026-elk/cut/s1-inside.webp",
-     "box": [
-      358,
-      0,
-      636,
-      1529
-     ],
-     "caption": "Inside face",
-     "regions": []
+      "file": "photos/2026-elk/shoulder_inside.jpg",
+      "caption": "Front shoulder #1, inside face"
+    },
+    {
+      "file": "photos/2026-elk/blade_cartilage.jpg",
+      "caption": "Blade cartilage close-up"
+    },
+    {
+      "file": "photos/2026-elk/elk_shoulder_ridge.jpg",
+      "caption": "Blade ridge, marked",
+      "cuts": [
+        "flat-iron",
+        "mock-tender"
+      ]
+    },
+    {
+      "file": "photos/2026-elk/elk_shoulder_cuts23.jpg",
+      "caption": "Flat iron and mock tender, either side of the ridge",
+      "cuts": [
+        "flat-iron",
+        "mock-tender"
+      ]
+    },
+    {
+      "file": "photos/2026-elk/flat_iron_split.png",
+      "caption": "Splitting the flat iron at the gristle",
+      "cuts": [
+        "flat-iron"
+      ]
+    },
+    {
+      "file": "photos/2026-elk/elk_shoulder_clod.jpg",
+      "caption": "Clod (orange) and shank cut at the elbow (red)",
+      "cuts": [
+        "clod",
+        "fore-shank"
+      ]
+    },
+    {
+      "file": "photos/2026-elk/cut/s2-outside.webp",
+      "caption": "Front shoulder #2, outside, uncut"
+    },
+    {
+      "file": "photos/2026-elk/cut/s2-outside-close.webp",
+      "caption": "Front shoulder #2: brisket at the bottom"
+    },
+    {
+      "file": "photos/2026-elk/cut/s2-inside-close.webp",
+      "caption": "Front shoulder #2: brisket flap on its seam",
+      "cuts": [
+        "brisket-rib-flaps"
+      ]
     }
-   ]
-  },
-  {
-   "id": "shoulder-2",
-   "primal": "front-shoulder",
-   "name": "Front shoulder #2",
-   "done": [],
-   "in_progress": [
-    "brisket-rib-flaps"
-   ],
-   "views": [
+  ],
+  "pieces": [
     {
-     "id": "outside",
-     "label": "Outside",
-     "img": "photos/2026-elk/cut/s2-outside.webp",
-     "box": [
-      275,
-      0,
-      656,
-      1862
-     ],
-     "caption": "Uncut, with the brisket and rib flaps still hanging off the bottom",
-     "regions": [
-      {
-       "type": "cut",
-       "cut": "fore-shank",
-       "pts": [
-        [
-         455,
-         40
-        ],
-        [
-         580,
-         30
-        ],
-        [
-         640,
-         300
-        ],
-        [
-         700,
-         560
-        ],
-        [
-         720,
-         690
-        ],
-        [
-         640,
-         760
-        ],
-        [
-         540,
-         780
-        ],
-        [
-         510,
-         600
-        ],
-        [
-         475,
-         300
-        ]
-       ]
-      },
-      {
-       "type": "cut",
-       "cut": "brisket-rib-flaps",
-       "pts": [
-        [
-         310,
-         1280
-        ],
-        [
-         480,
-         1360
-        ],
-        [
-         505,
-         1700
-        ],
-        [
-         440,
-         1830
-        ],
-        [
-         390,
-         1820
-        ],
-        [
-         330,
-         1600
-        ]
-       ]
-      },
-      {
-       "type": "cut",
-       "cut": "brisket-rib-flaps",
-       "pts": [
-        [
-         575,
-         1470
-        ],
-        [
-         705,
-         1470
-        ],
-        [
-         700,
-         1800
-        ],
-        [
-         610,
-         1760
-        ]
-       ]
-      },
-      {
-       "type": "line",
-       "name": "Flap seam",
-       "note": "Cut along it to take the flaps off.",
-       "pts": [
-        [
-         310,
-         1290
-        ],
-        [
-         500,
-         1450
-        ],
-        [
-         720,
-         1470
-        ],
-        [
-         830,
-         1420
-        ]
-       ]
-      },
-      {
-       "type": "line",
-       "name": "Blade ridge (feel to confirm)",
-       "note": "Best guess from the photo. Find the hard ridge with your thumb.",
-       "pts": [
-        [
-         610,
-         830
-        ],
-        [
-         625,
-         1050
-        ],
-        [
-         645,
-         1250
-        ],
-        [
-         660,
-         1450
-        ]
-       ]
-      }
-     ]
+      "id": "shoulder-1",
+      "primal": "front-shoulder",
+      "name": "Front shoulder #1",
+      "done": [
+        "flat-iron",
+        "mock-tender"
+      ],
+      "in_progress": [
+        "clod",
+        "fore-shank",
+        "shoulder-trim"
+      ],
+      "views": [
+        {
+          "id": "outside",
+          "label": "Outside",
+          "img": "photos/2026-elk/cut/s1-outside.webp",
+          "box": [
+            30,
+            0,
+            805,
+            1605
+          ],
+          "caption": "Hung by the shank, before the flat iron and mock tender came off",
+          "regions": [
+            {
+              "type": "cut",
+              "cut": "fore-shank",
+              "pts": [
+                [
+                  238,
+                  0
+                ],
+                [
+                  572,
+                  0
+                ],
+                [
+                  575,
+                  260
+                ],
+                [
+                  560,
+                  400
+                ],
+                [
+                  180,
+                  400
+                ],
+                [
+                  205,
+                  300
+                ],
+                [
+                  225,
+                  200
+                ]
+              ]
+            },
+            {
+              "type": "cut",
+              "cut": "clod",
+              "pts": [
+                [
+                  180,
+                  420
+                ],
+                [
+                  560,
+                  420
+                ],
+                [
+                  590,
+                  560
+                ],
+                [
+                  600,
+                  700
+                ],
+                [
+                  470,
+                  800
+                ],
+                [
+                  330,
+                  880
+                ],
+                [
+                  190,
+                  820
+                ],
+                [
+                  175,
+                  640
+                ]
+              ]
+            },
+            {
+              "type": "cut",
+              "cut": "flat-iron",
+              "pts": [
+                [
+                  330,
+                  880
+                ],
+                [
+                  470,
+                  800
+                ],
+                [
+                  640,
+                  880
+                ],
+                [
+                  610,
+                  1050
+                ],
+                [
+                  575,
+                  1200
+                ],
+                [
+                  540,
+                  1400
+                ],
+                [
+                  520,
+                  1470
+                ],
+                [
+                  300,
+                  1460
+                ],
+                [
+                  260,
+                  1300
+                ],
+                [
+                  290,
+                  1100
+                ]
+              ]
+            },
+            {
+              "type": "cut",
+              "cut": "mock-tender",
+              "pts": [
+                [
+                  640,
+                  880
+                ],
+                [
+                  740,
+                  830
+                ],
+                [
+                  770,
+                  950
+                ],
+                [
+                  770,
+                  1150
+                ],
+                [
+                  700,
+                  1300
+                ],
+                [
+                  600,
+                  1440
+                ],
+                [
+                  520,
+                  1470
+                ],
+                [
+                  540,
+                  1400
+                ],
+                [
+                  575,
+                  1200
+                ],
+                [
+                  610,
+                  1050
+                ]
+              ]
+            },
+            {
+              "type": "landmark",
+              "name": "Blade cartilage",
+              "note": "Pale and rubbery. Leave it on the blade.",
+              "pts": [
+                [
+                  30,
+                  1450
+                ],
+                [
+                  120,
+                  1360
+                ],
+                [
+                  220,
+                  1340
+                ],
+                [
+                  300,
+                  1460
+                ],
+                [
+                  520,
+                  1470
+                ],
+                [
+                  560,
+                  1440
+                ],
+                [
+                  530,
+                  1520
+                ],
+                [
+                  400,
+                  1560
+                ],
+                [
+                  200,
+                  1570
+                ],
+                [
+                  60,
+                  1530
+                ]
+              ]
+            },
+            {
+              "type": "line",
+              "name": "Blade ridge",
+              "note": "Hard raised line. Slice along it to the bone.",
+              "pts": [
+                [
+                  640,
+                  880
+                ],
+                [
+                  610,
+                  1050
+                ],
+                [
+                  575,
+                  1200
+                ],
+                [
+                  540,
+                  1400
+                ],
+                [
+                  520,
+                  1470
+                ]
+              ]
+            },
+            {
+              "type": "line",
+              "name": "Elbow",
+              "note": "The shank comes off through this joint.",
+              "pts": [
+                [
+                  180,
+                  405
+                ],
+                [
+                  565,
+                  405
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "inside",
+          "label": "Inside",
+          "img": "photos/2026-elk/cut/s1-inside.webp",
+          "box": [
+            358,
+            0,
+            636,
+            1529
+          ],
+          "caption": "Inside face",
+          "regions": []
+        }
+      ]
     },
     {
-     "id": "inside-close",
-     "label": "Inside, close",
-     "img": "photos/2026-elk/cut/s2-inside-close.webp",
-     "box": [
-      0,
-      0,
-      1148,
-      1788
-     ],
-     "caption": "Brisket flap pulled away along its seam",
-     "regions": [
-      {
-       "type": "cut",
-       "cut": "brisket-rib-flaps",
-       "pts": [
-        [
-         690,
-         790
-        ],
-        [
-         600,
-         960
-        ],
-        [
-         520,
-         1130
-        ],
-        [
-         470,
-         1300
-        ],
-        [
-         490,
-         1500
-        ],
-        [
-         545,
-         1730
-        ],
-        [
-         285,
-         1745
-        ],
-        [
-         275,
-         1580
-        ],
-        [
-         330,
-         1460
-        ],
-        [
-         350,
-         1270
-        ],
-        [
-         500,
-         1200
-        ],
-        [
-         560,
-         1000
-        ]
-       ]
-      },
-      {
-       "type": "landmark",
-       "name": "Blade cartilage",
-       "note": "The pale patch with rough red tissue. Not brisket: leave it on.",
-       "pts": [
-        [
-         600,
-         1300
-        ],
-        [
-         700,
-         1290
-        ],
-        [
-         880,
-         1200
-        ],
-        [
-         910,
-         1320
-        ],
-        [
-         880,
-         1600
-        ],
-        [
-         830,
-         1650
-        ],
-        [
-         560,
-         1660
-        ],
-        [
-         520,
-         1500
-        ]
-       ]
-      },
-      {
-       "type": "line",
-       "name": "Brisket seam",
-       "note": "Cut the membrane here, not the meat.",
-       "pts": [
-        [
-         690,
-         790
-        ],
-        [
-         600,
-         960
-        ],
-        [
-         520,
-         1130
-        ],
-        [
-         470,
-         1300
-        ],
-        [
-         490,
-         1500
-        ],
-        [
-         545,
-         1720
-        ]
-       ]
-      }
-     ]
+      "id": "shoulder-2",
+      "primal": "front-shoulder",
+      "name": "Front shoulder #2",
+      "done": [],
+      "in_progress": [
+        "brisket-rib-flaps"
+      ],
+      "views": [
+        {
+          "id": "outside",
+          "label": "Outside",
+          "img": "photos/2026-elk/cut/s2-outside.webp",
+          "box": [
+            275,
+            0,
+            656,
+            1862
+          ],
+          "caption": "Uncut, with the brisket and rib flaps still hanging off the bottom",
+          "regions": [
+            {
+              "type": "cut",
+              "cut": "fore-shank",
+              "pts": [
+                [
+                  455,
+                  40
+                ],
+                [
+                  580,
+                  30
+                ],
+                [
+                  640,
+                  300
+                ],
+                [
+                  700,
+                  560
+                ],
+                [
+                  720,
+                  690
+                ],
+                [
+                  640,
+                  760
+                ],
+                [
+                  540,
+                  780
+                ],
+                [
+                  510,
+                  600
+                ],
+                [
+                  475,
+                  300
+                ]
+              ]
+            },
+            {
+              "type": "cut",
+              "cut": "brisket-rib-flaps",
+              "pts": [
+                [
+                  310,
+                  1280
+                ],
+                [
+                  480,
+                  1360
+                ],
+                [
+                  505,
+                  1700
+                ],
+                [
+                  440,
+                  1830
+                ],
+                [
+                  390,
+                  1820
+                ],
+                [
+                  330,
+                  1600
+                ]
+              ]
+            },
+            {
+              "type": "cut",
+              "cut": "brisket-rib-flaps",
+              "pts": [
+                [
+                  575,
+                  1470
+                ],
+                [
+                  705,
+                  1470
+                ],
+                [
+                  700,
+                  1800
+                ],
+                [
+                  610,
+                  1760
+                ]
+              ]
+            },
+            {
+              "type": "line",
+              "name": "Flap seam",
+              "note": "Cut along it to take the flaps off.",
+              "pts": [
+                [
+                  310,
+                  1290
+                ],
+                [
+                  500,
+                  1450
+                ],
+                [
+                  720,
+                  1470
+                ],
+                [
+                  830,
+                  1420
+                ]
+              ]
+            },
+            {
+              "type": "line",
+              "name": "Blade ridge (feel to confirm)",
+              "note": "Best guess from the photo. Find the hard ridge with your thumb.",
+              "pts": [
+                [
+                  610,
+                  830
+                ],
+                [
+                  625,
+                  1050
+                ],
+                [
+                  645,
+                  1250
+                ],
+                [
+                  660,
+                  1450
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "inside-close",
+          "label": "Inside, close",
+          "img": "photos/2026-elk/cut/s2-inside-close.webp",
+          "box": [
+            0,
+            0,
+            1148,
+            1788
+          ],
+          "caption": "Brisket flap pulled away along its seam",
+          "regions": [
+            {
+              "type": "cut",
+              "cut": "brisket-rib-flaps",
+              "pts": [
+                [
+                  690,
+                  790
+                ],
+                [
+                  600,
+                  960
+                ],
+                [
+                  520,
+                  1130
+                ],
+                [
+                  470,
+                  1300
+                ],
+                [
+                  490,
+                  1500
+                ],
+                [
+                  545,
+                  1730
+                ],
+                [
+                  285,
+                  1745
+                ],
+                [
+                  275,
+                  1580
+                ],
+                [
+                  330,
+                  1460
+                ],
+                [
+                  350,
+                  1270
+                ],
+                [
+                  500,
+                  1200
+                ],
+                [
+                  560,
+                  1000
+                ]
+              ]
+            },
+            {
+              "type": "landmark",
+              "name": "Blade cartilage",
+              "note": "The pale patch with rough red tissue. Not brisket: leave it on.",
+              "pts": [
+                [
+                  600,
+                  1300
+                ],
+                [
+                  700,
+                  1290
+                ],
+                [
+                  880,
+                  1200
+                ],
+                [
+                  910,
+                  1320
+                ],
+                [
+                  880,
+                  1600
+                ],
+                [
+                  830,
+                  1650
+                ],
+                [
+                  560,
+                  1660
+                ],
+                [
+                  520,
+                  1500
+                ]
+              ]
+            },
+            {
+              "type": "line",
+              "name": "Brisket seam",
+              "note": "Cut the membrane here, not the meat.",
+              "pts": [
+                [
+                  690,
+                  790
+                ],
+                [
+                  600,
+                  960
+                ],
+                [
+                  520,
+                  1130
+                ],
+                [
+                  470,
+                  1300
+                ],
+                [
+                  490,
+                  1500
+                ],
+                [
+                  545,
+                  1720
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "outside-close",
+          "label": "Outside, close",
+          "img": "photos/2026-elk/cut/s2-outside-close.webp",
+          "box": [
+            35,
+            0,
+            1122,
+            1703
+          ],
+          "caption": "Brisket is the thick piece at the bottom",
+          "regions": [
+            {
+              "type": "cut",
+              "cut": "brisket-rib-flaps",
+              "pts": [
+                [
+                  760,
+                  1350
+                ],
+                [
+                  820,
+                  1200
+                ],
+                [
+                  960,
+                  1340
+                ],
+                [
+                  1090,
+                  1500
+                ],
+                [
+                  1095,
+                  1560
+                ],
+                [
+                  1000,
+                  1650
+                ],
+                [
+                  880,
+                  1680
+                ],
+                [
+                  760,
+                  1620
+                ],
+                [
+                  740,
+                  1460
+                ]
+              ]
+            },
+            {
+              "type": "landmark",
+              "name": "Blade cartilage",
+              "note": "Leave it on the blade.",
+              "pts": [
+                [
+                  330,
+                  1500
+                ],
+                [
+                  740,
+                  1500
+                ],
+                [
+                  740,
+                  1590
+                ],
+                [
+                  340,
+                  1560
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "id": "inside",
+          "label": "Inside",
+          "img": "photos/2026-elk/cut/s2-inside.webp",
+          "box": [
+            185,
+            96,
+            876,
+            1831
+          ],
+          "caption": "Inside face, hung by the shank",
+          "regions": []
+        }
+      ]
     },
     {
-     "id": "outside-close",
-     "label": "Outside, close",
-     "img": "photos/2026-elk/cut/s2-outside-close.webp",
-     "box": [
-      35,
-      0,
-      1122,
-      1703
-     ],
-     "caption": "Brisket is the thick piece at the bottom",
-     "regions": [
-      {
-       "type": "cut",
-       "cut": "brisket-rib-flaps",
-       "pts": [
-        [
-         760,
-         1350
+      "id": "hind-1",
+      "primal": "hindquarter",
+      "name": "Hindquarter #1",
+      "done": [
+        "top-round",
+        "bottom-round",
+        "eye-of-round",
+        "sirloin-tip",
+        "top-sirloin",
+        "hind-shank",
+        "hind-trim"
+      ],
+      "views": [
+        {
+          "id": "inside-20261101-132947",
+          "label": "Inside",
+          "img": "photos/2026-elk/cut/hind-1-inside-20261101-132947.webp",
+          "box": [
+            474,
+            306,
+            387,
+            1343
+          ],
+          "raw": "photos/2026-elk/raw/hind-1-inside-20261101-132947.jpg",
+          "caption": "Hindquarter #1, inside face. Hung by the hock, so the shank is at the top and the hip end is at the bottom. No cuts are off yet.",
+          "regions": [
+            {
+              "type": "cut",
+              "cut": "hind-shank",
+              "pts": [
+                [
+                  598,
+                  318
+                ],
+                [
+                  762,
+                  318
+                ],
+                [
+                  758,
+                  520
+                ],
+                [
+                  774,
+                  690
+                ],
+                [
+                  766,
+                  790
+                ],
+                [
+                  600,
+                  780
+                ]
+              ]
+            },
+            {
+              "type": "line",
+              "name": "Knee (stifle), approx.",
+              "note": "Feel for the joint here, then cut through it to take the shank off.",
+              "pts": [
+                [
+                  612,
+                  775
+                ],
+                [
+                  655,
+                  790
+                ],
+                [
+                  705,
+                  785
+                ]
+              ]
+            },
+            {
+              "type": "cut",
+              "cut": "top-round",
+              "pts": [
+                [
+                  590,
+                  900
+                ],
+                [
+                  680,
+                  840
+                ],
+                [
+                  760,
+                  880
+                ],
+                [
+                  800,
+                  1000
+                ],
+                [
+                  830,
+                  1150
+                ],
+                [
+                  830,
+                  1300
+                ],
+                [
+                  760,
+                  1385
+                ],
+                [
+                  640,
+                  1420
+                ],
+                [
+                  530,
+                  1400
+                ],
+                [
+                  500,
+                  1270
+                ],
+                [
+                  530,
+                  1100
+                ]
+              ]
+            },
+            {
+              "type": "line",
+              "name": "Femur (approx.)",
+              "note": "Feel for the bone. Every round muscle comes off along the seams around it.",
+              "pts": [
+                [
+                  655,
+                  800
+                ],
+                [
+                  680,
+                  1000
+                ],
+                [
+                  700,
+                  1200
+                ],
+                [
+                  730,
+                  1420
+                ]
+              ]
+            },
+            {
+              "type": "landmark",
+              "name": "Hip end (cut face)",
+              "note": "Ball-joint end. The top sirloin comes off here.",
+              "pts": [
+                [
+                  680,
+                  1420
+                ],
+                [
+                  760,
+                  1400
+                ],
+                [
+                  830,
+                  1430
+                ],
+                [
+                  830,
+                  1560
+                ],
+                [
+                  800,
+                  1620
+                ],
+                [
+                  740,
+                  1610
+                ],
+                [
+                  700,
+                  1520
+                ]
+              ]
+            }
+          ],
+          "draft": true,
+          "unsure": "I can't see the femur in this photo, so the femur line is my guess along the middle of the leg. The knee line is a guess too: I put it where the narrow shank widens into the round. Feel for the joint before you cut. I didn't outline the bottom round or eye of round because they're on the outside/back of the leg and don't show from this side. I didn't outline the sirloin tip either: I can't tell which edge is the front of the leg in this photo. The ragged dark area at the bottom right looks like the cut face at the hip, where the top sirloin should be. I marked it as a landmark, not a cut, because I can't see where the sirloin's seams are. The top round outline is a rough edge of the big inside muscle. I can't see the seam between it and the sirloin tip."
+        },
+        {
+          "id": "outside-20261101-132947",
+          "label": "Outside",
+          "img": "photos/2026-elk/cut/hind-1-outside-20261101-132947.webp",
+          "box": [
+            452,
+            0,
+            492,
+            1579
+          ],
+          "raw": "photos/2026-elk/raw/hind-1-outside-20261101-132947.jpg",
+          "caption": "Hindquarter #1, outside face. It hangs by the hock, so the shank is at the top and the hip/sirloin end is at the bottom. No cuts are off yet.",
+          "regions": [
+            {
+              "type": "cut",
+              "cut": "hind-shank",
+              "pts": [
+                [
+                  560,
+                  235
+                ],
+                [
+                  665,
+                  235
+                ],
+                [
+                  675,
+                  420
+                ],
+                [
+                  735,
+                  600
+                ],
+                [
+                  750,
+                  850
+                ],
+                [
+                  690,
+                  872
+                ],
+                [
+                  560,
+                  835
+                ],
+                [
+                  548,
+                  700
+                ],
+                [
+                  585,
+                  480
+                ]
+              ]
+            },
+            {
+              "type": "line",
+              "name": "Knee (stifle), approx.",
+              "note": "Find the joint by feel. Cut the shank off through the joint, not through bone.",
+              "pts": [
+                [
+                  560,
+                  830
+                ],
+                [
+                  680,
+                  870
+                ],
+                [
+                  800,
+                  850
+                ]
+              ]
+            },
+            {
+              "type": "landmark",
+              "name": "Hip end (ball joint)",
+              "note": "The top sirloin sits over this. Cut it off the hip bone along the seam.",
+              "pts": [
+                [
+                  640,
+                  1440
+                ],
+                [
+                  760,
+                  1440
+                ],
+                [
+                  760,
+                  1530
+                ],
+                [
+                  640,
+                  1530
+                ]
+              ]
+            }
+          ],
+          "draft": true,
+          "unsure": "I couldn't trace the seams on this outside face well enough to split the bottom round from the eye of round, so the bottom-round shape is a rough outline of the big outside muscle. From this view I also can't tell which edge is the front (sirloin tip) and which is the back (bottom round/eye). The cut red edge on the left (around x 490-540, y 1000-1150) is probably the flank side, which would put the sirloin tip on the left, but please confirm by feel before cutting. The top round is on the inside face and isn't drawn. The knee line is an estimate taken from where the shank flares into the round. Find the stifle by feel. The top-sirloin outline at the bottom is approximate."
+        }
+      ],
+      "spin": {
+        "frames": [
+          "photos/2026-elk/cut/hind-1-360-20261101-133149-00.webp",
+          "photos/2026-elk/cut/hind-1-360-20261101-133149-01.webp",
+          "photos/2026-elk/cut/hind-1-360-20261101-133149-02.webp",
+          "photos/2026-elk/cut/hind-1-360-20261101-133149-03.webp",
+          "photos/2026-elk/cut/hind-1-360-20261101-133149-04.webp",
+          "photos/2026-elk/cut/hind-1-360-20261101-133149-05.webp",
+          "photos/2026-elk/cut/hind-1-360-20261101-133149-06.webp",
+          "photos/2026-elk/cut/hind-1-360-20261101-133149-07.webp",
+          "photos/2026-elk/cut/hind-1-360-20261101-133149-08.webp"
         ],
-        [
-         820,
-         1200
-        ],
-        [
-         960,
-         1340
-        ],
-        [
-         1090,
-         1500
-        ],
-        [
-         1095,
-         1560
-        ],
-        [
-         1000,
-         1650
-        ],
-        [
-         880,
-         1680
-        ],
-        [
-         760,
-         1620
-        ],
-        [
-         740,
-         1460
-        ]
-       ]
+        "set": "hind1-a"
       },
-      {
-       "type": "landmark",
-       "name": "Blade cartilage",
-       "note": "Leave it on the blade.",
-       "pts": [
-        [
-         330,
-         1500
-        ],
-        [
-         740,
-         1500
-        ],
-        [
-         740,
-         1590
-        ],
-        [
-         340,
-         1560
-        ]
-       ]
-      }
-     ]
+      "in_progress": []
     },
     {
-     "id": "inside",
-     "label": "Inside",
-     "img": "photos/2026-elk/cut/s2-inside.webp",
-     "box": [
-      185,
-      96,
-      876,
-      1831
-     ],
-     "caption": "Inside face, hung by the shank",
-     "regions": []
+      "id": "hind-2",
+      "primal": "hindquarter",
+      "name": "Hindquarter #2",
+      "done": [],
+      "views": []
     }
-   ]
-  },
-  {
-   "id": "hind-1",
-   "primal": "hindquarter",
-   "name": "Hindquarter #1",
-   "done": [
-    "top-round",
-    "bottom-round",
-    "eye-of-round",
-    "sirloin-tip",
-    "top-sirloin",
-    "hind-shank",
-    "hind-trim"
-   ],
-   "views": [
+  ],
+  "weights": [
     {
-     "id": "inside-20261101-132947",
-     "label": "Inside",
-     "img": "photos/2026-elk/cut/hind-1-inside-20261101-132947.webp",
-     "box": [
-      474,
-      306,
-      387,
-      1343
-     ],
-     "raw": "photos/2026-elk/raw/hind-1-inside-20261101-132947.jpg",
-     "caption": "Hindquarter #1, inside face. Hung by the hock, so the shank is at the top and the hip end is at the bottom. No cuts are off yet.",
-     "regions": [
-      {
-       "type": "cut",
-       "cut": "hind-shank",
-       "pts": [
-        [
-         598,
-         318
-        ],
-        [
-         762,
-         318
-        ],
-        [
-         758,
-         520
-        ],
-        [
-         774,
-         690
-        ],
-        [
-         766,
-         790
-        ],
-        [
-         600,
-         780
-        ]
-       ]
-      },
-      {
-       "type": "line",
-       "name": "Knee (stifle), approx.",
-       "note": "Feel for the joint here, then cut through it to take the shank off.",
-       "pts": [
-        [
-         612,
-         775
-        ],
-        [
-         655,
-         790
-        ],
-        [
-         705,
-         785
-        ]
-       ]
-      },
-      {
-       "type": "cut",
-       "cut": "top-round",
-       "pts": [
-        [
-         590,
-         900
-        ],
-        [
-         680,
-         840
-        ],
-        [
-         760,
-         880
-        ],
-        [
-         800,
-         1000
-        ],
-        [
-         830,
-         1150
-        ],
-        [
-         830,
-         1300
-        ],
-        [
-         760,
-         1385
-        ],
-        [
-         640,
-         1420
-        ],
-        [
-         530,
-         1400
-        ],
-        [
-         500,
-         1270
-        ],
-        [
-         530,
-         1100
-        ]
-       ]
-      },
-      {
-       "type": "line",
-       "name": "Femur (approx.)",
-       "note": "Feel for the bone. Every round muscle comes off along the seams around it.",
-       "pts": [
-        [
-         655,
-         800
-        ],
-        [
-         680,
-         1000
-        ],
-        [
-         700,
-         1200
-        ],
-        [
-         730,
-         1420
-        ]
-       ]
-      },
-      {
-       "type": "landmark",
-       "name": "Hip end (cut face)",
-       "note": "Ball-joint end. The top sirloin comes off here.",
-       "pts": [
-        [
-         680,
-         1420
-        ],
-        [
-         760,
-         1400
-        ],
-        [
-         830,
-         1430
-        ],
-        [
-         830,
-         1560
-        ],
-        [
-         800,
-         1620
-        ],
-        [
-         740,
-         1610
-        ],
-        [
-         700,
-         1520
-        ]
-       ]
-      }
-     ],
-     "draft": true,
-     "unsure": "I can't see the femur in this photo, so the femur line is my guess along the middle of the leg. The knee line is a guess too: I put it where the narrow shank widens into the round. Feel for the joint before you cut. I didn't outline the bottom round or eye of round because they're on the outside/back of the leg and don't show from this side. I didn't outline the sirloin tip either: I can't tell which edge is the front of the leg in this photo. The ragged dark area at the bottom right looks like the cut face at the hip, where the top sirloin should be. I marked it as a landmark, not a cut, because I can't see where the sirloin's seams are. The top round outline is a rough edge of the big inside muscle. I can't see the seam between it and the sirloin tip."
-    },
-    {
-     "id": "outside-20261101-132947",
-     "label": "Outside",
-     "img": "photos/2026-elk/cut/hind-1-outside-20261101-132947.webp",
-     "box": [
-      452,
-      0,
-      492,
-      1579
-     ],
-     "raw": "photos/2026-elk/raw/hind-1-outside-20261101-132947.jpg",
-     "caption": "Hindquarter #1, outside face. It hangs by the hock, so the shank is at the top and the hip/sirloin end is at the bottom. No cuts are off yet.",
-     "regions": [
-      {
-       "type": "cut",
-       "cut": "hind-shank",
-       "pts": [
-        [
-         560,
-         235
-        ],
-        [
-         665,
-         235
-        ],
-        [
-         675,
-         420
-        ],
-        [
-         735,
-         600
-        ],
-        [
-         750,
-         850
-        ],
-        [
-         690,
-         872
-        ],
-        [
-         560,
-         835
-        ],
-        [
-         548,
-         700
-        ],
-        [
-         585,
-         480
-        ]
-       ]
-      },
-      {
-       "type": "line",
-       "name": "Knee (stifle), approx.",
-       "note": "Find the joint by feel. Cut the shank off through the joint, not through bone.",
-       "pts": [
-        [
-         560,
-         830
-        ],
-        [
-         680,
-         870
-        ],
-        [
-         800,
-         850
-        ]
-       ]
-      },
-      {
-       "type": "landmark",
-       "name": "Hip end (ball joint)",
-       "note": "The top sirloin sits over this. Cut it off the hip bone along the seam.",
-       "pts": [
-        [
-         640,
-         1440
-        ],
-        [
-         760,
-         1440
-        ],
-        [
-         760,
-         1530
-        ],
-        [
-         640,
-         1530
-        ]
-       ]
-      }
-     ],
-     "draft": true,
-     "unsure": "I couldn't trace the seams on this outside face well enough to split the bottom round from the eye of round, so the bottom-round shape is a rough outline of the big outside muscle. From this view I also can't tell which edge is the front (sirloin tip) and which is the back (bottom round/eye). The cut red edge on the left (around x 490-540, y 1000-1150) is probably the flank side, which would put the sirloin tip on the left, but please confirm by feel before cutting. The top round is on the inside face and isn't drawn. The knee line is an estimate taken from where the shank flares into the round. Find the stifle by feel. The top-sirloin outline at the bottom is approximate."
+      "date": "2026-11-01",
+      "piece": "hind-1",
+      "lb": 45.4,
+      "how": "bathroom scale: Lance holding it 261.0, Lance alone 215.6; hide off, lower leg off below the shank knuckle, in the cooler since Wed Oct 28"
     }
-   ],
-   "spin": {
-    "frames": [
-     "photos/2026-elk/cut/hind-1-360-20261101-133149-00.webp",
-     "photos/2026-elk/cut/hind-1-360-20261101-133149-01.webp",
-     "photos/2026-elk/cut/hind-1-360-20261101-133149-02.webp",
-     "photos/2026-elk/cut/hind-1-360-20261101-133149-03.webp",
-     "photos/2026-elk/cut/hind-1-360-20261101-133149-04.webp",
-     "photos/2026-elk/cut/hind-1-360-20261101-133149-05.webp",
-     "photos/2026-elk/cut/hind-1-360-20261101-133149-06.webp",
-     "photos/2026-elk/cut/hind-1-360-20261101-133149-07.webp",
-     "photos/2026-elk/cut/hind-1-360-20261101-133149-08.webp"
-    ],
-    "set": "hind1-a"
-   },
-   "in_progress": []
-  },
-  {
-   "id": "hind-2",
-   "primal": "hindquarter",
-   "name": "Hindquarter #2",
-   "done": [],
-   "views": []
-  }
- ],
- "weights": [
-  {
-   "date": "2026-11-01",
-   "piece": "hind-1",
-   "lb": 45.4,
-   "how": "bathroom scale: Lance holding it 261.0, Lance alone 215.6; hide off, lower leg off below the shank knuckle, in the cooler since Wed Oct 28"
-  }
- ]
+  ]
 }
