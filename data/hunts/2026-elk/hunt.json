@@ -1,7 +1,7 @@
 {
   "id": "2026-elk",
   "animal": "elk",
-  "title": "2026 bull elk, GMU 681",
+  "title": "2026 cow elk, GMU 681 (lead cow)",
   "harvested": "2026-10-28T15:00:00-06:00",
   "tag": "OTC 2nd rifle bull elk, GMU 681",
   "handling": [
@@ -1119,16 +1119,28 @@
   ],
   "weights": [
     {
+      "date": null,
+      "piece": "front-1",
+      "lb": 68.0,
+      "how": "Lance's weight; hide off, lower leg off"
+    },
+    {
+      "date": null,
+      "piece": "front-2",
+      "lb": 64.0,
+      "how": "Lance's weight; hide off, lower leg off"
+    },
+    {
       "date": "2026-11-01",
       "piece": "hind-1",
       "lb": 45.4,
-      "how": "bathroom scale: Lance holding it 261.0, Lance alone 215.6; hide off, lower leg off below the shank knuckle, in the cooler since Wed Oct 28"
+      "how": "bathroom scale: Lance holding it 261.0, Lance alone 215.6; hide off, lower leg off below the shank knuckle, in the cooler since Wed Oct 28; damaged meat trimmed off the top before weighing"
     },
     {
       "date": "2026-11-02",
       "piece": "hind-2",
       "lb": 44.8,
-      "how": "bathroom scale: Lance holding it 260.8, Lance alone 216.0; hide off, lower leg off below the shank knuckle, in the cooler since Wed Oct 28"
+      "how": "bathroom scale: Lance holding it 260.8, Lance alone 216.0; hide off, lower leg off below the shank knuckle, in the cooler since Wed Oct 28; damaged meat trimmed off the top before weighing"
     }
   ]
 }
