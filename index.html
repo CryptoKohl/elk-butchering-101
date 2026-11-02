@@ -516,7 +516,7 @@ function renderViewer() {
     </div>
     ${editing ? editBar(piece, regs) : focus ? "" : v.draft ? draftBar(v) : ""}
     ${focus || editing ? "" : `<div class="vkey"><span><i class="k next"></i>next</span><span><i class="k prog"></i>in progress</span><span><i class="k done"></i>done</span><span><i class="k later"></i>later</span><span><i class="k mark"></i>leave on</span><span><i class="k line"></i>cut line / landmark</span></div>`}
-    <p class="aka">${PUBLIC ? "Example photo from a 2026 bull elk; yours will look close to this. " : ""}${focus ? "" : esc(v.caption || "") + (v.caption ? ". " : "")}Outlines are drawn by eye: confirm by feel before you cut. Pinch or double-tap to zoom.</p>
+    <p class="aka">${PUBLIC ? "Example photo from a 2026 cow elk; yours will look close to this. " : ""}${focus ? "" : esc(v.caption || "") + (v.caption ? ". " : "")}Outlines are drawn by eye: confirm by feel before you cut. Pinch or double-tap to zoom.</p>
     ${focus || editing ? "" : `<div id="vinfo" aria-live="polite">${info(piece, v)}</div>`}
     ${focus || editing || v.draft || piece.implicit || PUBLIC ? "" : `<p class="vmanage"><a href="#" data-vact="edit">Fix outlines</a> · <a href="#" data-vact="redraw">Have Claude redraw them</a> · <a href="#" data-vact="delete">Delete this photo</a></p>`}</div>`;
   wireZoom($("svg.photo", box));
