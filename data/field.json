@@ -48,44 +48,585 @@
       "steps": [
         {
           "t": "Tag it and take your photos.",
-          "d": "Sign and detach the carcass tag and fasten it on. Lay out game bags, knife, spare blades, saw (if keeping the skull plate) and paracord."
+          "d": "Sign and detach the carcass tag and fasten it on. Lay out game bags, knife, spare blades, saw (if keeping the skull plate) and paracord.",
+          "fig": [
+            {
+              "zone": [
+                [
+                  1040,
+                  300
+                ],
+                [
+                  1100,
+                  300
+                ],
+                [
+                  1100,
+                  350
+                ],
+                [
+                  1040,
+                  350
+                ]
+              ],
+              "color": "#F2C200"
+            },
+            {
+              "label": "Tag on the carcass",
+              "at": [
+                980,
+                250
+              ]
+            }
+          ]
         },
         {
           "t": "Mark the evidence of sex first.",
           "d": "Find it before you cut anything else. Pick the quarter it rides on (the down-side hindquarter is easiest) and skin around it, never through it. See the Colorado box above.",
-          "sex": true
+          "sex": true,
+          "fig": [
+            {
+              "keep": [
+                [
+                  1030,
+                  520
+                ],
+                [
+                  1100,
+                  520
+                ],
+                [
+                  1110,
+                  600
+                ],
+                [
+                  1030,
+                  605
+                ]
+              ]
+            },
+            {
+              "keep": [
+                [
+                  880,
+                  540
+                ],
+                [
+                  935,
+                  540
+                ],
+                [
+                  930,
+                  600
+                ],
+                [
+                  885,
+                  600
+                ]
+              ]
+            },
+            {
+              "label": "Evidence of sex stays on a hindquarter",
+              "at": [
+                760,
+                690
+              ]
+            }
+          ]
         },
         {
           "t": "Lay it on its side, back uphill.",
-          "d": "Cut the hide down the spine from the neck to the tail, then down the back of each leg. Skin the top side down to the belly and lay the hide out flat as a clean tarp for the meat."
+          "d": "Cut the hide down the spine from the neck to the tail, then down the back of each leg. Skin the top side down to the belly and lay the hide out flat as a clean tarp for the meat.",
+          "fig": [
+            {
+              "cut": [
+                [
+                  430,
+                  262
+                ],
+                [
+                  560,
+                  240
+                ],
+                [
+                  700,
+                  228
+                ],
+                [
+                  850,
+                  236
+                ],
+                [
+                  1000,
+                  250
+                ],
+                [
+                  1150,
+                  290
+                ]
+              ]
+            },
+            {
+              "cut": [
+                [
+                  660,
+                  545
+                ],
+                [
+                  645,
+                  740
+                ]
+              ]
+            },
+            {
+              "cut": [
+                [
+                  1135,
+                  450
+                ],
+                [
+                  1165,
+                  740
+                ]
+              ]
+            },
+            {
+              "arrow": [
+                [
+                  820,
+                  270
+                ],
+                [
+                  820,
+                  470
+                ]
+              ]
+            },
+            {
+              "label": "Hide cut down the spine",
+              "at": [
+                800,
+                200
+              ]
+            },
+            {
+              "label": "Skin down to the belly",
+              "at": [
+                820,
+                520
+              ]
+            }
+          ]
         },
         {
           "t": "Front shoulder.",
-          "d": "Lift the leg and cut flat along the ribs under it. There is no ball joint, just meat; it comes free. Bag it."
+          "d": "Lift the leg and cut flat along the ribs under it. There is no ball joint, just meat; it comes free. Bag it.",
+          "fig": [
+            {
+              "zone": [
+                [
+                  555,
+                  250
+                ],
+                [
+                  700,
+                  238
+                ],
+                [
+                  735,
+                  400
+                ],
+                [
+                  705,
+                  540
+                ],
+                [
+                  690,
+                  740
+                ],
+                [
+                  585,
+                  740
+                ],
+                [
+                  570,
+                  540
+                ],
+                [
+                  540,
+                  400
+                ]
+              ]
+            },
+            {
+              "cut": [
+                [
+                  700,
+                  240
+                ],
+                [
+                  735,
+                  400
+                ],
+                [
+                  705,
+                  545
+                ]
+              ]
+            },
+            {
+              "label": "Cut flat along the ribs",
+              "at": [
+                640,
+                200
+              ]
+            }
+          ]
         },
         {
           "t": "Hindquarter.",
-          "d": "Cut along the pelvis to the ball joint. Pull the leg out to pop the joint, cut around the ball, and take it off. Keep the tip clear of the belly. If the evidence of sex is on this quarter, check it is still attached. Bag it."
+          "d": "Cut along the pelvis to the ball joint. Pull the leg out to pop the joint, cut around the ball, and take it off. Keep the tip clear of the belly. If the evidence of sex is on this quarter, check it is still attached. Bag it.",
+          "fig": [
+            {
+              "zone": [
+                [
+                  985,
+                  262
+                ],
+                [
+                  1150,
+                  285
+                ],
+                [
+                  1178,
+                  380
+                ],
+                [
+                  1140,
+                  470
+                ],
+                [
+                  1185,
+                  740
+                ],
+                [
+                  1060,
+                  740
+                ],
+                [
+                  1040,
+                  560
+                ],
+                [
+                  975,
+                  500
+                ],
+                [
+                  955,
+                  380
+                ]
+              ]
+            },
+            {
+              "ring": [
+                1050,
+                420,
+                22
+              ]
+            },
+            {
+              "label": "Pop the ball joint",
+              "at": [
+                1050,
+                210
+              ]
+            }
+          ]
         },
         {
           "t": "Backstrap.",
-          "d": "Cut along the spine from the hip to the neck, then along the top of the ribs, and peel it out in one long piece."
+          "d": "Cut along the spine from the hip to the neck, then along the top of the ribs, and peel it out in one long piece.",
+          "fig": [
+            {
+              "zone": [
+                [
+                  600,
+                  245
+                ],
+                [
+                  800,
+                  250
+                ],
+                [
+                  1000,
+                  262
+                ],
+                [
+                  1080,
+                  278
+                ],
+                [
+                  1080,
+                  322
+                ],
+                [
+                  1000,
+                  306
+                ],
+                [
+                  800,
+                  296
+                ],
+                [
+                  600,
+                  292
+                ]
+              ]
+            },
+            {
+              "cut": [
+                [
+                  600,
+                  245
+                ],
+                [
+                  800,
+                  250
+                ],
+                [
+                  1000,
+                  262
+                ],
+                [
+                  1080,
+                  278
+                ]
+              ]
+            },
+            {
+              "cut": [
+                [
+                  600,
+                  292
+                ],
+                [
+                  800,
+                  296
+                ],
+                [
+                  1000,
+                  306
+                ],
+                [
+                  1080,
+                  322
+                ]
+              ]
+            },
+            {
+              "label": "Backstrap: spine to ribs",
+              "at": [
+                840,
+                200
+              ]
+            }
+          ]
         },
         {
           "t": "Neck, brisket and rib meat.",
-          "d": "Take the neck meat off both sides, and strip the meat between and over the ribs for grind."
+          "d": "Take the neck meat off both sides, and strip the meat between and over the ribs for grind.",
+          "fig": [
+            {
+              "zone": [
+                [
+                  330,
+                  285
+                ],
+                [
+                  560,
+                  252
+                ],
+                [
+                  590,
+                  460
+                ],
+                [
+                  450,
+                  540
+                ],
+                [
+                  340,
+                  440
+                ]
+              ]
+            },
+            {
+              "zone": [
+                [
+                  565,
+                  470
+                ],
+                [
+                  700,
+                  500
+                ],
+                [
+                  695,
+                  560
+                ],
+                [
+                  585,
+                  545
+                ]
+              ]
+            },
+            {
+              "zone": [
+                [
+                  700,
+                  312
+                ],
+                [
+                  930,
+                  322
+                ],
+                [
+                  935,
+                  500
+                ],
+                [
+                  705,
+                  520
+                ]
+              ],
+              "color": "#F29B38"
+            },
+            {
+              "label": "Neck",
+              "at": [
+                455,
+                230
+              ]
+            },
+            {
+              "label": "Rib meat",
+              "at": [
+                820,
+                420
+              ]
+            },
+            {
+              "label": "Brisket",
+              "at": [
+                620,
+                610
+              ]
+            }
+          ]
         },
         {
           "t": "Tenderloin, without opening the belly.",
-          "d": "Push the belly meat down behind the last rib and cut a hand-sized window through the thin wall in front of the hip. Reach in along the spine and work the tenderloin free with your fingers, cutting each end. Everything else stays in its sack."
+          "d": "Push the belly meat down behind the last rib and cut a hand-sized window through the thin wall in front of the hip. Reach in along the spine and work the tenderloin free with your fingers, cutting each end. Everything else stays in its sack.",
+          "fig": [
+            {
+              "window": [
+                965,
+                365,
+                38,
+                26
+              ]
+            },
+            {
+              "zone": [
+                [
+                  880,
+                  318
+                ],
+                [
+                  1060,
+                  330
+                ],
+                [
+                  1060,
+                  356
+                ],
+                [
+                  880,
+                  346
+                ]
+              ],
+              "color": "#C0392B"
+            },
+            {
+              "arrow": [
+                [
+                  965,
+                  470
+                ],
+                [
+                  965,
+                  400
+                ]
+              ]
+            },
+            {
+              "label": "Window behind the last rib",
+              "at": [
+                900,
+                520
+              ]
+            },
+            {
+              "label": "Tenderloin under the spine",
+              "at": [
+                900,
+                290
+              ]
+            }
+          ]
         },
         {
           "t": "Roll it and repeat.",
-          "d": "Flip the carcass onto the clean hide side and do the other half the same way."
+          "d": "Flip the carcass onto the clean hide side and do the other half the same way.",
+          "fig": [
+            {
+              "flip": true
+            },
+            {
+              "label": "Flip onto the clean hide side",
+              "at": [
+                760,
+                200
+              ]
+            },
+            {
+              "label": "Repeat steps 3 to 7",
+              "at": [
+                760,
+                420
+              ]
+            }
+          ]
         },
         {
           "t": "Cool it.",
-          "d": "Hang the bags in shade with air around them; don't pile them. Get them below 40 °F as soon as you can."
+          "d": "Hang the bags in shade with air around them; don't pile them. Get them below 40 °F as soon as you can.",
+          "fig": [
+            {
+              "label": "Bags in the shade, air all around",
+              "at": [
+                760,
+                330
+              ]
+            },
+            {
+              "label": "Under 40 °F as soon as you can",
+              "at": [
+                760,
+                420
+              ]
+            }
+          ]
         }
       ]
     },
@@ -96,46 +637,421 @@
       "steps": [
         {
           "t": "Tag it and take your photos.",
-          "d": "Sign and detach the carcass tag and fasten it on. Gloves on."
+          "d": "Sign and detach the carcass tag and fasten it on. Gloves on.",
+          "fig": [
+            {
+              "zone": [
+                [
+                  1040,
+                  300
+                ],
+                [
+                  1100,
+                  300
+                ],
+                [
+                  1100,
+                  350
+                ],
+                [
+                  1040,
+                  350
+                ]
+              ],
+              "color": "#F2C200"
+            },
+            {
+              "label": "Tag on the carcass",
+              "at": [
+                980,
+                250
+              ]
+            }
+          ]
         },
         {
           "t": "On its back, rump downhill.",
-          "d": "Prop it with rocks or tie the legs out. Gravity pulls the guts back out of your way."
+          "d": "Prop it with rocks or tie the legs out. Gravity pulls the guts back out of your way.",
+          "fig": [
+            {
+              "tilt": 6
+            },
+            {
+              "label": "On its back, rump downhill",
+              "at": [
+                760,
+                200
+              ]
+            },
+            {
+              "arrow": [
+                [
+                  600,
+                  640
+                ],
+                [
+                  980,
+                  690
+                ]
+              ]
+            }
+          ]
         },
         {
           "t": "Keep the evidence of sex.",
           "d": "Route every cut around it, never through it, so it stays attached toward one hind leg. See the Colorado box above.",
-          "sex": true
+          "sex": true,
+          "fig": [
+            {
+              "keep": [
+                [
+                  1030,
+                  520
+                ],
+                [
+                  1100,
+                  520
+                ],
+                [
+                  1110,
+                  600
+                ],
+                [
+                  1030,
+                  605
+                ]
+              ]
+            },
+            {
+              "keep": [
+                [
+                  880,
+                  540
+                ],
+                [
+                  935,
+                  540
+                ],
+                [
+                  930,
+                  600
+                ],
+                [
+                  885,
+                  600
+                ]
+              ]
+            },
+            {
+              "label": "Evidence of sex stays on a hindquarter",
+              "at": [
+                760,
+                690
+              ]
+            }
+          ]
         },
         {
           "t": "Core the rear end.",
           "d": "Cut a deep circle around the anus (and the vulva on a cow, unless it's your evidence of sex), 3–4 inches in, angled toward the spine, staying close to the pelvic bone. Pull it out a few inches and tie it off tight with string or a zip tie. Then push it back inside the pelvis.",
-          "tip": "rectum"
+          "tip": "rectum",
+          "fig": [
+            {
+              "ring": [
+                1158,
+                398,
+                26
+              ],
+              "cut": true
+            },
+            {
+              "zone": [
+                [
+                  1080,
+                  360
+                ],
+                [
+                  1150,
+                  370
+                ],
+                [
+                  1150,
+                  430
+                ],
+                [
+                  1080,
+                  440
+                ]
+              ],
+              "color": "#8E5A2B"
+            },
+            {
+              "label": "Core around the anus, tie it off",
+              "at": [
+                880,
+                240
+              ]
+            }
+          ]
         },
         {
           "t": "Open the belly, shallow.",
-          "d": "Pinch up the skin at the bottom of the belly and nick it. Slide two fingers in, palm up, with the blade between them, edge up, and lift as you cut forward to the breastbone. You're cutting hide and the thin muscle only; never the paunch."
+          "d": "Pinch up the skin at the bottom of the belly and nick it. Slide two fingers in, palm up, with the blade between them, edge up, and lift as you cut forward to the breastbone. You're cutting hide and the thin muscle only; never the paunch.",
+          "fig": [
+            {
+              "cut": [
+                [
+                  1020,
+                  545
+                ],
+                [
+                  900,
+                  545
+                ],
+                [
+                  780,
+                  548
+                ],
+                [
+                  690,
+                  548
+                ]
+              ]
+            },
+            {
+              "zone": [
+                [
+                  780,
+                  400
+                ],
+                [
+                  980,
+                  400
+                ],
+                [
+                  985,
+                  520
+                ],
+                [
+                  780,
+                  535
+                ]
+              ],
+              "color": "#7DAA4F",
+              "dash": true
+            },
+            {
+              "label": "Shallow: never into the paunch",
+              "at": [
+                850,
+                630
+              ]
+            }
+          ]
         },
         {
           "t": "Free the diaphragm.",
-          "d": "Cut the sheet of muscle that separates the chest from the belly, around the inside of the ribs."
+          "d": "Cut the sheet of muscle that separates the chest from the belly, around the inside of the ribs.",
+          "fig": [
+            {
+              "cut": [
+                [
+                  930,
+                  290
+                ],
+                [
+                  880,
+                  380
+                ],
+                [
+                  800,
+                  470
+                ],
+                [
+                  730,
+                  540
+                ]
+              ]
+            },
+            {
+              "label": "Diaphragm",
+              "at": [
+                900,
+                230
+              ]
+            }
+          ]
         },
         {
           "t": "Cut the windpipe.",
-          "d": "Reach up into the chest as far toward the throat as you can, grab the windpipe and gullet together and cut them above your hand."
+          "d": "Reach up into the chest as far toward the throat as you can, grab the windpipe and gullet together and cut them above your hand.",
+          "fig": [
+            {
+              "cut": [
+                [
+                  360,
+                  395
+                ],
+                [
+                  400,
+                  470
+                ]
+              ]
+            },
+            {
+              "tube": [
+                [
+                  300,
+                  412
+                ],
+                [
+                  430,
+                  440
+                ],
+                [
+                  560,
+                  470
+                ],
+                [
+                  640,
+                  470
+                ]
+              ]
+            },
+            {
+              "label": "Cut the windpipe high in the neck",
+              "at": [
+                560,
+                610
+              ]
+            }
+          ]
         },
         {
           "t": "Roll it out.",
-          "d": "Pull the windpipe back and down, and the heart, lungs and stomach come with it. Free the tissue holding them along the spine as you go."
+          "d": "Pull the windpipe back and down, and the heart, lungs and stomach come with it. Free the tissue holding them along the spine as you go.",
+          "fig": [
+            {
+              "zone": [
+                [
+                  600,
+                  330
+                ],
+                [
+                  960,
+                  335
+                ],
+                [
+                  965,
+                  525
+                ],
+                [
+                  600,
+                  535
+                ]
+              ],
+              "color": "#C0392B"
+            },
+            {
+              "arrow": [
+                [
+                  780,
+                  450
+                ],
+                [
+                  780,
+                  650
+                ]
+              ]
+            },
+            {
+              "label": "Heart, lungs and guts roll out together",
+              "at": [
+                780,
+                720
+              ]
+            }
+          ]
         },
         {
           "t": "Bring the bladder and rectum out through the pelvis.",
           "d": "Reach in, find the tied-off rectum and the bladder, and draw them forward and out through the pelvic opening from the inside. No splitting the pelvis.",
-          "tip": "bladder"
+          "tip": "bladder",
+          "fig": [
+            {
+              "ring": [
+                1095,
+                445,
+                24
+              ]
+            },
+            {
+              "arrow": [
+                [
+                  1150,
+                  405
+                ],
+                [
+                  1010,
+                  480
+                ]
+              ]
+            },
+            {
+              "label": "Pull them out the front of the pelvis",
+              "at": [
+                820,
+                690
+              ]
+            }
+          ]
         },
         {
           "t": "Clean and cool.",
-          "d": "Wipe out blood and anything spilled with a dry cloth or snow. Prop the cavity open with a stick, get the hide off as soon as you can, and get the quarters into game bags in the shade."
+          "d": "Wipe out blood and anything spilled with a dry cloth or snow. Prop the cavity open with a stick, get the hide off as soon as you can, and get the quarters into game bags in the shade.",
+          "fig": [
+            {
+              "zone": [
+                [
+                  600,
+                  330
+                ],
+                [
+                  1000,
+                  340
+                ],
+                [
+                  1000,
+                  520
+                ],
+                [
+                  600,
+                  535
+                ]
+              ],
+              "color": "#5DADE2"
+            },
+            {
+              "cut": [
+                [
+                  700,
+                  330
+                ],
+                [
+                  700,
+                  535
+                ]
+              ],
+              "stick": true
+            },
+            {
+              "label": "Wipe dry and prop it open",
+              "at": [
+                800,
+                230
+              ]
+            }
+          ]
         }
       ]
     }
@@ -169,5 +1085,6 @@
         "If the paunch is nicked, keep cutting slow, finish, roll the guts out, and wipe the cavity clean and dry."
       ]
     }
-  }
+  },
+  "figNote": "Shown standing so you can see where things are. Red dashes: cut. Shaded: what comes off or out."
 }

@@ -1,6 +1,6 @@
 // Offline support for the installed app (https only). Pages and data: network first, then the last
 // copy. Photos, images and fonts: the cached copy, refreshed in the background. The API is never cached.
-const V = "elk-v2";
+const V = "elk-v3";
 const SHELL = ["./", "index.html", "data/cuts.json", "data/field.json", "manifest.webmanifest", "img/elk.webp", "img/elk-mask.png", "img/keepawake.mp4", "img/icon-192.png"];
 
 self.addEventListener("install", e => e.waitUntil(caches.open(V).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())));

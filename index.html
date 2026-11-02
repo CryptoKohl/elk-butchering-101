@@ -184,6 +184,7 @@ details.pcards > summary { cursor:pointer; color: var(--accent); padding: 10px 0
 .law .ev { font-size: 1.15rem; margin: 6px 0 } .law a { color: var(--accent) }
 .seg.two { position: static }
 ol.steps.check li { cursor: pointer } ol.steps.check li b { display:block } ol.steps.check li.ok { color: var(--muted) } ol.steps.check li.ok::before { content: "✓"; background: var(--ok) }
+.ffig { display:block; width:100%; max-width:560px; height:auto; margin:8px 0 2px; border-radius:8px; background:#fff; border:1px solid var(--rule) } .ffig text { font: 700 34px sans-serif; paint-order: stroke; stroke:#fff; stroke-width:9px; fill:#1d1d1d }
 ol.steps .why { font-size: 1.05rem } .tipbox { border-left: 4px solid #c98a1b; background: rgba(201,138,27,.12); padding: 4px 12px; margin: 8px 0; font-size: 1rem } .tipbox summary { cursor:pointer; min-height: 40px; display:flex; align-items:center; font-weight: 600 }
 .sheet label.btn { display:inline-flex; align-items:center; justify-content:center; color: var(--card); text-transform: uppercase; font: 500 1.1rem Oswald, sans-serif; margin: 0 } .sheet label.btn.ghost { color: var(--accent) }
 .vtabs .add { border-style: dashed; color: var(--accent); border-color: var(--accent) }
@@ -944,6 +945,27 @@ $("#breakdown").addEventListener("submit", e => {
 // ---- Field dressing: bull or cow, gutless or gut it whole, each step ticked off with a tap.
 let FIELD;
 const fstate = () => JSON.parse(localStorage.getItem("elk-field") || "null") || { sex: "bull", method: "gutless", done: [] };
+// Field dressing step pictures: the elk photo with that step's cuts (red dashes) and the meat or organs it frees (shaded).
+function figSvg(fig, k) {
+  const P = a => a.map(p => p.join(",")).join(" "), mk = `fa${k}`;
+  let tilt = 0, out = "";
+  for (const s of fig) {
+    if (s.tilt) tilt = s.tilt;
+    else if (s.ring) { const [x, y, r] = s.ring; out += `<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${s.cut ? "#D32F2F" : "#F2C200"}" stroke-width="7" ${s.cut ? 'stroke-dasharray="14 9"' : ""}/>` }
+    else if (s.stick) out += `<polyline points="${P(s.cut)}" fill="none" stroke="#7A4E25" stroke-width="14" stroke-linecap="round"/>`;
+    else if (s.cut) out += `<polyline points="${P(s.cut)}" fill="none" stroke="#D32F2F" stroke-width="8" stroke-dasharray="22 12" stroke-linecap="round" stroke-linejoin="round"/>`;
+    else if (s.zone) { const c = s.color || "#E8743B"; out += `<polygon points="${P(s.zone)}" fill="${c}" fill-opacity=".45" stroke="${c}" stroke-width="4" ${s.dash ? 'stroke-dasharray="12 8"' : ""}/>` }
+    else if (s.keep) out += `<polygon points="${P(s.keep)}" fill="#2FBF55" fill-opacity=".55" stroke="#1E9E43" stroke-width="5"/>`;
+    else if (s.window) { const [x, y, rx, ry] = s.window; out += `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="#fff" fill-opacity=".35" stroke="#D32F2F" stroke-width="7" stroke-dasharray="14 9"/>` }
+    else if (s.tube) out += `<polyline points="${P(s.tube)}" fill="none" stroke="#5DADE2" stroke-opacity=".85" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>`;
+    else if (s.arrow) out += `<polyline points="${P(s.arrow)}" fill="none" stroke="#1565C0" stroke-width="9" marker-end="url(#${mk})"/>`;
+    else if (s.flip) out += `<path d="M560 420C620 170 900 170 960 400" fill="none" stroke="#1565C0" stroke-width="9" marker-end="url(#${mk})"/>`;
+    else if (s.label) out += `<text x="${s.at[0]}" y="${s.at[1]}" text-anchor="middle">${esc(s.label)}</text>`;
+  }
+  const img = `<image href="img/elk.webp" width="1344" height="768"/>`;
+  return `<svg class="ffig" viewBox="190 150 1020 618" role="img" aria-hidden="true"><defs><marker id="${mk}" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1565C0"/></marker></defs>
+    ${tilt ? `<g transform="rotate(${tilt} 700 460)">${img}</g>` : img}${out}</svg>`;
+}
 function renderField() {
   if (!FIELD) return;
   const st = fstate(), sx = FIELD.sexes[st.sex], m = FIELD.methods.find(x => x.id === st.method) || FIELD.methods[0], L = FIELD.law;
@@ -955,10 +977,10 @@ function renderField() {
       <p class="ev"><b>${esc(sx.evidence)}</b></p><ol>${sx.how.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
       <details class="pcards"><summary>All the Colorado rules</summary><ul class="marks">${L.rules.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
       <p class="aka">${esc(L.note)} From <a href="${esc(L.source)}" target="_blank" rel="noopener">CPW's elk page</a>, checked ${esc(L.checked)}.</p></details></details>
-    <p class="summary">${esc(m.summary)}</p>
+    <p class="summary">${esc(m.summary)}</p>${FIELD.figNote ? `<p class="aka">${esc(FIELD.figNote)}</p>` : ""}
     <p class="row">${"speechSynthesis" in window ? `<button class="btn ghost sm" id="fspeak">🔊 Read it to me</button>` : ""}${st.done.length ? `<button class="btn ghost sm" id="freset">Clear the ticks</button>` : ""}</p>
     <ol class="steps check">${m.steps.map((x, i) => { const k = m.id + i;
-      return `<li data-fk="${k}" class="${st.done.includes(k) ? "ok" : ""}"><b>${esc(x.t)}</b><span class="why">${esc(x.d)}${x.sex ? ` <i>${esc(sx.evidence)}</i>` : ""}</span>${x.tip ? tip(x.tip) : ""}</li>` }).join("")}</ol>
+      return `<li data-fk="${k}" class="${st.done.includes(k) ? "ok" : ""}"><b>${esc(x.t)}</b><span class="why">${esc(x.d)}${x.sex ? ` <i>${esc(sx.evidence)}</i>` : ""}</span>${x.fig ? figSvg(x.fig, k) : ""}${x.tip ? tip(x.tip) : ""}</li>` }).join("")}</ol>
     <h2>Tips</h2>${Object.keys(FIELD.tips).map(tip).join("")}`;
 }
 $("#field").addEventListener("click", e => {
